@@ -1036,7 +1036,7 @@ export function LandingPage() {
             </Reveal>
             <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" }, gap: 2.5 }}>
               {[
-                { quote: "ChapMail's deliverability is in a class of its own. Our open rates jumped 18% the first month after switching. The IP warmup tooling alone saved us weeks of manual work.", name: "Sarah K.", role: "Head of Growth", company: "TechFlow SaaS", avatar: "SK", color: blue },
+                { quote: "ChapMail's deliverability is in a class of its own. Our open rates jumped 18% the first month after switching. The IP warmup tooling alone saved us weeks of manual work.", name: "Benjamin A.", role: "Head of Growth", company: "TechFlow SaaS", avatar: "SK", color: blue },
                 { quote: "We send 2 million emails a month and the uptime has been flawless. The reseller dashboard lets us manage 40+ client accounts from a single login — genuinely game-changing.", name: "Marcus O.", role: "CEO", company: "SendLoop Agency", avatar: "MO", color: cyan },
                 { quote: "The migration was zero-drama. Real-time analytics showed us issues we didn't even know we had. Inbox placement went from 87% to 99% within the first two weeks.", name: "Priya N.", role: "Email Marketing Lead", company: "CloudBase", avatar: "PN", color: "#a78bfa" },
               ].map((t, i) => (
