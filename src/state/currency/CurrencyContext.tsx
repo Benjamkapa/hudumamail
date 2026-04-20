@@ -88,8 +88,8 @@ export function CurrencyProvider({ children }: Props) {
     refreshRate: fetchRate,
     formatPrice,
     prices: {
-      usd: usdAmount => usdAmount,
-      kes: usdAmount => usdAmount * usdToKesRate,
+      usd: 1,
+      kes: usdToKesRate,
     },
   };
 

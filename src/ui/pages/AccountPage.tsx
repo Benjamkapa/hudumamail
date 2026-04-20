@@ -77,7 +77,7 @@ export function AccountPage() {
             Tenant: <strong>{user.tenantName || 'N/A'}</strong>
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 0.5 }}>
-            Member since: <strong>{new Date(user.createdAt).toLocaleDateString()}</strong>
+            Member since: <strong>{new Date(user.createdAt || '').toLocaleDateString()}</strong>
           </Typography>
         </CardContent>
       </GlassCard>

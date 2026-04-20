@@ -13,6 +13,7 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  ListItemButton,
 } from "@mui/material";
 import {
   CodeRounded,
@@ -39,7 +40,7 @@ const shimmer = keyframes`
 `;
 
 // ─── Utility Components ───
-const GlassCard = ({ children, sx = {} }) => (
+const GlassCard = ({ children, sx = {} }: { children: React.ReactNode, sx?: any }) => (
   <Paper
     elevation={0}
     sx={{
@@ -57,7 +58,7 @@ const GlassCard = ({ children, sx = {} }) => (
   </Paper>
 );
 
-const CodeBlock = ({ code, language = "curl" }) => {
+const CodeBlock = ({ code, language = "curl" }: { code: string, language?: string }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -204,7 +205,7 @@ export const ApiDocsPage = () => {
       <Container maxWidth="xl" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <Box sx={{ position: "sticky", top: "100px" }}>
               <Typography
                 variant="overline"
@@ -216,8 +217,7 @@ export const ApiDocsPage = () => {
                 {sections.map((section) => (
                   <ListItem
                     key={section.id}
-                    button
-                    onClick={() => setActiveSection(section.id)}
+                    disablePadding
                     sx={{
                       borderRadius: "10px",
                       mb: 0.5,
@@ -230,13 +230,18 @@ export const ApiDocsPage = () => {
                       },
                     }}
                   >
-                    <ListItemIcon sx={{ color: "inherit", minWidth: "40px" }}>
-                      {React.cloneElement(section.icon, { fontSize: "small" })}
-                    </ListItemIcon>
-                    <ListItemText 
-                      primary={section.title} 
-                      primaryTypographyProps={{ fontWeight: activeSection === section.id ? 700 : 500, fontSize: "0.95rem" }} 
-                    />
+                    <ListItemButton
+                      onClick={() => setActiveSection(section.id)}
+                      sx={{ borderRadius: "10px", px: 2 }}
+                    >
+                      <ListItemIcon sx={{ color: "inherit", minWidth: "40px" }}>
+                        {React.cloneElement(section.icon as React.ReactElement, { fontSize: "small" })}
+                      </ListItemIcon>
+                      <ListItemText 
+                        primary={section.title} 
+                        primaryTypographyProps={{ fontWeight: activeSection === section.id ? 700 : 500, fontSize: "0.95rem" }} 
+                      />
+                    </ListItemButton>
                   </ListItem>
                 ))}
               </List>
@@ -254,7 +259,7 @@ export const ApiDocsPage = () => {
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }}>
             <Box sx={{ animation: `${fadeIn} 0.6s ease-out both` }}>
               
               {/* Authentication */}
@@ -314,7 +319,7 @@ export const ApiDocsPage = () => {
                         { name: "html", type: "string", desc: "HTML body content" },
                         { name: "tags", type: "array", desc: "Metadata tags for categorization" },
                       ].map((p) => (
-                        <Grid item xs={12} key={p.name}>
+                        <Grid size={{ xs: 12 }} key={p.name}>
                           <Stack direction="row" gap={2} alignItems="baseline">
                             <Typography sx={{ color: colors.primary, fontWeight: 700, minWidth: "80px", fontFamily: "monospace" }}>{p.name}</Typography>
                             <Typography sx={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", minWidth: "60px" }}>{p.type}</Typography>

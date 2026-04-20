@@ -76,7 +76,7 @@ const slideUp = keyframes`
 `;
 
 // ─── Scroll reveal ────────────────────────────────────────────────────────────
-function Reveal({ children, delay = 0, sx = {} }) {
+function Reveal({ children, delay = 0, sx = {} }: { children: React.ReactNode, delay?: number, sx?: any }) {
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
   useEffect(() => {
@@ -104,7 +104,7 @@ function Reveal({ children, delay = 0, sx = {} }) {
 }
 
 // ─── Count-up stat ────────────────────────────────────────────────────────────
-function CountUp({ end, prefix = "", suffix = "", decimals = 0, duration = 2200 }) {
+function CountUp({ end, prefix = "", suffix = "", decimals = 0, duration = 2200 }: { end: number, prefix?: string, suffix?: string, decimals?: number, duration?: number }) {
   const [display, setDisplay] = useState("0");
   const ref = useRef(null);
   const done = useRef(false);
@@ -116,7 +116,7 @@ function CountUp({ end, prefix = "", suffix = "", decimals = 0, duration = 2200 
         done.current = true;
         obs.disconnect();
         const t0 = performance.now();
-        const tick = (now) => {
+        const tick = (now: number) => {
           const p = Math.min((now - t0) / duration, 1);
           const eased = 1 - Math.pow(1 - p, 4);
           setDisplay((end * eased).toFixed(decimals));
@@ -228,13 +228,13 @@ const BrandIcons = {
 };
 
 // ─── Currency format ──────────────────────────────────────────────────────────
-function fmt(val, currency) {
+function fmt(val: number, currency: string) {
   if (currency === "USD") return val === 0 ? "$0" : `$${val.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   return `KES ${Math.round(val).toLocaleString("en-KE")}`;
 }
 
 // ─── Dashboard Preview ────────────────────────────────────────────────────────
-function DashboardPreview({ dark }) {
+function DashboardPreview({ dark }: { dark: boolean }) {
   const bg = dark ? "#0d0f14" : "#f8faff";
   const card = dark ? "#161b27" : "#ffffff";
   const border = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
@@ -249,15 +249,15 @@ function DashboardPreview({ dark }) {
   const peakIdx = bars.indexOf(Math.max(...bars));
   const yMax = 50;
   const SEGS = 13; const R = 36; const GCX = 46; const GCY = 46; const filled = 9;
-  const toRad = (d) => (d * Math.PI) / 180;
-  const segArc = (i) => {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const segArc = (i: number) => {
     const slot = 180 / SEGS; const s = 180 - i * slot; const e = 180 - (i + 1) * slot;
     const gap = (slot * 0.28) / 2; const ss = s - gap; const se = e + gap;
     const sx2 = GCX + R * Math.cos(toRad(ss)); const sy2 = GCY - R * Math.sin(toRad(ss));
     const ex2 = GCX + R * Math.cos(toRad(se)); const ey2 = GCY - R * Math.sin(toRad(se));
     return `M ${sx2.toFixed(1)} ${sy2.toFixed(1)} A ${R} ${R} 0 0 1 ${ex2.toFixed(1)} ${ey2.toFixed(1)}`;
   };
-  const blueAt = (i) => { const t = i / (filled - 1); return `rgb(${Math.round(29 + t * 118)},${Math.round(78 + t * 119)},${Math.round(216 + t * 37)})`; };
+  const blueAt = (i: number) => { const t = i / (filled - 1); return `rgb(${Math.round(29 + t * 118)},${Math.round(78 + t * 119)},${Math.round(216 + t * 37)})`; };
   const W = 620; const H = 200; const PL = 28; const PR = 6; const PT = 8; const PB = 18;
   const chartW = W - PL - PR; const chartH = H - PT - PB; const colW = chartW / 12; const barW = Math.floor(colW * 0.6);
 
@@ -415,9 +415,9 @@ function DashboardPreview({ dark }) {
 }
 
 // ─── Email Cost Calculator ────────────────────────────────────────────────────
-function EmailCalculator({ dark, currency, rate, surface, bord, bordH, txt, muted, dimmer, blue, cyan, green, font }) {
+function EmailCalculator({ dark, currency, rate, surface, bord, bordH, txt, muted, dimmer, blue, cyan, green, font }: any) {
   const [volume, setVolume] = useState(50000);
-  const monthlyUSD = (vol) => {
+  const monthlyUSD = (vol: number) => {
     if (vol <= 5000) return 0;
     const tiers = [{ max: 5000, price: 0 }, { max: 100000, price: 0.8 }, { max: 500000, price: 0.6 }, { max: 1000000, price: 0.45 }, { max: Infinity, price: 0.3 }];
     let cost = 0; let remaining = vol; let prev = 0;
@@ -543,7 +543,7 @@ export function LandingPage() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   const effectiveRate = usdToKesRate;
-  const price = (usd) => {
+  const price = (usd: number) => {
     if (currency === "USD") return usd === 0 ? "$0" : `$${usd}`;
     return usd === 0 ? "KES 0" : `KES ${Math.round(usd * effectiveRate).toLocaleString("en-KE")}`;
   };
@@ -591,7 +591,7 @@ export function LandingPage() {
     { label: "Blogs",      id: "blogs",      show: true, url: "/blogs" },
   ];
 
-  const scrollTo = useCallback((id) => {
+  const scrollTo = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
@@ -1017,7 +1017,7 @@ export function LandingPage() {
                 { name: "n8n", color: "#ea4b71" },
               ].map((intg) => (
                 <Box key={intg.name} sx={{ ...cardSx, p: 2.5, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 1, "&:hover": { borderColor: `${intg.color}50`, transform: "translateY(-3px)", boxShadow: `0 8px 24px ${intg.color}15` } }}>
-                  <Box sx={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center" }}>{BrandIcons[intg.name]}</Box>
+                  <Box sx={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center" }}>{(BrandIcons as any)[intg.name]}</Box>
                   <Typography sx={{ fontSize: 11, fontWeight: 700, color: muted, fontFamily: font }}>{intg.name}</Typography>
                 </Box>
               ))}
@@ -1120,7 +1120,7 @@ export function LandingPage() {
                       </Box>
                       {annual && plan.name !== "Trial" && <Typography sx={{ fontSize: 11, color: green, fontWeight: 700, fontFamily: font, mb: 0.5 }}>Save 20% with annual billing</Typography>}
                       <Typography sx={{ fontSize: 13, color: muted, mb: 3, lineHeight: 1.65, fontFamily: font }}>{plan.tagline}</Typography>
-                      <Button onClick={() => navigate(user ? "/app/dashboard" : "/register")} fullWidth variant={plan.ctaV}
+                      <Button onClick={() => navigate(user ? "/app/dashboard" : "/register")} fullWidth variant={plan.ctaV as any}
                         sx={plan.ctaV === "contained" ? { bgcolor: blue, color: "#fff", fontWeight: 800, py: 1.35, borderRadius: 2, fontFamily: font, boxShadow: `0 6px 22px ${blue}40`, mb: 3, "&:hover": { bgcolor: blueL } } : { borderColor: `${plan.accent}55`, color: plan.accent, fontWeight: 800, py: 1.35, borderRadius: 2, fontFamily: font, mb: 3, "&:hover": { borderColor: plan.accent, bgcolor: `${plan.accent}0d` } }}>
                         {plan.cta}
                       </Button>
