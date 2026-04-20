@@ -79,6 +79,7 @@ export const router = reactRouterDom.createBrowserRouter([
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
   { path: '/reset-password', element: <ResetPasswordPage /> },
   { path: '/docs', element: <ApiDocsPage /> },
+  // comming soon
   // { path: '/auth/google/callback', element: <GoogleCallbackPage /> },
   { path: '/403', element: <AccessDeniedPage /> },
   {
