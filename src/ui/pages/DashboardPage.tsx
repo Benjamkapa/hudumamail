@@ -556,7 +556,7 @@ export function DashboardPage() {
             <StatCard title="Emails sent (30d)" value={statsQuery.data?.emailsSent30d?.toLocaleString() ?? '—'} delta={{ value: '+9.1%', direction: 'up' }} icon={<MailOutlineIcon />} />
             <StatCard title="Delivery rate" value={statsQuery.data?.deliveryRate?.toFixed(1) ?? '—'} delta={{ value: '+0.6%', direction: 'up' }} icon={<VerifiedIcon />} />
             <StatCard title="Open rate" value={statsQuery.data?.openRate?.toFixed(1) ?? '—'} delta={{ value: '-1.2%', direction: 'down' }} icon={<TrendingUpIcon />} />
-            <StatCard title="Active campaigns" value={statsQuery.data?.activeCampaigns ?? '—'} delta={{ value: '+1', direction: 'up' }} icon={<CampaignIcon />} />
+            <StatCard title="Active campaigns" value={statsQuery.data?.activeCampaigns?.toString() ?? '—'} delta={{ value: '+1', direction: 'up' }} icon={<CampaignIcon />} />
           </>
         )}
 

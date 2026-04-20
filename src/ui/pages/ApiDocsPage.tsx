@@ -235,7 +235,7 @@ export const ApiDocsPage = () => {
                       sx={{ borderRadius: "10px", px: 2 }}
                     >
                       <ListItemIcon sx={{ color: "inherit", minWidth: "40px" }}>
-                        {React.cloneElement(section.icon as React.ReactElement, { fontSize: "small" })}
+                      {React.cloneElement(section.icon as any, { fontSize: "small" })}
                       </ListItemIcon>
                       <ListItemText 
                         primary={section.title} 

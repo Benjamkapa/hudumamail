@@ -64,7 +64,7 @@ const GlobalDomainsPage = lazy(() => import('../ui/pages/modules/platform-admin/
 const InfraPage         = lazy(() => import('../ui/pages/modules/platform-admin/infrastructure'));
 const HealthPage        = lazy(() => import('../ui/pages/modules/platform-admin/health'));
 
-const AuditLogsPage     = lazy(() => import('../ui/pages/modules/platform-admin/logs/index'));
+const AuditLogsPage     = lazy(() => import('../ui/pages/modules/platform-admin/shared-pages').then(m => ({ default: m.AuditLogsPage })));
 
 const ConfigPage        = lazy(() => import('../ui/pages/modules/platform-admin/config'));
 const CompliancePage    = lazy(() => import('../ui/pages/modules/platform-admin/compliance'));

@@ -512,7 +512,7 @@ export function LandingPage() {
   const { currency, setCurrency, usdToKesRate } = useCurrency();
   const [dark, setDark] = useState(muiTheme.palette.mode === "dark");
   const [annual, setAnnual] = useState(true);
-  const [openFaq, setOpenFaq] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -976,7 +976,7 @@ export function LandingPage() {
                 </Typography>
                 <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mt: 1 }}>
                   {(["USD", "KES"]).map((c) => (
-                    <Box key={c} onClick={() => setCurrency(c)}
+                    <Box key={c} onClick={() => setCurrency(c as any)}
                       sx={{ px: 2.5, py: 0.75, borderRadius: 99, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all .2s", fontFamily: font, bgcolor: currency === c ? (c === "KES" ? "rgba(34,197,94,0.12)" : blueDim) : "transparent", color: currency === c ? (c === "KES" ? green : blue) : muted, border: `1.5px solid ${currency === c ? (c === "KES" ? "#22c55e50" : `${blue}50`) : bord}` }}>
                       {c === "USD" ? "$ USD" : "KES"}
                     </Box>
@@ -1077,7 +1077,7 @@ export function LandingPage() {
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 2, flexWrap: "wrap", mb: 2 }}>
                   <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0, bgcolor: surfB, border: `1px solid ${bord}`, borderRadius: 99, p: 0.5 }}>
                     {(["USD", "KES"]).map((c) => (
-                      <Box key={c} onClick={() => setCurrency(c)}
+                      <Box key={c} onClick={() => setCurrency(c as any)}
                         sx={{ px: 2, py: 0.65, borderRadius: 99, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all .2s", fontFamily: font, bgcolor: currency === c ? (c === "KES" ? "#22c55e" : blue) : "transparent", color: currency === c ? "#fff" : muted, boxShadow: currency === c ? `0 2px 12px ${c === "KES" ? "#22c55e45" : `${blue}45`}` : "none" }}>
                         {c === "USD" ? "$ USD" : "KES"}
                       </Box>

@@ -221,7 +221,7 @@ export function HtmlEditorPage() {
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const editorRef          = useRef<any>(null);
   const monacoRef          = useRef<any>(null);
-  const debounceRef        = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef        = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [html,           setHtml]           = useState(STARTER_HTML);
   const [previewHtml,    setPreviewHtml]     = useState(STARTER_HTML);
