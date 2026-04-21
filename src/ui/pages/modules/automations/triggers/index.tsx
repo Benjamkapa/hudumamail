@@ -42,18 +42,18 @@ import {
   Stack, Switch, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import BoltIcon          from '@mui/icons-material/Bolt';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import BoltIcon from '@mui/icons-material/Bolt';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import SearchIcon        from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -75,42 +75,42 @@ type Trigger = {
 };
 
 type TriggerForm = { name: string; event: string; description: string; source: TriggerSource; };
-type Errors      = Partial<Record<keyof TriggerForm, string>>;
+type Errors = Partial<Record<keyof TriggerForm, string>>;
 
 // ─── Seed data ────────────────────────────────────────────────────────────────
 
 const SEED: Trigger[] = [
-  { id: 1, name: 'New subscriber',      event: 'contact.subscribed',       description: 'Fires when a contact is added to any list',             source: 'Platform',    linkedFlows: 2, active: true,  firedToday: 34,  createdAt: 'Jun 1, 2025'  },
-  { id: 2, name: 'Purchase completed',  event: 'ecommerce.purchase',       description: 'Fires on a confirmed purchase from the connected store', source: 'Integration', linkedFlows: 1, active: true,  firedToday: 12,  createdAt: 'Jun 15, 2025' },
-  { id: 3, name: 'Link clicked',        event: 'campaign.link_clicked',    description: 'Fires when a contact clicks any link in a campaign',    source: 'Platform',    linkedFlows: 1, active: false, firedToday: 0,   createdAt: 'Jul 1, 2025'  },
-  { id: 4, name: 'Form submitted',      event: 'form.submitted',           description: 'Fires when a contact submits an embedded signup form',  source: 'Platform',    linkedFlows: 0, active: false, firedToday: 0,   createdAt: 'Jul 14, 2025' },
-  { id: 5, name: 'Cart abandoned',      event: 'ecommerce.cart_abandoned', description: 'Fires when a cart session expires without checkout',    source: 'Integration', linkedFlows: 1, active: true,  firedToday: 8,   createdAt: 'Jul 10, 2025' },
-  { id: 6, name: 'API custom event',    event: 'custom.event',             description: 'Fires when your backend POSTs to the events endpoint',  source: 'API',         linkedFlows: 0, active: false, firedToday: 0,   createdAt: 'Jul 15, 2025' },
+  { id: 1, name: 'New subscriber', event: 'contact.subscribed', description: 'Fires when a contact is added to any list', source: 'Platform', linkedFlows: 2, active: true, firedToday: 34, createdAt: 'Jun 1, 2025' },
+  { id: 2, name: 'Purchase completed', event: 'ecommerce.purchase', description: 'Fires on a confirmed purchase from the connected store', source: 'Integration', linkedFlows: 1, active: true, firedToday: 12, createdAt: 'Jun 15, 2025' },
+  { id: 3, name: 'Link clicked', event: 'campaign.link_clicked', description: 'Fires when a contact clicks any link in a campaign', source: 'Platform', linkedFlows: 1, active: false, firedToday: 0, createdAt: 'Jul 1, 2025' },
+  { id: 4, name: 'Form submitted', event: 'form.submitted', description: 'Fires when a contact submits an embedded signup form', source: 'Platform', linkedFlows: 0, active: false, firedToday: 0, createdAt: 'Jul 14, 2025' },
+  { id: 5, name: 'Cart abandoned', event: 'ecommerce.cart_abandoned', description: 'Fires when a cart session expires without checkout', source: 'Integration', linkedFlows: 1, active: true, firedToday: 8, createdAt: 'Jul 10, 2025' },
+  { id: 6, name: 'API custom event', event: 'custom.event', description: 'Fires when your backend POSTs to the events endpoint', source: 'API', linkedFlows: 0, active: false, firedToday: 0, createdAt: 'Jul 15, 2025' },
 ];
 
 const EVENTS = [
-  { label: 'Contact subscribed',    event: 'contact.subscribed'       },
-  { label: 'Contact unsubscribed',  event: 'contact.unsubscribed'     },
-  { label: 'Purchase completed',    event: 'ecommerce.purchase'       },
-  { label: 'Cart abandoned',        event: 'ecommerce.cart_abandoned' },
-  { label: 'No open in 90 days',    event: 'contact.inactive_90d'     },
-  { label: 'Birthday date match',   event: 'contact.birthday'         },
-  { label: 'Link clicked in email', event: 'campaign.link_clicked'    },
-  { label: 'Form submitted',        event: 'form.submitted'           },
-  { label: 'Tag added to contact',  event: 'contact.tag_added'        },
-  { label: 'Custom API event',      event: 'custom.event'             },
+  { label: 'Contact subscribed', event: 'contact.subscribed' },
+  { label: 'Contact unsubscribed', event: 'contact.unsubscribed' },
+  { label: 'Purchase completed', event: 'ecommerce.purchase' },
+  { label: 'Cart abandoned', event: 'ecommerce.cart_abandoned' },
+  { label: 'No open in 90 days', event: 'contact.inactive_90d' },
+  { label: 'Birthday date match', event: 'contact.birthday' },
+  { label: 'Link clicked in email', event: 'campaign.link_clicked' },
+  { label: 'Form submitted', event: 'form.submitted' },
+  { label: 'Tag added to contact', event: 'contact.tag_added' },
+  { label: 'Custom API event', event: 'custom.event' },
 ];
 
 const SOURCES: TriggerSource[] = ['Platform', 'API', 'Webhook', 'Integration'];
-const SOURCE_COLOR: Record<TriggerSource, 'primary'|'secondary'|'warning'|'success'> = {
+const SOURCE_COLOR: Record<TriggerSource, 'primary' | 'secondary' | 'warning' | 'success'> = {
   Platform: 'primary', API: 'secondary', Webhook: 'warning', Integration: 'success',
 };
 const EMPTY: TriggerForm = { name: '', event: '', description: '', source: 'Platform' };
 
 function validate(f: TriggerForm): Errors {
   const e: Errors = {};
-  if (!f.name.trim()) e.name  = 'Trigger name is required';
-  if (!f.event)       e.event = 'Select an event type';
+  if (!f.name.trim()) e.name = 'Trigger name is required';
+  if (!f.event) e.event = 'Select an event type';
   return e;
 }
 
@@ -120,7 +120,7 @@ function TriggerModal({ open, onClose, editing, onSaved }: {
   open: boolean; onClose: () => void; editing: Trigger | null;
   onSaved: (t: Trigger, isEdit: boolean) => void;
 }) {
-  const [form, setForm]     = useState<TriggerForm>(EMPTY);
+  const [form, setForm] = useState<TriggerForm>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [saving, setSaving] = useState(false);
 
@@ -205,7 +205,7 @@ function TriggerModal({ open, onClose, editing, onSaved }: {
           <FormControl fullWidth>
             <InputLabel>Event source</InputLabel>
             <Select value={form.source} label="Event source" onChange={e => set('source', e.target.value as TriggerSource)}>
-              <MenuItem value="Platform">Platform — fired by BulkEmail internally</MenuItem>
+              <MenuItem value="Platform">Platform — fired by ChapMail internally</MenuItem>
               <MenuItem value="API">API — your backend fires it via REST</MenuItem>
               <MenuItem value="Webhook">Webhook — incoming POST from a third party</MenuItem>
               <MenuItem value="Integration">Integration — from a connected app (Shopify etc.)</MenuItem>
@@ -229,13 +229,13 @@ function TriggerModal({ open, onClose, editing, onSaved }: {
 
 export function AutomationTriggersPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [triggers,  setTriggers]  = useState<Trigger[]>(SEED);
-  const [search,    setSearch]    = useState('');
+  const [triggers, setTriggers] = useState<Trigger[]>(SEED);
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing,   setEditing]   = useState<Trigger | null>(null);
-  const [toDelete,  setToDelete]  = useState<Trigger | null>(null);
+  const [editing, setEditing] = useState<Trigger | null>(null);
+  const [toDelete, setToDelete] = useState<Trigger | null>(null);
 
   const displayed = useMemo(() =>
     triggers.filter(t =>
@@ -248,13 +248,13 @@ export function AutomationTriggersPage() {
   }, []);
 
   const handleToggle = useCallback(async (t: Trigger) => {
-    try { await apiFetch('PATCH', `/api/automations/triggers/${t.id}`, { active: !t.active }); } catch {}
+    try { await apiFetch('PATCH', `/api/automations/triggers/${t.id}`, { active: !t.active }); } catch { }
     setTriggers(prev => prev.map(x => x.id === t.id ? { ...x, active: !x.active } : x));
   }, []);
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/automations/triggers/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/automations/triggers/${toDelete.id}`); } catch { }
     setTriggers(prev => prev.filter(t => t.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);
@@ -281,10 +281,10 @@ export function AutomationTriggersPage() {
       {/* Summary */}
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
         {[
-          { label: 'Active triggers',  value: triggers.filter(t=>t.active).length,                          color: 'success.main' },
-          { label: 'Total triggers',   value: triggers.length,                                               color: undefined      },
-          { label: 'Fired today',      value: totalFiredToday.toLocaleString(),                              color: undefined      },
-          { label: 'Linked flows',     value: triggers.reduce((a,t)=>a+t.linkedFlows,0).toLocaleString(),   color: undefined      },
+          { label: 'Active triggers', value: triggers.filter(t => t.active).length, color: 'success.main' },
+          { label: 'Total triggers', value: triggers.length, color: undefined },
+          { label: 'Fired today', value: totalFiredToday.toLocaleString(), color: undefined },
+          { label: 'Linked flows', value: triggers.reduce((a, t) => a + t.linkedFlows, 0).toLocaleString(), color: undefined },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>

@@ -7,17 +7,17 @@ import {
   Stack, Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import PlayArrowIcon     from '@mui/icons-material/PlayArrow';
-import ScienceIcon       from '@mui/icons-material/Science';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ScienceIcon from '@mui/icons-material/Science';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const BASE = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const BASE = () => (import.meta as any).env?.VITE_API_URL;
 
 type ABStatus = 'draft' | 'running' | 'completed';
 
@@ -33,28 +33,34 @@ type ABForm = { name: string; listName: string; subjectA: string; subjectB: stri
 type Errors = Partial<Record<keyof ABForm, string>>;
 
 const SEED: ABTest[] = [
-  { id: 1, name: 'Subject line — Summer Sale', listName: 'All Subscribers', splitPct: 50, status: 'completed',
-    variantA: { subject: '☀️ Summer deals — up to 50% off',       openRate: 34.2, sent: 2105 },
-    variantB: { subject: '🔥 Limited time: 50% off everything',   openRate: 41.8, sent: 2105 },
-    winner: 'B', startedAt: 'Jul 10, 2025' },
-  { id: 2, name: 'From-name test — Newsletter', listName: 'Newsletter List', splitPct: 50, status: 'running',
-    variantA: { subject: 'Weekly digest from Acme Team',            openRate: 38.1, sent: 750 },
-    variantB: { subject: 'Weekly digest from Alex @ Acme',          openRate: 35.4, sent: 750 },
-    winner: null, startedAt: 'Jul 14, 2025' },
-  { id: 3, name: 'CTA test — Onboarding email', listName: 'New Signups', splitPct: 50, status: 'draft',
-    variantA: { subject: 'Welcome — get started today',             openRate: 0, sent: 0 },
-    variantB: { subject: "Welcome — here's your first step",        openRate: 0, sent: 0 },
-    winner: null, startedAt: '—' },
+  {
+    id: 1, name: 'Subject line — Summer Sale', listName: 'All Subscribers', splitPct: 50, status: 'completed',
+    variantA: { subject: '☀️ Summer deals — up to 50% off', openRate: 34.2, sent: 2105 },
+    variantB: { subject: '🔥 Limited time: 50% off everything', openRate: 41.8, sent: 2105 },
+    winner: 'B', startedAt: 'Jul 10, 2025'
+  },
+  {
+    id: 2, name: 'From-name test — Newsletter', listName: 'Newsletter List', splitPct: 50, status: 'running',
+    variantA: { subject: 'Weekly digest from Acme Team', openRate: 38.1, sent: 750 },
+    variantB: { subject: 'Weekly digest from Alex @ Acme', openRate: 35.4, sent: 750 },
+    winner: null, startedAt: 'Jul 14, 2025'
+  },
+  {
+    id: 3, name: 'CTA test — Onboarding email', listName: 'New Signups', splitPct: 50, status: 'draft',
+    variantA: { subject: 'Welcome — get started today', openRate: 0, sent: 0 },
+    variantB: { subject: "Welcome — here's your first step", openRate: 0, sent: 0 },
+    winner: null, startedAt: '—'
+  },
 ];
 
-const LISTS = ['All Subscribers','Active Users','Newsletter List','New Signups','VIP Customers'];
-const EMPTY: ABForm = { name:'', listName:'', subjectA:'', subjectB:'', splitPct:'50' };
-const STATUS_COLOR: Record<ABStatus, 'success'|'info'|'default'> = { completed:'success', running:'info', draft:'default' };
+const LISTS = ['All Subscribers', 'Active Users', 'Newsletter List', 'New Signups', 'VIP Customers'];
+const EMPTY: ABForm = { name: '', listName: '', subjectA: '', subjectB: '', splitPct: '50' };
+const STATUS_COLOR: Record<ABStatus, 'success' | 'info' | 'default'> = { completed: 'success', running: 'info', draft: 'default' };
 
 function validate(f: ABForm): Errors {
   const e: Errors = {};
-  if (!f.name.trim())    e.name    = 'Required';
-  if (!f.listName)       e.listName = 'Select a list';
+  if (!f.name.trim()) e.name = 'Required';
+  if (!f.listName) e.listName = 'Select a list';
   if (!f.subjectA.trim()) e.subjectA = 'Required';
   if (!f.subjectB.trim()) e.subjectB = 'Required';
   else if (f.subjectA === f.subjectB) e.subjectB = 'Variants must differ';
@@ -67,7 +73,7 @@ function ABModal({ open, onClose, onSaved }: {
   open: boolean; onClose: () => void;
   onSaved: (t: ABTest) => void;
 }) {
-  const [form,   setForm]   = useState<ABForm>(EMPTY);
+  const [form, setForm] = useState<ABForm>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [saving, setSaving] = useState(false);
 
@@ -88,7 +94,7 @@ function ABModal({ open, onClose, onSaved }: {
         body: JSON.stringify({ ...form, splitPct: Number(form.splitPct), status: 'draft' }),
       });
       if (res.ok) { onSaved(await res.json()); handleClose(); setSaving(false); return; }
-    } catch {}
+    } catch { }
     const fallback: ABTest = {
       id: Date.now(), name: form.name, listName: form.listName,
       splitPct: Number(form.splitPct), status: 'draft',
@@ -161,11 +167,11 @@ function ABModal({ open, onClose, onSaved }: {
 
 export function CampaignsAbTestsPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [tests,     setTests]     = useState<ABTest[]>(SEED);
+  const [tests, setTests] = useState<ABTest[]>(SEED);
   const [modalOpen, setModalOpen] = useState(false);
-  const [toDelete,  setToDelete]  = useState<ABTest | null>(null);
+  const [toDelete, setToDelete] = useState<ABTest | null>(null);
 
   const handleSaved = useCallback((t: ABTest) => {
     setTests(prev => [t, ...prev]);
@@ -179,13 +185,13 @@ export function CampaignsAbTestsPage() {
         body: JSON.stringify({ status: 'running' }),
       });
       if (res.ok) { setTests(prev => prev.map(x => x.id === t.id ? { ...x, status: 'running', startedAt: new Date().toLocaleDateString() } : x)); return; }
-    } catch {}
+    } catch { }
     setTests(prev => prev.map(x => x.id === t.id ? { ...x, status: 'running', startedAt: new Date().toLocaleDateString() } : x));
   }, []);
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await fetch(`${BASE()}/api/campaigns/ab-tests/${toDelete.id}`, { method: 'DELETE', credentials: 'include' }); } catch {}
+    try { await fetch(`${BASE()}/api/campaigns/ab-tests/${toDelete.id}`, { method: 'DELETE', credentials: 'include' }); } catch { }
     setTests(prev => prev.filter(t => t.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);
@@ -254,7 +260,7 @@ export function CampaignsAbTestsPage() {
 
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
             {(['A', 'B'] as const).map(v => {
-              const variant  = v === 'A' ? test.variantA : test.variantB;
+              const variant = v === 'A' ? test.variantA : test.variantB;
               const isWinner = test.winner === v;
               return (
                 <Box key={v} sx={{ p: 2, borderRadius: 1.5, border: 2, borderColor: isWinner ? 'success.main' : 'divider', position: 'relative' }}>

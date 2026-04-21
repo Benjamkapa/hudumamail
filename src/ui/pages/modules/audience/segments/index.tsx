@@ -37,19 +37,19 @@ import {
   Stack, Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import FilterListIcon    from '@mui/icons-material/FilterList';
-import RefreshIcon       from '@mui/icons-material/Refresh';
-import SearchIcon        from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -63,7 +63,7 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type ConditionField    = 'opened_campaigns' | 'last_open_days' | 'added_days_ago' | 'click_rate' | 'tag' | 'list' | 'status' | 'country';
+type ConditionField = 'opened_campaigns' | 'last_open_days' | 'added_days_ago' | 'click_rate' | 'tag' | 'list' | 'status' | 'country';
 type ConditionOperator = 'greater_than' | 'less_than' | 'equals' | 'not_equals' | 'contains' | 'not_contains';
 
 type Condition = {
@@ -89,56 +89,66 @@ type Errors = Partial<Record<keyof SegmentForm, string>>;
 // ─── Condition options ────────────────────────────────────────────────────────
 
 const FIELDS: { value: ConditionField; label: string }[] = [
-  { value: 'opened_campaigns', label: 'Campaigns opened (count)'  },
-  { value: 'last_open_days',   label: 'Days since last open'      },
-  { value: 'added_days_ago',   label: 'Days since contact added'  },
-  { value: 'click_rate',       label: 'Overall click rate (%)'    },
-  { value: 'tag',              label: 'Has tag'                   },
-  { value: 'list',             label: 'Belongs to list'           },
-  { value: 'status',           label: 'Subscription status'       },
-  { value: 'country',          label: 'Country'                   },
+  { value: 'opened_campaigns', label: 'Campaigns opened (count)' },
+  { value: 'last_open_days', label: 'Days since last open' },
+  { value: 'added_days_ago', label: 'Days since contact added' },
+  { value: 'click_rate', label: 'Overall click rate (%)' },
+  { value: 'tag', label: 'Has tag' },
+  { value: 'list', label: 'Belongs to list' },
+  { value: 'status', label: 'Subscription status' },
+  { value: 'country', label: 'Country' },
 ];
 
 const OPERATORS: { value: ConditionOperator; label: string }[] = [
-  { value: 'greater_than',  label: 'is greater than'  },
-  { value: 'less_than',     label: 'is less than'     },
-  { value: 'equals',        label: 'is equal to'      },
-  { value: 'not_equals',    label: 'is not equal to'  },
-  { value: 'contains',      label: 'contains'         },
-  { value: 'not_contains',  label: 'does not contain' },
+  { value: 'greater_than', label: 'is greater than' },
+  { value: 'less_than', label: 'is less than' },
+  { value: 'equals', label: 'is equal to' },
+  { value: 'not_equals', label: 'is not equal to' },
+  { value: 'contains', label: 'contains' },
+  { value: 'not_contains', label: 'does not contain' },
 ];
 
 // ─── Seed data ────────────────────────────────────────────────────────────────
 
 const SEED: Segment[] = [
-  { id: 1, name: 'High-value subscribers', description: 'Contacts who are actively engaged with campaigns',
+  {
+    id: 1, name: 'High-value subscribers', description: 'Contacts who are actively engaged with campaigns',
     conditions: [{ field: 'opened_campaigns', operator: 'greater_than', value: '5' }],
-    conditionSummary: 'Campaigns opened > 5', count: 1240, lastRefreshed: 'Jul 14, 2025' },
-  { id: 2, name: 'Inactive 90 days', description: 'Contacts who have not opened any email in 90 days',
+    conditionSummary: 'Campaigns opened > 5', count: 1240, lastRefreshed: 'Jul 14, 2025'
+  },
+  {
+    id: 2, name: 'Inactive 90 days', description: 'Contacts who have not opened any email in 90 days',
     conditions: [{ field: 'last_open_days', operator: 'greater_than', value: '90' }],
-    conditionSummary: 'Days since last open > 90', count: 870, lastRefreshed: 'Jul 13, 2025' },
-  { id: 3, name: 'Recent sign-ups', description: 'Contacts added to the system in the last 30 days',
+    conditionSummary: 'Days since last open > 90', count: 870, lastRefreshed: 'Jul 13, 2025'
+  },
+  {
+    id: 3, name: 'Recent sign-ups', description: 'Contacts added to the system in the last 30 days',
     conditions: [{ field: 'added_days_ago', operator: 'less_than', value: '30' }],
-    conditionSummary: 'Added less than 30 days ago', count: 430, lastRefreshed: 'Jul 15, 2025' },
-  { id: 4, name: 'Clicked any link', description: 'Contacts with a click rate above 0 across all campaigns',
+    conditionSummary: 'Added less than 30 days ago', count: 430, lastRefreshed: 'Jul 15, 2025'
+  },
+  {
+    id: 4, name: 'Clicked any link', description: 'Contacts with a click rate above 0 across all campaigns',
     conditions: [{ field: 'click_rate', operator: 'greater_than', value: '0' }],
-    conditionSummary: 'Click rate > 0%', count: 2100, lastRefreshed: 'Jul 10, 2025' },
-  { id: 5, name: 'VIP customers', description: 'Contacts tagged as VIP',
+    conditionSummary: 'Click rate > 0%', count: 2100, lastRefreshed: 'Jul 10, 2025'
+  },
+  {
+    id: 5, name: 'VIP customers', description: 'Contacts tagged as VIP',
     conditions: [{ field: 'tag', operator: 'equals', value: 'vip' }],
-    conditionSummary: 'Tag equals "vip"', count: 312, lastRefreshed: 'Jul 12, 2025' },
+    conditionSummary: 'Tag equals "vip"', count: 312, lastRefreshed: 'Jul 12, 2025'
+  },
 ];
 
 const EMPTY_FORM: SegmentForm = { name: '', description: '', field: 'opened_campaigns', operator: 'greater_than', value: '' };
 
 function validate(f: SegmentForm): Errors {
   const e: Errors = {};
-  if (!f.name.trim()) e.name  = 'Segment name is required';
+  if (!f.name.trim()) e.name = 'Segment name is required';
   if (!f.value.trim()) e.value = 'Enter a value for the condition';
   return e;
 }
 
 function buildSummary(f: SegmentForm): string {
-  const fieldLabel    = FIELDS.find(x => x.value === f.field)?.label ?? f.field;
+  const fieldLabel = FIELDS.find(x => x.value === f.field)?.label ?? f.field;
   const operatorLabel = OPERATORS.find(x => x.value === f.operator)?.label ?? f.operator;
   return `${fieldLabel} ${operatorLabel} "${f.value}"`;
 }
@@ -149,7 +159,7 @@ function SegmentModal({ open, onClose, editing, onSaved }: {
   open: boolean; onClose: () => void; editing: Segment | null;
   onSaved: (s: Segment, isEdit: boolean) => void;
 }) {
-  const [form, setForm]     = useState<SegmentForm>(EMPTY_FORM);
+  const [form, setForm] = useState<SegmentForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<Errors>({});
   const [saving, setSaving] = useState(false);
 
@@ -161,9 +171,9 @@ function SegmentModal({ open, onClose, editing, onSaved }: {
       const c = editing.conditions[0];
       setForm({
         name: editing.name, description: editing.description,
-        field:    (c?.field    ?? 'opened_campaigns') as ConditionField,
-        operator: (c?.operator ?? 'greater_than')     as ConditionOperator,
-        value:    c?.value ?? '',
+        field: (c?.field ?? 'opened_campaigns') as ConditionField,
+        operator: (c?.operator ?? 'greater_than') as ConditionOperator,
+        value: c?.value ?? '',
       });
     } else {
       setForm(EMPTY_FORM);
@@ -279,13 +289,13 @@ function SegmentModal({ open, onClose, editing, onSaved }: {
 
 export function SegmentsPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [segments,  setSegments]  = useState<Segment[]>(SEED);
-  const [search,    setSearch]    = useState('');
+  const [segments, setSegments] = useState<Segment[]>(SEED);
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing,   setEditing]   = useState<Segment | null>(null);
-  const [toDelete,  setToDelete]  = useState<Segment | null>(null);
+  const [editing, setEditing] = useState<Segment | null>(null);
+  const [toDelete, setToDelete] = useState<Segment | null>(null);
 
   const displayed = useMemo(() =>
     segments.filter(s =>
@@ -311,7 +321,7 @@ export function SegmentsPage() {
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/segments/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/segments/${toDelete.id}`); } catch { }
     setSegments(prev => prev.filter(s => s.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);

@@ -29,7 +29,7 @@ import EditIcon          from '@mui/icons-material/Edit';
 import SearchIcon        from '@mui/icons-material/Search';
 import { GlassCard } from '../../../../dashboard/GlassCard';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',

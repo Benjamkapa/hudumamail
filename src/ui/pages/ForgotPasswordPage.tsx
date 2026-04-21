@@ -16,14 +16,32 @@ type FormValues = z.infer<typeof schema>;
 
 export function ForgotPasswordPage() {
   const nav = useNavigate();
-  const [resetToken, setResetToken] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { email: '' } });
+
+  if (isSuccess) {
+    return (
+      <AuthSplitLayout title="Check your inbox" bullets={['Reset instructions sent', 'Secure link generated', 'Check spam folder'] as string[]}>
+        <Stack spacing={3} alignItems="center" sx={{ py: 4 }}>
+          <Stack spacing={1} alignItems="center">
+            <Typography variant="h5" sx={{ fontWeight: 800 }}>Check your email</Typography>
+            <Typography variant="body1" textAlign="center" color="text.secondary">
+              If an account exists for that email, we've sent instructions to reset your password.
+            </Typography>
+          </Stack>
+          <Button variant="contained" fullWidth onClick={() => nav('/login')}>
+            Back to Login
+          </Button>
+        </Stack>
+      </AuthSplitLayout>
+    );
+  }
 
   return (
 <AuthSplitLayout title="Account recovery" bullets={['Encrypted reset links', 'Fast identity verification', 'System integrity check'] as string[]}>
@@ -40,10 +58,9 @@ export function ForgotPasswordPage() {
             <form
               onSubmit={handleSubmit(async (values) => {
                 setServerError(null);
-                setResetToken(null);
                 try {
-                  const res = await forgotPasswordApi(values);
-                  if (res.resetToken) setResetToken(res.resetToken);
+                  await forgotPasswordApi(values);
+                  setIsSuccess(true);
                 } catch (e: any) {
                   setServerError(e?.response?.data?.error ?? 'Failed to request reset');
                 }
@@ -58,15 +75,6 @@ export function ForgotPasswordPage() {
             </form>
 
             {serverError && <Alert severity="error">{serverError}</Alert>}
-
-            {resetToken && (
-              <Alert severity="info">
-                Dev mode token: <code>{resetToken}</code>{' '}
-                <Link component="button" onClick={() => nav(`/reset-password?token=${encodeURIComponent(resetToken)}`)} underline="hover">
-                  Continue
-                </Link>
-              </Alert>
-            )}
 
             <Divider />
             <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', mt: 1 }}>

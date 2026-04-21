@@ -37,32 +37,32 @@ import {
   DialogActions,
 } from '@mui/material';
 
-import ArrowBackIcon       from '@mui/icons-material/ArrowBack';
-import CheckIcon           from '@mui/icons-material/Check';
-import CodeIcon            from '@mui/icons-material/Code';
-import ComputerIcon        from '@mui/icons-material/Computer';
-import ExpandIcon          from '@mui/icons-material/Fullscreen';
-import CollapseIcon        from '@mui/icons-material/FullscreenExit';
-import ImageIcon           from '@mui/icons-material/Image';
-import LinkIcon            from '@mui/icons-material/Link';
-import PhoneAndroidIcon    from '@mui/icons-material/PhoneAndroid';
-import RefreshIcon         from '@mui/icons-material/Refresh';
-import SaveIcon            from '@mui/icons-material/Save';
-import SendIcon            from '@mui/icons-material/Send';
-import TabletIcon          from '@mui/icons-material/Tablet';
-import TextFieldsIcon      from '@mui/icons-material/TextFields';
-import WarningAmberIcon    from '@mui/icons-material/WarningAmber';
-import FormatBoldIcon      from '@mui/icons-material/FormatBold';
-import FormatItalicIcon    from '@mui/icons-material/FormatItalic';
-import HelpOutlineIcon     from '@mui/icons-material/HelpOutline';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CheckIcon from '@mui/icons-material/Check';
+import CodeIcon from '@mui/icons-material/Code';
+import ComputerIcon from '@mui/icons-material/Computer';
+import ExpandIcon from '@mui/icons-material/Fullscreen';
+import CollapseIcon from '@mui/icons-material/FullscreenExit';
+import ImageIcon from '@mui/icons-material/Image';
+import LinkIcon from '@mui/icons-material/Link';
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SaveIcon from '@mui/icons-material/Save';
+import SendIcon from '@mui/icons-material/Send';
+import TabletIcon from '@mui/icons-material/Tablet';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import FormatBoldIcon from '@mui/icons-material/FormatBold';
+import FormatItalicIcon from '@mui/icons-material/FormatItalic';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useAuth } from '../../../../../state/auth/useAuth';
-import { Role }    from '../../../../../types/auth';
+import { Role } from '../../../../../types/auth';
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
@@ -150,24 +150,24 @@ const STARTER_HTML = `<!DOCTYPE html>
 // ─── Common template variables ─────────────────────────────────────────────────
 
 const TEMPLATE_VARS = [
-  { label: '{{first_name}}',      desc: 'Recipient first name' },
-  { label: '{{last_name}}',       desc: 'Recipient last name' },
-  { label: '{{email}}',           desc: 'Recipient email' },
-  { label: '{{company_name}}',    desc: 'Your company name' },
+  { label: '{{first_name}}', desc: 'Recipient first name' },
+  { label: '{{last_name}}', desc: 'Recipient last name' },
+  { label: '{{email}}', desc: 'Recipient email' },
+  { label: '{{company_name}}', desc: 'Your company name' },
   { label: '{{unsubscribe_url}}', desc: 'Unsubscribe link' },
-  { label: '{{preview_url}}',     desc: 'View in browser link' },
-  { label: '{{cta_url}}',         desc: 'Call-to-action URL' },
-  { label: '{{cta_text}}',        desc: 'Call-to-action label' },
-  { label: '{{year}}',            desc: 'Current year' },
-  { label: '{{privacy_url}}',     desc: 'Privacy policy URL' },
+  { label: '{{preview_url}}', desc: 'View in browser link' },
+  { label: '{{cta_url}}', desc: 'Call-to-action URL' },
+  { label: '{{cta_text}}', desc: 'Call-to-action label' },
+  { label: '{{year}}', desc: 'Current year' },
+  { label: '{{privacy_url}}', desc: 'Privacy policy URL' },
 ];
 
 type PreviewWidth = 'desktop' | 'tablet' | 'mobile';
 
 const PREVIEW_WIDTHS: Record<PreviewWidth, number> = {
   desktop: 800,
-  tablet:  600,
-  mobile:  375,
+  tablet: 600,
+  mobile: 375,
 };
 
 // ─── Monaco loader ────────────────────────────────────────────────────────────
@@ -194,7 +194,7 @@ function loadMonaco(): Promise<any> {
     }
     // AMD loader
     const loader = document.createElement('script');
-    loader.id  = 'monaco-loader';
+    loader.id = 'monaco-loader';
     loader.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js';
     loader.onload = () => {
       window.require.config({
@@ -212,31 +212,31 @@ function loadMonaco(): Promise<any> {
 // ─── HtmlEditorPage ───────────────────────────────────────────────────────────
 
 export function HtmlEditorPage() {
-  const { user }         = useAuth();
-  const navigate         = useNavigate();
-  const [params]         = useSearchParams();
-  const templateId       = params.get('id');
-  const canEdit          = user?.role !== Role.CLIENT_USER;
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const templateId = params.get('id');
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
   const editorContainerRef = useRef<HTMLDivElement>(null);
-  const editorRef          = useRef<any>(null);
-  const monacoRef          = useRef<any>(null);
-  const debounceRef        = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const editorRef = useRef<any>(null);
+  const monacoRef = useRef<any>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  const [html,           setHtml]           = useState(STARTER_HTML);
-  const [previewHtml,    setPreviewHtml]     = useState(STARTER_HTML);
-  const [previewWidth,   setPreviewWidth]    = useState<PreviewWidth>('desktop');
-  const [fullscreen,     setFullscreen]      = useState(false);
-  const [editorReady,    setEditorReady]     = useState(false);
-  const [loadingTpl,     setLoadingTpl]      = useState(Boolean(templateId));
-  const [templateName,   setTemplateName]    = useState('Untitled template');
-  const [saving,         setSaving]          = useState(false);
-  const [snack,          setSnack]           = useState<{ msg: string; sev: 'success'|'error' } | null>(null);
-  const [dirty,          setDirty]           = useState(false);
-  const [varAnchor,      setVarAnchor]       = useState<null | HTMLElement>(null);
-  const [linkOpen,       setLinkOpen]        = useState(false);
-  const [linkHref,       setLinkHref]        = useState('');
-  const [linkText,       setLinkText]        = useState('');
+  const [html, setHtml] = useState(STARTER_HTML);
+  const [previewHtml, setPreviewHtml] = useState(STARTER_HTML);
+  const [previewWidth, setPreviewWidth] = useState<PreviewWidth>('desktop');
+  const [fullscreen, setFullscreen] = useState(false);
+  const [editorReady, setEditorReady] = useState(false);
+  const [loadingTpl, setLoadingTpl] = useState(Boolean(templateId));
+  const [templateName, setTemplateName] = useState('Untitled template');
+  const [saving, setSaving] = useState(false);
+  const [snack, setSnack] = useState<{ msg: string; sev: 'success' | 'error' } | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [varAnchor, setVarAnchor] = useState<null | HTMLElement>(null);
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkHref, setLinkHref] = useState('');
+  const [linkText, setLinkText] = useState('');
 
   // ── Load template ──
   useEffect(() => {
@@ -282,31 +282,31 @@ export function HtmlEditorPage() {
         inherit: true,
         rules: [
           { token: 'template-variable', foreground: 'fbbf24', fontStyle: 'bold' },
-          { token: 'tag',               foreground: '7dd3fc' },
-          { token: 'attribute.name',    foreground: 'a5b4fc' },
-          { token: 'attribute.value',   foreground: '86efac' },
-          { token: 'comment',           foreground: '6b7280', fontStyle: 'italic' },
+          { token: 'tag', foreground: '7dd3fc' },
+          { token: 'attribute.name', foreground: 'a5b4fc' },
+          { token: 'attribute.value', foreground: '86efac' },
+          { token: 'comment', foreground: '6b7280', fontStyle: 'italic' },
         ],
         colors: { 'editor.background': '#0f172a' },
       });
 
       const editor = monaco.editor.create(editorContainerRef.current!, {
-        value:             html,
-        language:          'html',
-        theme:             'email-dark',
-        fontSize:          13,
-        lineHeight:        20,
-        wordWrap:          'on',
-        minimap:           { enabled: false },
+        value: html,
+        language: 'html',
+        theme: 'email-dark',
+        fontSize: 13,
+        lineHeight: 20,
+        wordWrap: 'on',
+        minimap: { enabled: false },
         scrollBeyondLastLine: false,
-        formatOnPaste:     true,
-        automaticLayout:   true,
-        readOnly:          !canEdit,
+        formatOnPaste: true,
+        automaticLayout: true,
+        readOnly: !canEdit,
         renderLineHighlight: 'gutter',
-        padding:           { top: 16 },
-        fontFamily:        '"Fira Code", "JetBrains Mono", "Cascadia Code", monospace',
-        fontLigatures:     true,
-        tabSize:           2,
+        padding: { top: 16 },
+        fontFamily: '"Fira Code", "JetBrains Mono", "Cascadia Code", monospace',
+        fontLigatures: true,
+        tabSize: 2,
       });
 
       editorRef.current = editor;
@@ -330,7 +330,7 @@ export function HtmlEditorPage() {
       editorRef.current?.dispose();
       editorRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingTpl]);
 
   // ── Insert at cursor ──
@@ -351,7 +351,7 @@ export function HtmlEditorPage() {
     const editor = editorRef.current;
     if (!editor) return;
     const selection = editor.getSelection();
-    const selected  = editor.getModel()?.getValueInRange(selection) ?? '';
+    const selected = editor.getModel()?.getValueInRange(selection) ?? '';
     insertAtCursor(`${before}${selected || 'text'}${after}`);
   }, [insertAtCursor]);
 
@@ -544,8 +544,10 @@ export function HtmlEditorPage() {
           <Box ref={editorContainerRef} sx={{ flex: 1, minHeight: 0, '& .monaco-editor': { height: '100% !important' } }} />
 
           {!editorReady && (
-            <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
-              justifyContent: 'center', bgcolor: '#0f172a' }}>
+            <Box sx={{
+              position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
+              justifyContent: 'center', bgcolor: '#0f172a'
+            }}>
               <CircularProgress size={24} sx={{ color: '#6366f1' }} />
             </Box>
           )}
@@ -569,8 +571,10 @@ export function HtmlEditorPage() {
           </Box>
 
           {/* iframe scroll wrapper */}
-          <Box sx={{ flex: 1, overflow: 'auto', display: 'flex',
-            alignItems: 'flex-start', justifyContent: 'center', p: 2 }}>
+          <Box sx={{
+            flex: 1, overflow: 'auto', display: 'flex',
+            alignItems: 'flex-start', justifyContent: 'center', p: 2
+          }}>
             <Box sx={{
               width: iframeWidth, maxWidth: '100%', boxShadow: 6,
               borderRadius: 1, overflow: 'hidden', bgcolor: '#fff',
@@ -596,7 +600,7 @@ export function HtmlEditorPage() {
                         (e.target as HTMLIFrameElement).style.height =
                           `${doc.body.scrollHeight + 32}px`;
                       }
-                    } catch {}
+                    } catch { }
                   }}
                 />
               )}

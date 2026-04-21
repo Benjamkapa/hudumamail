@@ -29,6 +29,7 @@ export function RegisterPage() {
   const auth = useAuth();
   const nav = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const {
     register,
@@ -39,6 +40,24 @@ export function RegisterPage() {
     resolver: zodResolver(schema),
     defaultValues: { companyName: '', name: '', email: '', password: '', confirmPassword: '' },
   });
+
+  if (isSuccess) {
+    return (
+      <AuthSplitLayout title="Check your inbox" bullets={['Verification email sent', 'Activate your account', 'Ready to scale'] as string[]}>
+        <Stack spacing={3} alignItems="center" sx={{ py: 4 }}>
+          <Stack spacing={1} alignItems="center">
+            <Typography variant="h5" sx={{ fontWeight: 800 }}>Check your email</Typography>
+            <Typography variant="body1" textAlign="center" color="text.secondary">
+              We've sent a verification link to your inbox. Please click it to activate your account.
+            </Typography>
+          </Stack>
+          <Button variant="contained" fullWidth onClick={() => nav('/login')}>
+            Back to Login
+          </Button>
+        </Stack>
+      </AuthSplitLayout>
+    );
+  }
 
   return (
 <AuthSplitLayout title="Get started" bullets={['Zero-config infrastructure', 'Advanced security patterns', 'Scalable list architecture'] as string[]}>
@@ -62,7 +81,7 @@ export function RegisterPage() {
                     email: values.email,
                     password: values.password,
                   });
-                  nav('/login', { replace: true });
+                  setIsSuccess(true);
                 } catch (e: any) {
                   const msg =
                     e?.response?.data?.error ??
@@ -103,7 +122,7 @@ export function RegisterPage() {
                     {serverError.toLowerCase().includes('connect') || serverError.toLowerCase().includes('network') ? (
                       <>
                         {' '}
-                        Backend not reachable. Start it with <code>npm run dev</code> in <code>c:\PROJECTS\BulkE</code>.
+                        Backend not reachable.
                       </>
                     ) : null}
                     {serverError.toLowerCase().includes('plan') ? (

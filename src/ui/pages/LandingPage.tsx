@@ -350,7 +350,7 @@ function DashboardPreview({ dark }: DashboardPreviewProps) {
                         </g>
                       )}
                       <text x={bx + barW / 2} y={H - 4} textAnchor="middle" style={{ fontSize: 7, fill: muted, fontFamily: "inherit" }}>
-                        {["J","F","M","A","M","J","J","A","S","O","N","D"][i]}
+                        {["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"][i]}
                       </text>
                     </g>
                   );
@@ -611,11 +611,11 @@ export function LandingPage() {
 
   // ─── Nav links — all scroll to in-page sections ───────────────────────────
   const navLinks = [
-    { label: "Features",   id: "features"   },
+    { label: "Features", id: "features" },
     { label: "Industries", id: "industries" },
-    { label: "Pricing",    id: "pricing"    },
-    { label: "API Docs",   id: "docs"       },
-    { label: "Blogs",      id: "blogs"      },
+    { label: "Pricing", id: "pricing" },
+    { label: "API Docs", id: "docs" },
+    { label: "Blogs", id: "blogs" },
   ];
 
   const scrollTo = useCallback((id: string) => {
@@ -744,12 +744,12 @@ export function LandingPage() {
 
         {/* ══ HERO ════════════════════════════════════════════════════════════ */}
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, pt: { xs: 6, md: 12 }, pb: 4, textAlign: "center" }}>
-          <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1, px: 2, py: 0.7, borderRadius: 99, mb: 5, bgcolor: blueDim, border: `1px solid ${blue}45`, animation: `${fadeUp} .6s .05s both` }}>
+          {/* <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1, px: 2, py: 0.7, borderRadius: 99, mb: 5, bgcolor: blueDim, border: `1px solid ${blue}45`, animation: `${fadeUp} .6s .05s both` }}>
             <Box sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: cyan, boxShadow: `0 0 8px ${cyan}`, animation: `${pulse} 2s infinite` }} />
             <Typography sx={{ fontSize: 12.5, fontWeight: 700, color: cyan, letterSpacing: 0.3, fontFamily: font }}>
               v2.0 is live — Infrastructure-grade email, rebuilt from scratch
             </Typography>
-          </Box>
+          </Box> */}
 
           <Box sx={{ animation: `${fadeUp} .7s .15s both` }}>
             <Typography sx={{ fontSize: { xs: "2.8rem", sm: "4rem", md: "5.2rem" }, fontWeight: 700, letterSpacing: { xs: -1.5, md: -3 }, lineHeight: 1.04, color: txt, mb: 1, fontFamily: display }}>
@@ -778,10 +778,6 @@ export function LandingPage() {
                   <Button onClick={() => navigate("/register")} variant="contained" endIcon={<ArrowForward />}
                     sx={{ bgcolor: blue, color: "#fff", fontWeight: 800, fontSize: 15, px: 4.5, py: 1.6, borderRadius: 2, fontFamily: font, boxShadow: `0 8px 30px ${blue}50`, transition: "all .2s", "&:hover": { bgcolor: blueL, transform: "translateY(-2px)", boxShadow: `0 12px 40px ${blue}65` } }}>
                     Start free — no card needed
-                  </Button>
-                  <Button onClick={() => navigate("/login")} variant="text"
-                    sx={{ color: muted, fontWeight: 700, fontSize: 14, px: 3.5, py: 1.6, borderRadius: 2, fontFamily: font, border: `1.5px solid ${bord}`, transition: "all .2s", "&:hover": { color: txt, borderColor: bordH, bgcolor: dark ? "rgba(255,255,255,0.035)" : "rgba(15,23,42,0.04)" } }}>
-                    Sign in →
                   </Button>
                 </>
               )}
@@ -816,10 +812,10 @@ export function LandingPage() {
             <Container maxWidth="lg">
               <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr 1fr", md: "repeat(4,1fr)" }, gap: { xs: 4, md: 2 } }}>
                 {[
-                  { end: 50, prefix: "", suffix: "B+",   label: "Emails delivered monthly",  color: blue,      sub: "across all clients",    decimals: 0 },
-                  { end: 99.99, prefix: "", suffix: "%", label: "Platform uptime SLA",        color: cyan,      sub: "guaranteed",            decimals: 2 },
-                  { end: 0.1,  prefix: "<", suffix: "s", label: "Average send latency",       color: "#a78bfa", sub: "from API to SMTP",      decimals: 1 },
-                  { end: 99,   prefix: "", suffix: "%",  label: "Inbox placement rate",       color: green,     sub: "industry avg: 85%",     decimals: 0 },
+                  { end: 50, prefix: "", suffix: "B+", label: "Emails delivered monthly", color: blue, sub: "across all clients", decimals: 0 },
+                  { end: 99.99, prefix: "", suffix: "%", label: "Platform uptime SLA", color: cyan, sub: "guaranteed", decimals: 2 },
+                  { end: 0.1, prefix: "<", suffix: "s", label: "Average send latency", color: "#a78bfa", sub: "from API to SMTP", decimals: 1 },
+                  { end: 99, prefix: "", suffix: "%", label: "Inbox placement rate", color: green, sub: "industry avg: 85%", decimals: 0 },
                 ].map((s, i) => (
                   <Reveal key={s.label} delay={i * 0.07}>
                     <Box sx={{ textAlign: "center" }}>
@@ -1120,7 +1116,7 @@ export function LandingPage() {
                 const tabs = [
                   {
                     lang: "Node.js",
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.605.065-.037.151-.023.218.016l2.256 1.338c.082.045.198.045.275 0l8.795-5.076c.082-.047.134-.141.134-.238V7.926c0-.099-.05-.191-.134-.241l-8.794-5.072c-.081-.047-.197-.047-.276 0L3.065 7.685c-.085.05-.137.143-.137.24v10.15c0 .097.052.19.137.236l2.409 1.391c1.307.654 2.108-.116 2.108-.891V8.95c0-.143.115-.255.258-.255h1.115c.14 0 .256.112.256.255v10.862c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 20.633A1.86 1.86 0 011.354 19V8.85c0-.664.354-1.279.922-1.608l8.795-5.082c.553-.315 1.287-.315 1.838 0l8.794 5.082c.57.33.924.944.924 1.608v10.15c0 .663-.354 1.278-.924 1.607l-8.794 5.076c-.28.164-.6.247-.922.247"/></svg>,
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.605.065-.037.151-.023.218.016l2.256 1.338c.082.045.198.045.275 0l8.795-5.076c.082-.047.134-.141.134-.238V7.926c0-.099-.05-.191-.134-.241l-8.794-5.072c-.081-.047-.197-.047-.276 0L3.065 7.685c-.085.05-.137.143-.137.24v10.15c0 .097.052.19.137.236l2.409 1.391c1.307.654 2.108-.116 2.108-.891V8.95c0-.143.115-.255.258-.255h1.115c.14 0 .256.112.256.255v10.862c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 20.633A1.86 1.86 0 011.354 19V8.85c0-.664.354-1.279.922-1.608l8.795-5.082c.553-.315 1.287-.315 1.838 0l8.794 5.082c.57.33.924.944.924 1.608v10.15c0 .663-.354 1.278-.924 1.607l-8.794 5.076c-.28.164-.6.247-.922.247" /></svg>,
                     code: `const chapmail = require('@chapmail/node');
 const client = new chapmail.Client('ck_live_••••••••');
 
@@ -1134,7 +1130,7 @@ await client.emails.send({
                   },
                   {
                     lang: "Python",
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.83l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.23l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.02.21-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25c-.73 0-1.32.59-1.32 1.32s.59 1.32 1.32 1.32 1.32-.59 1.32-1.32-.59-1.32-1.32-1.32z"/></svg>,
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.83l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.23l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.02.21-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25c-.73 0-1.32.59-1.32 1.32s.59 1.32 1.32 1.32 1.32-.59 1.32-1.32-.59-1.32-1.32-1.32z" /></svg>,
                     code: `import chapmail
 
 client = chapmail.Client("ck_live_••••••••")
@@ -1149,7 +1145,7 @@ response = client.emails.send(
                   },
                   {
                     lang: "cURL",
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>,
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" /></svg>,
                     code: `curl -X POST https://api.chapmail.io/v1/emails \\
   -H "Authorization: Bearer ck_live_••••••••" \\
   -H "Content-Type: application/json" \\
@@ -1163,7 +1159,7 @@ response = client.emails.send(
                   },
                   {
                     lang: "PHP",
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.824-.124-1.06-.172-.235-.477-.225-.524-.225h-.523zm6.886 0h-.942l-.515 2.648h.837c.557 0 .971-.105 1.243-.314.272-.21.455-.559.549-1.049.092-.47.051-.824-.123-1.06-.174-.235-.478-.225-.525-.225h-.524zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM7.557 15.443H5.934L7.187 8.56h1.563c.65 0 1.143.115 1.48.344.336.228.523.527.558.897.035.37-.049.706-.25 1.007-.203.301-.506.541-.91.719.414.172.7.407.857.707.158.299.178.644.06 1.036-.2.667-.617 1.014-1.249 1.173h-1.739zm7.064 0h-1.619l1.253-6.883h1.563c.65 0 1.143.115 1.48.344.337.228.523.527.559.897.035.37-.05.706-.251 1.007-.203.301-.506.541-.91.719.414.172.701.407.857.707.158.299.178.644.06 1.036-.2.667-.617 1.014-1.249 1.173h-.743z"/></svg>,
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.824-.124-1.06-.172-.235-.477-.225-.524-.225h-.523zm6.886 0h-.942l-.515 2.648h.837c.557 0 .971-.105 1.243-.314.272-.21.455-.559.549-1.049.092-.47.051-.824-.123-1.06-.174-.235-.478-.225-.525-.225h-.524zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM7.557 15.443H5.934L7.187 8.56h1.563c.65 0 1.143.115 1.48.344.336.228.523.527.558.897.035.37-.049.706-.25 1.007-.203.301-.506.541-.91.719.414.172.7.407.857.707.158.299.178.644.06 1.036-.2.667-.617 1.014-1.249 1.173h-1.739zm7.064 0h-1.619l1.253-6.883h1.563c.65 0 1.143.115 1.48.344.337.228.523.527.559.897.035.37-.05.706-.251 1.007-.203.301-.506.541-.91.719.414.172.701.407.857.707.158.299.178.644.06 1.036-.2.667-.617 1.014-1.249 1.173h-.743z" /></svg>,
                     code: `<?php
 use Chapmail\\Client;
 
@@ -1203,7 +1199,7 @@ $response = $client->emails->send([
 }`,
                         },
                         {
-                          method: "GET",  path: "/v1/emails/:id", desc: "Retrieve delivery status & metadata", color: blue,
+                          method: "GET", path: "/v1/emails/:id", desc: "Retrieve delivery status & metadata", color: blue,
                           reqBody: `// No request body — pass message ID in URL:
 // GET /v1/emails/msg_01JXKR9T...`,
                           resBody: `{
@@ -1233,7 +1229,7 @@ $response = $client->emails->send([
 }`,
                         },
                         {
-                          method: "GET",  path: "/v1/analytics/summary", desc: "Pull open, click, bounce aggregates", color: "#a78bfa",
+                          method: "GET", path: "/v1/analytics/summary", desc: "Pull open, click, bounce aggregates", color: "#a78bfa",
                           reqBody: `// Query params:
 // ?campaign_id=cmp_01JY3...
 // &from=2025-05-01&to=2025-05-31`,
@@ -1317,12 +1313,13 @@ $response = $client->emails->send([
                                             {ep.reqBody.split("\n").map((line, li) => (
                                               <Typography key={li} component="div"
                                                 sx={{ fontSize: 11, lineHeight: 1.75, color: "#e2e8f0", fontFamily: "monospace", whiteSpace: "pre" }}
-                                                dangerouslySetInnerHTML={{ __html: line
-                                                  .replace(/(\/\/.*$)/g, '<span style="color:#475569">$1</span>')
-                                                  .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:#93c5fd">$1</span>:')
-                                                  .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:#86efac">$1</span>')
-                                                  .replace(/:\s*(true|false|null)/g, ': <span style="color:#fbbf24">$1</span>')
-                                                  .replace(/:\s*(\d+)/g, ': <span style="color:#f9a8d4">$1</span>')
+                                                dangerouslySetInnerHTML={{
+                                                  __html: line
+                                                    .replace(/(\/\/.*$)/g, '<span style="color:#475569">$1</span>')
+                                                    .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:#93c5fd">$1</span>:')
+                                                    .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:#86efac">$1</span>')
+                                                    .replace(/:\s*(true|false|null)/g, ': <span style="color:#fbbf24">$1</span>')
+                                                    .replace(/:\s*(\d+)/g, ': <span style="color:#f9a8d4">$1</span>')
                                                 }} />
                                             ))}
                                           </Box>
@@ -1339,12 +1336,13 @@ $response = $client->emails->send([
                                             {ep.resBody.split("\n").map((line, li) => (
                                               <Typography key={li} component="div"
                                                 sx={{ fontSize: 11, lineHeight: 1.75, color: "#e2e8f0", fontFamily: "monospace", whiteSpace: "pre" }}
-                                                dangerouslySetInnerHTML={{ __html: line
-                                                  .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:#93c5fd">$1</span>:')
-                                                  .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:#86efac">$1</span>')
-                                                  .replace(/:\s*(true|false|null)/g, ': <span style="color:#fbbf24">$1</span>')
-                                                  .replace(/:\s*(\d+\.\d+)/g, ': <span style="color:#f9a8d4">$1</span>')
-                                                  .replace(/:\s*(\d+)(?=[,\n}])/g, ': <span style="color:#f9a8d4">$1</span>')
+                                                dangerouslySetInnerHTML={{
+                                                  __html: line
+                                                    .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:#93c5fd">$1</span>:')
+                                                    .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:#86efac">$1</span>')
+                                                    .replace(/:\s*(true|false|null)/g, ': <span style="color:#fbbf24">$1</span>')
+                                                    .replace(/:\s*(\d+\.\d+)/g, ': <span style="color:#f9a8d4">$1</span>')
+                                                    .replace(/:\s*(\d+)(?=[,\n}])/g, ': <span style="color:#f9a8d4">$1</span>')
                                                 }} />
                                             ))}
                                           </Box>
@@ -1363,11 +1361,11 @@ $response = $client->emails->send([
                             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
                               {[
                                 { name: "Node.js", color: "#68a063" },
-                                { name: "Python",  color: "#3572a5" },
-                                { name: "PHP",     color: "#787cb5" },
-                                { name: "Go",      color: "#00add8" },
-                                { name: "Ruby",    color: "#cc342d" },
-                                { name: "Java",    color: "#b07219" },
+                                { name: "Python", color: "#3572a5" },
+                                { name: "PHP", color: "#787cb5" },
+                                { name: "Go", color: "#00add8" },
+                                { name: "Ruby", color: "#cc342d" },
+                                { name: "Java", color: "#b07219" },
                               ].map((sdk) => (
                                 <Box key={sdk.name} sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.75, py: 0.75, borderRadius: 99, bgcolor: `${sdk.color}10`, border: `1px solid ${sdk.color}30`, cursor: "pointer", transition: "all .15s", "&:hover": { bgcolor: `${sdk.color}18`, borderColor: `${sdk.color}55` } }}>
                                   <Box sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: sdk.color }} />
@@ -1422,7 +1420,7 @@ $response = $client->emails->send([
                         {/* Copy button */}
                         <Box onClick={() => navigator.clipboard?.writeText(tabs[activeTab].code)}
                           sx={{ position: "absolute", top: 16, right: 16, px: 1.5, py: 0.5, borderRadius: 1, bgcolor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { bgcolor: "rgba(255,255,255,0.1)" } }}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" /></svg>
                           <Typography sx={{ fontSize: 11, color: "#94a3b8", fontFamily: font, fontWeight: 600 }}>Copy</Typography>
                         </Box>
                       </Box>
@@ -1453,9 +1451,9 @@ $response = $client->emails->send([
                 <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(3,1fr)", md: "repeat(6,1fr)" }, gap: 1.5 }}>
                   {[
                     { event: "email.delivered", color: green },
-                    { event: "email.opened",    color: blue },
-                    { event: "email.clicked",   color: cyan },
-                    { event: "email.bounced",   color: "#f97316" },
+                    { event: "email.opened", color: blue },
+                    { event: "email.clicked", color: cyan },
+                    { event: "email.bounced", color: "#f97316" },
                     { event: "email.complaint", color: "#ec4899" },
                     { event: "email.unsubscribed", color: "#a78bfa" },
                   ].map((ev) => (
@@ -1846,13 +1844,13 @@ $response = $client->emails->send([
                   </Button>
                 ) : (
                   <>
-                    <Button onClick={() => navigate("/register")} variant="contained" endIcon={<ArrowForward />}
+                    {/* <Button onClick={() => navigate("/register")} variant="contained" endIcon={<ArrowForward />}
                       sx={{ bgcolor: blue, color: "#fff", fontWeight: 900, fontSize: 16, px: 5.5, py: 1.85, borderRadius: 2.5, fontFamily: font, boxShadow: `0 14px 40px ${blue}52`, "&:hover": { bgcolor: blueL, transform: "scale(1.03)" }, transition: "all .2s" }}>
                       Create free account
-                    </Button>
+                    </Button> */}
                     <Button onClick={() => navigate("/login")} variant="text"
                       sx={{ color: muted, fontWeight: 700, fontSize: 14, px: 3.5, py: 1.85, borderRadius: 2.5, fontFamily: font, border: `1.5px solid ${bord}`, "&:hover": { color: txt, borderColor: bordH } }}>
-                      Sign in →
+                      Get Started →
                     </Button>
                   </>
                 )}
@@ -1879,9 +1877,9 @@ $response = $client->emails->send([
               </Typography>
               <Stack direction="row" spacing={1.25}>
                 {[
-                  { key: "x",  svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.733-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> },
-                  { key: "li", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> },
-                  { key: "yt", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg> },
+                  { key: "x", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.733-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg> },
+                  { key: "li", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg> },
+                  { key: "yt", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z" /></svg> },
                 ].map((s) => (
                   <Box key={s.key} sx={{ width: 32, height: 32, borderRadius: 1.5, bgcolor: surfB, border: `1px solid ${bord}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: muted, transition: "all .15s", "&:hover": { borderColor: bordH, color: txt } }}>{s.svg}</Box>
                 ))}

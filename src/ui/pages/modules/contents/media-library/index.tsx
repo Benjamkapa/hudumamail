@@ -47,31 +47,31 @@ import {
   Typography,
 } from '@mui/material';
 
-import AddIcon           from '@mui/icons-material/Add';
-import CheckIcon         from '@mui/icons-material/Check';
-import CloseIcon         from '@mui/icons-material/Close';
-import ContentCopyIcon   from '@mui/icons-material/ContentCopy';
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import DescriptionIcon   from '@mui/icons-material/Description';
-import FileDownloadIcon  from '@mui/icons-material/FileDownload';
-import FilterListIcon    from '@mui/icons-material/FilterList';
-import ImageIcon         from '@mui/icons-material/Image';
-import MoreVertIcon      from '@mui/icons-material/MoreVert';
-import OpenInNewIcon     from '@mui/icons-material/OpenInNew';
-import PictureAsPdfIcon  from '@mui/icons-material/PictureAsPdf';
-import SearchIcon        from '@mui/icons-material/Search';
-import SmartDisplayIcon  from '@mui/icons-material/SmartDisplay';
-import UploadFileIcon    from '@mui/icons-material/UploadFile';
-import ViewListIcon      from '@mui/icons-material/ViewList';
-import ViewModuleIcon    from '@mui/icons-material/ViewModule';
+import DescriptionIcon from '@mui/icons-material/Description';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ImageIcon from '@mui/icons-material/Image';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import SearchIcon from '@mui/icons-material/Search';
+import SmartDisplayIcon from '@mui/icons-material/SmartDisplay';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
@@ -87,10 +87,10 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type AssetType  = 'image' | 'pdf' | 'svg' | 'video';
-type SortField  = 'name' | 'size' | 'type' | 'uploadedAt';
-type SortDir    = 'asc' | 'desc';
-type ViewMode   = 'grid' | 'list';
+type AssetType = 'image' | 'pdf' | 'svg' | 'video';
+type SortField = 'name' | 'size' | 'type' | 'uploadedAt';
+type SortDir = 'asc' | 'desc';
+type ViewMode = 'grid' | 'list';
 
 type Asset = {
   id: string;
@@ -115,9 +115,9 @@ const TYPE_CONFIG: Record<AssetType, {
   icon: React.ReactNode;
   accept: string;
 }> = {
-  image: { label: 'Image', color: '#6366f1', icon: <ImageIcon />,        accept: '.jpg,.jpeg,.png,.gif,.webp' },
-  pdf:   { label: 'PDF',   color: '#ef4444', icon: <PictureAsPdfIcon />, accept: '.pdf' },
-  svg:   { label: 'SVG',   color: '#f59e0b', icon: <DescriptionIcon />,  accept: '.svg' },
+  image: { label: 'Image', color: '#6366f1', icon: <ImageIcon />, accept: '.jpg,.jpeg,.png,.gif,.webp' },
+  pdf: { label: 'PDF', color: '#ef4444', icon: <PictureAsPdfIcon />, accept: '.pdf' },
+  svg: { label: 'SVG', color: '#f59e0b', icon: <DescriptionIcon />, accept: '.svg' },
   video: { label: 'Video', color: '#8b5cf6', icon: <SmartDisplayIcon />, accept: '.mp4,.webm,.mov' },
 };
 
@@ -127,7 +127,7 @@ const ACCEPT_ALL = ALL_TYPES.map(t => TYPE_CONFIG[t].accept).join(',');
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtSize(bytes: number): string {
-  if (bytes < 1024)       return `${bytes} B`;
+  if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
@@ -144,15 +144,15 @@ function fmtDuration(sec: number) {
 
 function guessType(name: string): AssetType {
   const ext = name.split('.').pop()?.toLowerCase() ?? '';
-  if (['jpg','jpeg','png','gif','webp'].includes(ext)) return 'image';
-  if (ext === 'pdf')                                    return 'pdf';
-  if (ext === 'svg')                                    return 'svg';
+  if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'image';
+  if (ext === 'pdf') return 'pdf';
+  if (ext === 'svg') return 'svg';
   return 'video';
 }
 
 // ─── Seed assets ──────────────────────────────────────────────────────────────
 
-const PLACEHOLDER_COLORS = ['#6366f1','#8b5cf6','#ec4899','#f97316','#22c55e','#0ea5e9'];
+const PLACEHOLDER_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f97316', '#22c55e', '#0ea5e9'];
 
 // We generate placeholder gradient thumbnails since we don't have real files
 function placeholderThumb(seed: string) {
@@ -164,18 +164,18 @@ function placeholderThumb(seed: string) {
 }
 
 const INITIAL_ASSETS: Asset[] = [
-  { id:'m_01', name:'hero-summer-sale.jpg', type:'image', mimeType:'image/jpeg', url:'https://example.com/media/hero-summer-sale.jpg', thumbUrl: undefined, size:284_201, width:1200, height:630, uploadedAt:'2025-07-01T09:00:00Z', uploadedBy:'Alice Morgan' },
-  { id:'m_02', name:'logo-dark.png',        type:'image', mimeType:'image/png',  url:'https://example.com/media/logo-dark.png',         thumbUrl: undefined, size:18_432, width:400, height:120,  uploadedAt:'2025-06-10T11:00:00Z', uploadedBy:'Alice Morgan' },
-  { id:'m_03', name:'product-showcase.gif', type:'image', mimeType:'image/gif',  url:'https://example.com/media/product-showcase.gif',  thumbUrl: undefined, size:1_420_800, width:600, height:400, uploadedAt:'2025-07-05T14:00:00Z', uploadedBy:'Bob Fletcher' },
-  { id:'m_04', name:'banner-webp.webp',     type:'image', mimeType:'image/webp', url:'https://example.com/media/banner-webp.webp',      thumbUrl: undefined, size:62_340, width:1200, height:400, uploadedAt:'2025-07-08T10:00:00Z', uploadedBy:'Alice Morgan' },
-  { id:'m_05', name:'terms-of-service.pdf', type:'pdf',   mimeType:'application/pdf', url:'https://example.com/media/terms-of-service.pdf', size:348_120, uploadedAt:'2025-04-01T09:00:00Z', uploadedBy:'Alice Morgan' },
-  { id:'m_06', name:'product-brochure.pdf', type:'pdf',   mimeType:'application/pdf', url:'https://example.com/media/product-brochure.pdf', size:1_204_800, uploadedAt:'2025-05-15T11:00:00Z', uploadedBy:'Kate Russo' },
-  { id:'m_07', name:'icon-set.svg',         type:'svg',   mimeType:'image/svg+xml', url:'https://example.com/media/icon-set.svg', size:8_192, width:24, height:24, uploadedAt:'2025-06-20T12:00:00Z', uploadedBy:'Bob Fletcher' },
-  { id:'m_08', name:'logo-mark.svg',        type:'svg',   mimeType:'image/svg+xml', url:'https://example.com/media/logo-mark.svg', size:4_096, width:64, height:64, uploadedAt:'2025-06-20T12:05:00Z', uploadedBy:'Bob Fletcher' },
-  { id:'m_09', name:'product-demo.mp4',     type:'video', mimeType:'video/mp4', url:'https://example.com/media/product-demo.mp4', size:18_432_000, duration:94,  uploadedAt:'2025-07-10T15:00:00Z', uploadedBy:'Alice Morgan' },
-  { id:'m_10', name:'explainer.webm',       type:'video', mimeType:'video/webm', url:'https://example.com/media/explainer.webm', size:9_216_000, duration:62, uploadedAt:'2025-07-11T09:00:00Z', uploadedBy:'Henry Silva' },
-  { id:'m_11', name:'cta-banner.png',       type:'image', mimeType:'image/png', url:'https://example.com/media/cta-banner.png', thumbUrl: undefined, size:94_320, width:600, height:200, uploadedAt:'2025-07-12T13:00:00Z', uploadedBy:'Alice Morgan' },
-  { id:'m_12', name:'avatar-placeholder.png', type:'image', mimeType:'image/png', url:'https://example.com/media/avatar-placeholder.png', size:12_288, width:200, height:200, uploadedAt:'2025-03-10T08:00:00Z', uploadedBy:'Iris Tanaka' },
+  { id: 'm_01', name: 'hero-summer-sale.jpg', type: 'image', mimeType: 'image/jpeg', url: 'https://example.com/media/hero-summer-sale.jpg', thumbUrl: undefined, size: 284_201, width: 1200, height: 630, uploadedAt: '2025-07-01T09:00:00Z', uploadedBy: 'Alice Morgan' },
+  { id: 'm_02', name: 'logo-dark.png', type: 'image', mimeType: 'image/png', url: 'https://example.com/media/logo-dark.png', thumbUrl: undefined, size: 18_432, width: 400, height: 120, uploadedAt: '2025-06-10T11:00:00Z', uploadedBy: 'Alice Morgan' },
+  { id: 'm_03', name: 'product-showcase.gif', type: 'image', mimeType: 'image/gif', url: 'https://example.com/media/product-showcase.gif', thumbUrl: undefined, size: 1_420_800, width: 600, height: 400, uploadedAt: '2025-07-05T14:00:00Z', uploadedBy: 'Bob Fletcher' },
+  { id: 'm_04', name: 'banner-webp.webp', type: 'image', mimeType: 'image/webp', url: 'https://example.com/media/banner-webp.webp', thumbUrl: undefined, size: 62_340, width: 1200, height: 400, uploadedAt: '2025-07-08T10:00:00Z', uploadedBy: 'Alice Morgan' },
+  { id: 'm_05', name: 'terms-of-service.pdf', type: 'pdf', mimeType: 'application/pdf', url: 'https://example.com/media/terms-of-service.pdf', size: 348_120, uploadedAt: '2025-04-01T09:00:00Z', uploadedBy: 'Alice Morgan' },
+  { id: 'm_06', name: 'product-brochure.pdf', type: 'pdf', mimeType: 'application/pdf', url: 'https://example.com/media/product-brochure.pdf', size: 1_204_800, uploadedAt: '2025-05-15T11:00:00Z', uploadedBy: 'Kate Russo' },
+  { id: 'm_07', name: 'icon-set.svg', type: 'svg', mimeType: 'image/svg+xml', url: 'https://example.com/media/icon-set.svg', size: 8_192, width: 24, height: 24, uploadedAt: '2025-06-20T12:00:00Z', uploadedBy: 'Bob Fletcher' },
+  { id: 'm_08', name: 'logo-mark.svg', type: 'svg', mimeType: 'image/svg+xml', url: 'https://example.com/media/logo-mark.svg', size: 4_096, width: 64, height: 64, uploadedAt: '2025-06-20T12:05:00Z', uploadedBy: 'Bob Fletcher' },
+  { id: 'm_09', name: 'product-demo.mp4', type: 'video', mimeType: 'video/mp4', url: 'https://example.com/media/product-demo.mp4', size: 18_432_000, duration: 94, uploadedAt: '2025-07-10T15:00:00Z', uploadedBy: 'Alice Morgan' },
+  { id: 'm_10', name: 'explainer.webm', type: 'video', mimeType: 'video/webm', url: 'https://example.com/media/explainer.webm', size: 9_216_000, duration: 62, uploadedAt: '2025-07-11T09:00:00Z', uploadedBy: 'Henry Silva' },
+  { id: 'm_11', name: 'cta-banner.png', type: 'image', mimeType: 'image/png', url: 'https://example.com/media/cta-banner.png', thumbUrl: undefined, size: 94_320, width: 600, height: 200, uploadedAt: '2025-07-12T13:00:00Z', uploadedBy: 'Alice Morgan' },
+  { id: 'm_12', name: 'avatar-placeholder.png', type: 'image', mimeType: 'image/png', url: 'https://example.com/media/avatar-placeholder.png', size: 12_288, width: 200, height: 200, uploadedAt: '2025-03-10T08:00:00Z', uploadedBy: 'Iris Tanaka' },
 ];
 
 // ─── Asset thumbnail ──────────────────────────────────────────────────────────
@@ -214,9 +214,9 @@ function AssetThumb({ asset, size = 80 }: { asset: Asset; size?: number }) {
 type ActionProps = {
   asset: Asset;
   canEdit: boolean;
-  onDelete:  (a: Asset) => void;
+  onDelete: (a: Asset) => void;
   onPreview: (a: Asset) => void;
-  onCopy:    (a: Asset) => void;
+  onCopy: (a: Asset) => void;
 };
 
 function AssetActions({ asset, canEdit, onDelete, onPreview, onCopy }: ActionProps) {
@@ -271,8 +271,10 @@ function PreviewDialog({ asset, onClose }: { asset: Asset | null; onClose: () =>
         </Box>
         <IconButton size="small" onClick={onClose}><CloseIcon fontSize="small" /></IconButton>
       </DialogTitle>
-      <DialogContent sx={{ p: 0, bgcolor: '#0f172a', minHeight: 320,
-        display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <DialogContent sx={{
+        p: 0, bgcolor: '#0f172a', minHeight: 320,
+        display: 'flex', alignItems: 'center', justifyContent: 'center'
+      }}>
         {(asset.type === 'image' || asset.type === 'svg') && (
           // Placeholder gradient since we don't have real files in this demo
           <Box sx={{
@@ -367,8 +369,8 @@ function UploadZone({ canEdit, onUploaded }: {
   canEdit: boolean;
   onUploaded: (asset: Asset) => void;
 }) {
-  const [dragging,    setDragging]    = useState(false);
-  const [uploading,   setUploading]   = useState<UploadingFile[]>([]);
+  const [dragging, setDragging] = useState(false);
+  const [uploading, setUploading] = useState<UploadingFile[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const processFiles = useCallback(async (files: File[]) => {
@@ -385,12 +387,12 @@ function UploadZone({ canEdit, onUploaded }: {
       }
       const now = new Date().toISOString();
       const fakeAsset: Asset = {
-        id:         `m_${Date.now()}_${i}`,
-        name:       file.name,
-        type:       guessType(file.name),
-        mimeType:   file.type,
-        url:        URL.createObjectURL(file),
-        size:       file.size,
+        id: `m_${Date.now()}_${i}`,
+        name: file.name,
+        type: guessType(file.name),
+        mimeType: file.type,
+        url: URL.createObjectURL(file),
+        size: file.size,
         uploadedAt: now,
         uploadedBy: 'You',
       };
@@ -453,18 +455,18 @@ function UploadZone({ canEdit, onUploaded }: {
 
 export function MediaLibraryPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [assets,      setAssets]      = useState<Asset[]>(INITIAL_ASSETS);
-  const [viewMode,    setViewMode]    = useState<ViewMode>('grid');
-  const [search,      setSearch]      = useState('');
-  const [typeFilter,  setTypeFilter]  = useState<AssetType | 'all'>('all');
-  const [sortField,   setSortField]   = useState<SortField>('uploadedAt');
-  const [sortDir,     setSortDir]     = useState<SortDir>('desc');
-  const [selected,    setSelected]    = useState<Set<string>>(new Set());
-  const [toDelete,    setToDelete]    = useState<Asset[]>([]);
-  const [previewing,  setPreviewing]  = useState<Asset | null>(null);
-  const [snack,       setSnack]       = useState<string | null>(null);
+  const [assets, setAssets] = useState<Asset[]>(INITIAL_ASSETS);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all');
+  const [sortField, setSortField] = useState<SortField>('uploadedAt');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [toDelete, setToDelete] = useState<Asset[]>([]);
+  const [previewing, setPreviewing] = useState<Asset | null>(null);
+  const [snack, setSnack] = useState<string | null>(null);
 
   const handleSort = useCallback((field: SortField) => {
     setSortDir(prev => sortField === field && prev === 'desc' ? 'asc' : 'desc');
@@ -487,13 +489,13 @@ export function MediaLibraryPage() {
     return list;
   }, [assets, search, typeFilter, sortField, sortDir]);
 
-  const allSelected   = displayed.length > 0 && displayed.every(a => selected.has(a.id));
-  const someSelected  = displayed.some(a => selected.has(a.id)) && !allSelected;
+  const allSelected = displayed.length > 0 && displayed.every(a => selected.has(a.id));
+  const someSelected = displayed.some(a => selected.has(a.id)) && !allSelected;
   const selectedCount = displayed.filter(a => selected.has(a.id)).length;
 
   const toggleAll = () => {
     if (allSelected) setSelected(prev => { const s = new Set(prev); displayed.forEach(a => s.delete(a.id)); return s; });
-    else             setSelected(prev => { const s = new Set(prev); displayed.forEach(a => s.add(a.id));    return s; });
+    else setSelected(prev => { const s = new Set(prev); displayed.forEach(a => s.add(a.id)); return s; });
   };
   const toggleOne = (id: string) => setSelected(prev => {
     const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s;
@@ -505,7 +507,7 @@ export function MediaLibraryPage() {
 
   const handleDelete = useCallback(async () => {
     for (const a of toDelete) {
-      try { await apiFetch('DELETE', `/api/media/${a.id}`); } catch {}
+      try { await apiFetch('DELETE', `/api/media/${a.id}`); } catch { }
     }
     const ids = new Set(toDelete.map(a => a.id));
     setAssets(prev => prev.filter(a => !ids.has(a.id)));
@@ -520,19 +522,19 @@ export function MediaLibraryPage() {
   }, []);
 
   const counts = useMemo(() => ({
-    total:  assets.length,
-    image:  assets.filter(a => a.type === 'image').length,
-    pdf:    assets.filter(a => a.type === 'pdf').length,
-    svg:    assets.filter(a => a.type === 'svg').length,
-    video:  assets.filter(a => a.type === 'video').length,
+    total: assets.length,
+    image: assets.filter(a => a.type === 'image').length,
+    pdf: assets.filter(a => a.type === 'pdf').length,
+    svg: assets.filter(a => a.type === 'svg').length,
+    video: assets.filter(a => a.type === 'video').length,
     totalSize: assets.reduce((sum, a) => sum + a.size, 0),
   }), [assets]);
 
   const actionProps = (a: Asset): ActionProps => ({
     asset: a, canEdit,
-    onDelete:  (x) => setToDelete([x]),
+    onDelete: (x) => setToDelete([x]),
     onPreview: setPreviewing,
-    onCopy:    handleCopyUrl,
+    onCopy: handleCopyUrl,
   });
 
   return (
@@ -564,9 +566,11 @@ export function MediaLibraryPage() {
           sx={{ fontWeight: 600, fontSize: 12 }} />
         {ALL_TYPES.map(t => counts[t] > 0 && (
           <Chip key={t} label={`${TYPE_CONFIG[t].label}: ${counts[t]}`} size="small" variant="outlined"
-            sx={{ fontSize: 12, fontWeight: 600,
+            sx={{
+              fontSize: 12, fontWeight: 600,
               color: TYPE_CONFIG[t].color,
-              borderColor: TYPE_CONFIG[t].color + '60' }} />
+              borderColor: TYPE_CONFIG[t].color + '60'
+            }} />
         ))}
       </Stack>
 
@@ -575,10 +579,12 @@ export function MediaLibraryPage() {
         <TextField
           size="small" placeholder="Search by filename…" value={search}
           onChange={e => setSearch(e.target.value)}
-          InputProps={{ startAdornment:
-            <InputAdornment position="start">
-              <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
-            </InputAdornment> }}
+          InputProps={{
+            startAdornment:
+              <InputAdornment position="start">
+                <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+              </InputAdornment>
+          }}
           sx={{ minWidth: 220, flex: 1, maxWidth: 340 }} />
 
         {/* Type filter */}
@@ -662,12 +668,15 @@ export function MediaLibraryPage() {
 
       {/* GRID VIEW */}
       {viewMode === 'grid' && displayed.length > 0 && (
-        <Box sx={{ display: 'grid', gap: 2, alignItems: 'start',
-          gridTemplateColumns: { xs: 'repeat(2,1fr)', sm: 'repeat(3,1fr)', md: 'repeat(4,1fr)', lg: 'repeat(5,1fr)', xl: 'repeat(6,1fr)' } }}>
+        <Box sx={{
+          display: 'grid', gap: 2, alignItems: 'start',
+          gridTemplateColumns: { xs: 'repeat(2,1fr)', sm: 'repeat(3,1fr)', md: 'repeat(4,1fr)', lg: 'repeat(5,1fr)', xl: 'repeat(6,1fr)' }
+        }}>
           {displayed.map(a => (
             <GlassCard key={a.id}
               onClick={() => setPreviewing(a)}
-              sx={{ cursor: 'pointer', overflow: 'hidden',
+              sx={{
+                cursor: 'pointer', overflow: 'hidden',
                 outline: selected.has(a.id) ? '2px solid' : 'none',
                 outlineColor: 'primary.main',
                 '&:hover': { transform: 'translateY(-2px)', boxShadow: 6 },
@@ -675,14 +684,16 @@ export function MediaLibraryPage() {
               }}>
               <Box sx={{ position: 'relative' }}>
                 <AssetThumb asset={a} size={120} />
-                <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 1.5,
+                <Box sx={{
+                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 1.5,
                   background: 'linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.55))'
                 }} />
                 {canEdit && (
                   <Checkbox size="small"
                     checked={selected.has(a.id)}
                     onClick={e => { e.stopPropagation(); toggleOne(a.id); }}
-                    sx={{ position: 'absolute', top: 2, left: 2,
+                    sx={{
+                      position: 'absolute', top: 2, left: 2,
                       color: 'rgba(255,255,255,0.7)',
                       '&.Mui-checked': { color: '#fff' },
                       p: 0.5,
@@ -767,7 +778,8 @@ export function MediaLibraryPage() {
                     </TableCell>
                     <TableCell>
                       <Chip label={TYPE_CONFIG[a.type].label} size="small"
-                        sx={{ fontSize: 10, height: 18, fontWeight: 600,
+                        sx={{
+                          fontSize: 10, height: 18, fontWeight: 600,
                           bgcolor: TYPE_CONFIG[a.type].color + '18',
                           color: TYPE_CONFIG[a.type].color,
                           border: `1px solid ${TYPE_CONFIG[a.type].color}40`,

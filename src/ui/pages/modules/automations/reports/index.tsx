@@ -28,25 +28,25 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { GlassCard } from '../../../../dashboard/GlassCard';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 
 // ─── Seed data ────────────────────────────────────────────────────────────────
 
 type FlowReport = {
-  id: number; name: string; status: 'active'|'paused'|'draft';
+  id: number; name: string; status: 'active' | 'paused' | 'draft';
   enrolled: number; completed: number; emailsSent: number;
   openRate: number; clickRate: number; convRate: number; unsubRate: number;
 };
 
 const SEED: FlowReport[] = [
-  { id: 1, name: 'Welcome Series',     status: 'active', enrolled: 1240, completed: 980,  emailsSent: 3720, openRate: 42.1, clickRate: 11.3, convRate: 12.4, unsubRate: 0.4 },
-  { id: 2, name: 'Post-purchase Flow', status: 'active', enrolled: 430,  completed: 210,  emailsSent: 860,  openRate: 38.4, clickRate: 9.8,  convRate: 8.7,  unsubRate: 0.2 },
-  { id: 3, name: 'Win-back Sequence',  status: 'paused', enrolled: 870,  completed: 340,  emailsSent: 1740, openRate: 22.6, clickRate: 4.2,  convRate: 4.2,  unsubRate: 1.1 },
-  { id: 4, name: 'Birthday Campaign',  status: 'draft',  enrolled: 0,    completed: 0,    emailsSent: 0,    openRate: 0,    clickRate: 0,    convRate: 0,    unsubRate: 0   },
-  { id: 5, name: 'Cart Abandonment',   status: 'draft',  enrolled: 0,    completed: 0,    emailsSent: 0,    openRate: 0,    clickRate: 0,    convRate: 0,    unsubRate: 0   },
+  { id: 1, name: 'Welcome Series', status: 'active', enrolled: 1240, completed: 980, emailsSent: 3720, openRate: 42.1, clickRate: 11.3, convRate: 12.4, unsubRate: 0.4 },
+  { id: 2, name: 'Post-purchase Flow', status: 'active', enrolled: 430, completed: 210, emailsSent: 860, openRate: 38.4, clickRate: 9.8, convRate: 8.7, unsubRate: 0.2 },
+  { id: 3, name: 'Win-back Sequence', status: 'paused', enrolled: 870, completed: 340, emailsSent: 1740, openRate: 22.6, clickRate: 4.2, convRate: 4.2, unsubRate: 1.1 },
+  { id: 4, name: 'Birthday Campaign', status: 'draft', enrolled: 0, completed: 0, emailsSent: 0, openRate: 0, clickRate: 0, convRate: 0, unsubRate: 0 },
+  { id: 5, name: 'Cart Abandonment', status: 'draft', enrolled: 0, completed: 0, emailsSent: 0, openRate: 0, clickRate: 0, convRate: 0, unsubRate: 0 },
 ];
 
-const STATUS_COLOR: Record<string, 'success'|'warning'|'default'> = { active:'success', paused:'warning', draft:'default' };
+const STATUS_COLOR: Record<string, 'success' | 'warning' | 'default'> = { active: 'success', paused: 'warning', draft: 'default' };
 
 // ─── Mini bar ─────────────────────────────────────────────────────────────────
 
@@ -78,14 +78,14 @@ export function AutomationReportsPage() {
     setRefreshing(false);
   };
 
-  const activeFlows    = reports.filter(r => r.status === 'active');
-  const totalEnrolled  = reports.reduce((a,r) => a + r.enrolled, 0);
-  const totalEmailsSent= reports.reduce((a,r) => a + r.emailsSent, 0);
-  const avgOpenRate    = activeFlows.length
-    ? (activeFlows.reduce((a,r) => a + r.openRate, 0) / activeFlows.length).toFixed(1)
+  const activeFlows = reports.filter(r => r.status === 'active');
+  const totalEnrolled = reports.reduce((a, r) => a + r.enrolled, 0);
+  const totalEmailsSent = reports.reduce((a, r) => a + r.emailsSent, 0);
+  const avgOpenRate = activeFlows.length
+    ? (activeFlows.reduce((a, r) => a + r.openRate, 0) / activeFlows.length).toFixed(1)
     : '—';
-  const avgConvRate    = activeFlows.length
-    ? (activeFlows.reduce((a,r) => a + r.convRate, 0) / activeFlows.length).toFixed(1)
+  const avgConvRate = activeFlows.length
+    ? (activeFlows.reduce((a, r) => a + r.convRate, 0) / activeFlows.length).toFixed(1)
     : '—';
 
   return (
@@ -107,10 +107,10 @@ export function AutomationReportsPage() {
       {/* KPIs */}
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
         {[
-          { label: 'Active flows',       value: activeFlows.length,             color: 'success.main' },
-          { label: 'Contacts enrolled',  value: totalEnrolled.toLocaleString(), color: undefined      },
-          { label: 'Emails sent (auto)', value: totalEmailsSent.toLocaleString(),color: undefined     },
-          { label: 'Avg. open rate',     value: `${avgOpenRate}%`,              color: undefined      },
+          { label: 'Active flows', value: activeFlows.length, color: 'success.main' },
+          { label: 'Contacts enrolled', value: totalEnrolled.toLocaleString(), color: undefined },
+          { label: 'Emails sent (auto)', value: totalEmailsSent.toLocaleString(), color: undefined },
+          { label: 'Avg. open rate', value: `${avgOpenRate}%`, color: undefined },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>
@@ -149,7 +149,7 @@ export function AutomationReportsPage() {
                     <Typography variant="body2" fontWeight={600} noWrap>{r.name}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip label={r.status.charAt(0).toUpperCase()+r.status.slice(1)}
+                    <Chip label={r.status.charAt(0).toUpperCase() + r.status.slice(1)}
                       color={STATUS_COLOR[r.status]} size="small" variant="outlined" sx={{ fontSize: 11 }} />
                   </TableCell>
                   <TableCell align="right">{r.enrolled > 0 ? r.enrolled.toLocaleString() : '—'}</TableCell>
@@ -199,12 +199,12 @@ export function AutomationReportsPage() {
         </Typography>
         <Stack spacing={0.75}>
           {[
-            { label: 'Enrolled',     desc: 'Contacts currently progressing through this flow — they have not finished yet' },
-            { label: 'Completed',    desc: 'Contacts who received every step — the full journey is done' },
-            { label: 'Open rate',    desc: 'Average across all automated emails sent by this flow (≥25% is healthy)' },
-            { label: 'Click rate',   desc: 'Average link clicks across all emails in this flow' },
-            { label: 'Conv. rate',   desc: 'Contacts who took the target action (purchase, signup etc.) during the flow' },
-            { label: 'Unsub rate',   desc: 'Contacts who unsubscribed while inside this flow (>1% = review your content)' },
+            { label: 'Enrolled', desc: 'Contacts currently progressing through this flow — they have not finished yet' },
+            { label: 'Completed', desc: 'Contacts who received every step — the full journey is done' },
+            { label: 'Open rate', desc: 'Average across all automated emails sent by this flow (≥25% is healthy)' },
+            { label: 'Click rate', desc: 'Average link clicks across all emails in this flow' },
+            { label: 'Conv. rate', desc: 'Contacts who took the target action (purchase, signup etc.) during the flow' },
+            { label: 'Unsub rate', desc: 'Contacts who unsubscribed while inside this flow (>1% = review your content)' },
           ].map(item => (
             <Box key={item.label} sx={{ display: 'flex', gap: 1 }}>
               <Typography variant="caption" fontWeight={700} sx={{ minWidth: 82, flexShrink: 0 }}>{item.label}</Typography>

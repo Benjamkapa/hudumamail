@@ -8,6 +8,7 @@ import { LoginPage } from '../ui/pages/LoginPage';
 import { RegisterPage } from '../ui/pages/RegisterPage';
 import { ForgotPasswordPage } from '../ui/pages/ForgotPasswordPage';
 import { ResetPasswordPage } from '../ui/pages/ResetPasswordPage';
+// import { VerifyEmailPage } from '../ui/pages/VerifyEmailPage';
 // import { GoogleCallbackPage } from '../ui/pages/GoogleCallbackPage';
 import { DashboardPage } from '../ui/pages/modules/dashboard/index';
 
@@ -78,8 +79,8 @@ export const router = reactRouterDom.createBrowserRouter([
   { path: '/register', element: <RegisterPage /> },
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
   { path: '/reset-password', element: <ResetPasswordPage /> },
+  // { path: '/verify', element: <VerifyEmailPage /> },
   { path: '/docs', element: <ApiDocsPage /> },
-  // comming soon
   // { path: '/auth/google/callback', element: <GoogleCallbackPage /> },
   { path: '/403', element: <AccessDeniedPage /> },
   {

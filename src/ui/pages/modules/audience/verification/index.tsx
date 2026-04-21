@@ -44,17 +44,17 @@ import {
   LinearProgress, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Tooltip, Typography,
 } from '@mui/material';
-import CheckCircleIcon  from '@mui/icons-material/CheckCircle';
-import CloseIcon        from '@mui/icons-material/Close';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import ErrorIcon        from '@mui/icons-material/Error';
-import FactCheckIcon    from '@mui/icons-material/FactCheck';
-import HelpOutlineIcon  from '@mui/icons-material/HelpOutline';
+import ErrorIcon from '@mui/icons-material/Error';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -68,34 +68,34 @@ type VerifResult = {
 // ─── Seed history ─────────────────────────────────────────────────────────────
 
 const SEED: VerifResult[] = [
-  { id: 1, email: 'alice@example.com',    status: 'valid',   reason: 'Mailbox confirmed and deliverable',         checkedAt: 'Jul 15, 2025 · 14:32' },
-  { id: 2, email: 'bob@acmecorp.com',     status: 'valid',   reason: 'Mailbox confirmed and deliverable',         checkedAt: 'Jul 15, 2025 · 14:32' },
-  { id: 3, email: 'test@mailinator.com',  status: 'risky',   reason: 'Disposable/temporary email provider',      checkedAt: 'Jul 15, 2025 · 14:32' },
-  { id: 4, email: 'info@company.io',      status: 'risky',   reason: 'Role address — may not be a real person',  checkedAt: 'Jul 14, 2025 · 09:10' },
-  { id: 5, email: 'ghost@fakeemail.xyz',  status: 'invalid', reason: 'Domain does not have valid MX records',    checkedAt: 'Jul 14, 2025 · 09:10' },
-  { id: 6, email: 'nobody@defunct.co',    status: 'invalid', reason: 'Mailbox does not exist on this server',    checkedAt: 'Jul 13, 2025 · 16:45' },
-  { id: 7, email: 'slow@timeoutmail.net', status: 'unknown', reason: 'Mail server timed out — try again later',  checkedAt: 'Jul 13, 2025 · 16:45' },
+  { id: 1, email: 'alice@example.com', status: 'valid', reason: 'Mailbox confirmed and deliverable', checkedAt: 'Jul 15, 2025 · 14:32' },
+  { id: 2, email: 'bob@acmecorp.com', status: 'valid', reason: 'Mailbox confirmed and deliverable', checkedAt: 'Jul 15, 2025 · 14:32' },
+  { id: 3, email: 'test@mailinator.com', status: 'risky', reason: 'Disposable/temporary email provider', checkedAt: 'Jul 15, 2025 · 14:32' },
+  { id: 4, email: 'info@company.io', status: 'risky', reason: 'Role address — may not be a real person', checkedAt: 'Jul 14, 2025 · 09:10' },
+  { id: 5, email: 'ghost@fakeemail.xyz', status: 'invalid', reason: 'Domain does not have valid MX records', checkedAt: 'Jul 14, 2025 · 09:10' },
+  { id: 6, email: 'nobody@defunct.co', status: 'invalid', reason: 'Mailbox does not exist on this server', checkedAt: 'Jul 13, 2025 · 16:45' },
+  { id: 7, email: 'slow@timeoutmail.net', status: 'unknown', reason: 'Mail server timed out — try again later', checkedAt: 'Jul 13, 2025 · 16:45' },
 ];
 
 // ─── Status config ────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<VerifStatus, {
-  label: string; color: 'success'|'error'|'warning'|'default'; icon: React.ReactNode; advice: string;
+  label: string; color: 'success' | 'error' | 'warning' | 'default'; icon: React.ReactNode; advice: string;
 }> = {
-  valid:   { label: 'Valid',   color: 'success', icon: <CheckCircleIcon  sx={{ fontSize: 16, color: 'success.main' }} />, advice: 'Safe to send'                         },
-  invalid: { label: 'Invalid', color: 'error',   icon: <ErrorIcon         sx={{ fontSize: 16, color: 'error.main'   }} />, advice: 'Do not send — will hard-bounce'       },
-  risky:   { label: 'Risky',   color: 'warning', icon: <WarningAmberIcon  sx={{ fontSize: 16, color: 'warning.main' }} />, advice: 'Send with caution or skip'            },
-  unknown: { label: 'Unknown', color: 'default', icon: <HelpOutlineIcon   sx={{ fontSize: 16, color: 'text.disabled'}} />, advice: 'Retry later or skip if low-priority'  },
+  valid: { label: 'Valid', color: 'success', icon: <CheckCircleIcon sx={{ fontSize: 16, color: 'success.main' }} />, advice: 'Safe to send' },
+  invalid: { label: 'Invalid', color: 'error', icon: <ErrorIcon sx={{ fontSize: 16, color: 'error.main' }} />, advice: 'Do not send — will hard-bounce' },
+  risky: { label: 'Risky', color: 'warning', icon: <WarningAmberIcon sx={{ fontSize: 16, color: 'warning.main' }} />, advice: 'Send with caution or skip' },
+  unknown: { label: 'Unknown', color: 'default', icon: <HelpOutlineIcon sx={{ fontSize: 16, color: 'text.disabled' }} />, advice: 'Retry later or skip if low-priority' },
 };
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function AudienceVerificationPage() {
-  const [history,    setHistory]    = useState<VerifResult[]>(SEED);
-  const [input,      setInput]      = useState('');
-  const [verifying,  setVerifying]  = useState(false);
-  const [progress,   setProgress]   = useState(0);
-  const [error,      setError]      = useState('');
+  const [history, setHistory] = useState<VerifResult[]>(SEED);
+  const [input, setInput] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState('');
 
   const handleVerify = useCallback(async () => {
     const emails = input.split('\n').map(e => e.trim()).filter(Boolean);
@@ -132,10 +132,10 @@ export function AudienceVerificationPage() {
       // Offline: simulate results
       const now = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
       const simulated: VerifResult[] = emails.map((email, idx) => ({
-        id:        Date.now() + idx,
+        id: Date.now() + idx,
         email,
-        status:    'unknown'    as VerifStatus,
-        reason:    'API not connected — result simulated',
+        status: 'unknown' as VerifStatus,
+        reason: 'API not connected — result simulated',
         checkedAt: now,
       }));
       setHistory(prev => [...simulated, ...prev]);
@@ -151,9 +151,9 @@ export function AudienceVerificationPage() {
   }, []);
 
   const counts = {
-    valid:   history.filter(r => r.status === 'valid').length,
+    valid: history.filter(r => r.status === 'valid').length,
     invalid: history.filter(r => r.status === 'invalid').length,
-    risky:   history.filter(r => r.status === 'risky').length,
+    risky: history.filter(r => r.status === 'risky').length,
     unknown: history.filter(r => r.status === 'unknown').length,
   };
 
@@ -229,10 +229,10 @@ export function AudienceVerificationPage() {
         <>
           <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
             {([
-              { key: 'valid',   label: 'Valid',   color: 'success.main',  advice: 'Safe to send' },
-              { key: 'invalid', label: 'Invalid', color: 'error.main',    advice: 'Do not send'  },
-              { key: 'risky',   label: 'Risky',   color: 'warning.main',  advice: 'Send with caution' },
-              { key: 'unknown', label: 'Unknown', color: 'text.secondary',advice: 'Retry later'  },
+              { key: 'valid', label: 'Valid', color: 'success.main', advice: 'Safe to send' },
+              { key: 'invalid', label: 'Invalid', color: 'error.main', advice: 'Do not send' },
+              { key: 'risky', label: 'Risky', color: 'warning.main', advice: 'Send with caution' },
+              { key: 'unknown', label: 'Unknown', color: 'text.secondary', advice: 'Retry later' },
             ] as const).map(s => (
               <GlassCard key={s.key} sx={{ p: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.5 }}>
@@ -259,8 +259,8 @@ export function AudienceVerificationPage() {
                 sx={{ height: 8, borderRadius: 4 }} />
               <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
                 {deliverabilityScore >= 90 ? '✓ Excellent — safe to send this list' :
-                 deliverabilityScore >= 70 ? '⚠ Fair — remove invalid addresses before sending' :
-                                             '✗ Poor — clean this list before sending to avoid reputation damage'}
+                  deliverabilityScore >= 70 ? '⚠ Fair — remove invalid addresses before sending' :
+                    '✗ Poor — clean this list before sending to avoid reputation damage'}
               </Typography>
             </GlassCard>
           )}
@@ -347,9 +347,9 @@ export function AudienceVerificationPage() {
         </Typography>
         <Stack spacing={1}>
           {[
-            { step: '1. DNS check',    desc: 'Does the email domain have valid MX records? Invalid domains fail here.' },
-            { step: '2. SMTP check',   desc: 'Does the mail server acknowledge the specific mailbox exists?' },
-            { step: '3. Pattern check',desc: 'Is it a known disposable provider, role address, or catch-all domain?' },
+            { step: '1. DNS check', desc: 'Does the email domain have valid MX records? Invalid domains fail here.' },
+            { step: '2. SMTP check', desc: 'Does the mail server acknowledge the specific mailbox exists?' },
+            { step: '3. Pattern check', desc: 'Is it a known disposable provider, role address, or catch-all domain?' },
           ].map(s => (
             <Box key={s.step} sx={{ display: 'flex', gap: 1.5 }}>
               <Typography variant="caption" fontWeight={700} sx={{ minWidth: 100, flexShrink: 0 }}>{s.step}</Typography>

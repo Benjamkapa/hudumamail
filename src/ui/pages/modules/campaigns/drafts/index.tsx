@@ -7,20 +7,20 @@ import {
   Stack, Step, StepLabel, Stepper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import DraftsIcon        from '@mui/icons-material/Drafts';
-import EditIcon          from '@mui/icons-material/Edit';
-import SearchIcon        from '@mui/icons-material/Search';
-import SendIcon          from '@mui/icons-material/Send';
-import ScheduleSendIcon  from '@mui/icons-material/ScheduleSend';
+import DraftsIcon from '@mui/icons-material/Drafts';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
+import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const BASE = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const BASE = () => (import.meta as any).env?.VITE_API_URL;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -72,30 +72,30 @@ const mapDraft = (c: ApiCampaign): Draft => {
     listName: tags.listName ?? 'All Subscribers',
     updatedAt: formatDate(c.updatedAt ?? c.createdAt),
   };
-};type DraftForm = Omit<Draft, 'id' | 'updatedAt'>;
+}; type DraftForm = Omit<Draft, 'id' | 'updatedAt'>;
 type Errors = Partial<Record<keyof DraftForm, string>>;
 
 // ─── Seed data ────────────────────────────────────────────────────────────────
 
 const SEED: Draft[] = [
-  { id: '', name: 'Weekly Newsletter #48',   subject: '[Draft] Weekly roundup — week 48',      previewText: 'Your weekly digest', fromName: 'Acme News',  fromEmail: 'news@acme.com',  replyTo: '',                listName: 'Newsletter List',  updatedAt: 'Jul 15, 2025' },
-  { id: '', name: 'Holiday Promo',           subject: '[Draft] Celebrate the season with us',  previewText: 'Special offer',      fromName: 'Acme Deals', fromEmail: 'deals@acme.com', replyTo: '',                listName: 'VIP Customers',    updatedAt: 'Jul 16, 2025' },
-  { id: '', name: 'Q3 Product Roundup',      subject: '[Draft] Everything new in Q3',          previewText: 'Q3 highlights',      fromName: 'Acme Team',  fromEmail: 'hello@acme.com', replyTo: '',                listName: 'Active Users',     updatedAt: 'Jul 14, 2025' },
-  { id: '', name: 'Referral Program Launch', subject: '[Draft] Invite a friend, earn rewards', previewText: 'Refer and earn',     fromName: 'Acme Team',  fromEmail: 'hello@acme.com', replyTo: 'support@acme.com', listName: 'All Subscribers',  updatedAt: 'Jul 12, 2025' },
+  { id: '', name: 'Weekly Newsletter #48', subject: '[Draft] Weekly roundup — week 48', previewText: 'Your weekly digest', fromName: 'Acme News', fromEmail: 'news@acme.com', replyTo: '', listName: 'Newsletter List', updatedAt: 'Jul 15, 2025' },
+  { id: '', name: 'Holiday Promo', subject: '[Draft] Celebrate the season with us', previewText: 'Special offer', fromName: 'Acme Deals', fromEmail: 'deals@acme.com', replyTo: '', listName: 'VIP Customers', updatedAt: 'Jul 16, 2025' },
+  { id: '', name: 'Q3 Product Roundup', subject: '[Draft] Everything new in Q3', previewText: 'Q3 highlights', fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: '', listName: 'Active Users', updatedAt: 'Jul 14, 2025' },
+  { id: '', name: 'Referral Program Launch', subject: '[Draft] Invite a friend, earn rewards', previewText: 'Refer and earn', fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: 'support@acme.com', listName: 'All Subscribers', updatedAt: 'Jul 12, 2025' },
 ];
 
-const LISTS = ['All Subscribers','Active Users','Inactive 90d','Newsletter List','New Signups','VIP Customers','Churned Users'];
-const EMPTY: DraftForm = { name:'', subject:'', previewText:'', fromName:'', fromEmail:'', replyTo:'', listName:'' };
-const STEPS = ['Details','Sender','Audience'];
+const LISTS = ['All Subscribers', 'Active Users', 'Inactive 90d', 'Newsletter List', 'New Signups', 'VIP Customers', 'Churned Users'];
+const EMPTY: DraftForm = { name: '', subject: '', previewText: '', fromName: '', fromEmail: '', replyTo: '', listName: '' };
+const STEPS = ['Details', 'Sender', 'Audience'];
 
 function validate(step: number, f: DraftForm): Errors {
   const e: Errors = {};
   if (step === 0) {
-    if (!f.name.trim())    e.name    = 'Campaign name is required';
+    if (!f.name.trim()) e.name = 'Campaign name is required';
     if (!f.subject.trim()) e.subject = 'Subject line is required';
   }
   if (step === 1) {
-    if (!f.fromName.trim())  e.fromName  = 'From name is required';
+    if (!f.fromName.trim()) e.fromName = 'From name is required';
     if (!f.fromEmail.trim()) e.fromEmail = 'From email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.fromEmail)) e.fromEmail = 'Enter a valid email';
     if (f.replyTo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.replyTo)) e.replyTo = 'Enter a valid email';
@@ -123,9 +123,11 @@ function DraftModal({ open, onClose, editing, onSaved }: {
     setLastEditing(editing);
     setStep(0); setErrors({});
     setForm(editing
-      ? { name: editing.name, subject: editing.subject, previewText: editing.previewText,
-          fromName: editing.fromName, fromEmail: editing.fromEmail,
-          replyTo: editing.replyTo, listName: editing.listName }
+      ? {
+        name: editing.name, subject: editing.subject, previewText: editing.previewText,
+        fromName: editing.fromName, fromEmail: editing.fromEmail,
+        replyTo: editing.replyTo, listName: editing.listName
+      }
       : EMPTY
     );
   }
@@ -242,9 +244,9 @@ function DraftModal({ open, onClose, editing, onSaved }: {
         {step < STEPS.length - 1
           ? <Button onClick={handleNext} variant="contained" size="small">Next</Button>
           : <Button onClick={handleSave} variant="contained" size="small" disabled={saving}
-              startIcon={<DraftsIcon fontSize="small" />}>
-              {saving ? 'Saving…' : editing ? 'Save changes' : 'Save draft'}
-            </Button>}
+            startIcon={<DraftsIcon fontSize="small" />}>
+            {saving ? 'Saving…' : editing ? 'Save changes' : 'Save draft'}
+          </Button>}
       </DialogActions>
     </Dialog>
   );
@@ -254,17 +256,17 @@ function DraftModal({ open, onClose, editing, onSaved }: {
 
 export function CampaignDraftsPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [drafts,    setDrafts]    = useState<Draft[]>([]);
-  const [loading,   setLoading]   = useState(true);
+  const [drafts, setDrafts] = useState<Draft[]>([]);
+  const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [search,    setSearch]    = useState('');
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing,   setEditing]   = useState<Draft | null>(null);
-  const [toDelete,  setToDelete]  = useState<Draft | null>(null);
+  const [editing, setEditing] = useState<Draft | null>(null);
+  const [toDelete, setToDelete] = useState<Draft | null>(null);
   const [scheduleDraft, setScheduleDraft] = useState<Draft | null>(null);
-  const [scheduleAt,    setScheduleAt]    = useState('');
+  const [scheduleAt, setScheduleAt] = useState('');
   const [scheduleError, setScheduleError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -343,7 +345,7 @@ export function CampaignDraftsPage() {
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await fetch(`${BASE()}/api/campaigns/${toDelete.id}`, { method: 'DELETE', credentials: 'include' }); } catch {}
+    try { await fetch(`${BASE()}/api/campaigns/${toDelete.id}`, { method: 'DELETE', credentials: 'include' }); } catch { }
     setDrafts(prev => prev.filter(d => d.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);

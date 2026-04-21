@@ -9,15 +9,15 @@ import {
   InputLabel, MenuItem, Select, Stack, Switch, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import PeopleAltIcon     from '@mui/icons-material/PeopleAlt';
-import SearchIcon        from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import SearchIcon from '@mui/icons-material/Search';
 import { GlassCard } from '../../../../dashboard/GlassCard';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -44,18 +44,18 @@ const CLIENTS_REF = [
 ];
 
 const SEED: PlatUser[] = [
-  { id:1, name:'Alice Johnson',  email:'alice@acme.com',     role:'CLIENT_ADMIN', clientName:'Acme Corp',    clientId:1, active:true,  lastLogin:'2 min ago',   createdAt:'Jan 5, 2025'  },
-  { id:2, name:'Bob Martinez',   email:'bob@acme.com',      role:'CLIENT_USER',  clientName:'Acme Corp',    clientId:1, active:true,  lastLogin:'1 hour ago',  createdAt:'Feb 12, 2025' },
-  { id:3, name:'Carol Davis',    email:'carol@bright.io',   role:'CLIENT_ADMIN', clientName:'BrightMedia',  clientId:2, active:true,  lastLogin:'Yesterday',   createdAt:'Mar 12, 2025' },
-  { id:4, name:'David Lee',      email:'david@techflow.com',role:'CLIENT_USER',  clientName:'TechFlow Inc', clientId:3, active:true,  lastLogin:'Today',       createdAt:'Nov 20, 2024' },
-  { id:5, name:'Emma Wilson',    email:'emma@novastar.net', role:'CLIENT_ADMIN', clientName:'NovaStar Ltd', clientId:5, active:false, lastLogin:'2 weeks ago', createdAt:'Jul 10, 2025' },
-  { id:6, name:'Frank Oduya',    email:'frank@momentum.de', role:'CLIENT_USER',  clientName:'Momentum AG',  clientId:6, active:true,  lastLogin:'5 min ago',   createdAt:'Sep 14, 2024' },
-  { id:7, name:'Platform Admin', email:'admin@platform.io', role:'SUPER_ADMIN',  clientName:'Platform',     clientId:0, active:true,  lastLogin:'Just now',    createdAt:'Jan 1, 2025'  },
+  { id: 1, name: 'Alice Johnson', email: 'alice@acme.com', role: 'CLIENT_ADMIN', clientName: 'Acme Corp', clientId: 1, active: true, lastLogin: '2 min ago', createdAt: 'Jan 5, 2025' },
+  { id: 2, name: 'Bob Martinez', email: 'bob@acme.com', role: 'CLIENT_USER', clientName: 'Acme Corp', clientId: 1, active: true, lastLogin: '1 hour ago', createdAt: 'Feb 12, 2025' },
+  { id: 3, name: 'Carol Davis', email: 'carol@bright.io', role: 'CLIENT_ADMIN', clientName: 'BrightMedia', clientId: 2, active: true, lastLogin: 'Yesterday', createdAt: 'Mar 12, 2025' },
+  { id: 4, name: 'David Lee', email: 'david@techflow.com', role: 'CLIENT_USER', clientName: 'TechFlow Inc', clientId: 3, active: true, lastLogin: 'Today', createdAt: 'Nov 20, 2024' },
+  { id: 5, name: 'Emma Wilson', email: 'emma@novastar.net', role: 'CLIENT_ADMIN', clientName: 'NovaStar Ltd', clientId: 5, active: false, lastLogin: '2 weeks ago', createdAt: 'Jul 10, 2025' },
+  { id: 6, name: 'Frank Oduya', email: 'frank@momentum.de', role: 'CLIENT_USER', clientName: 'Momentum AG', clientId: 6, active: true, lastLogin: '5 min ago', createdAt: 'Sep 14, 2024' },
+  { id: 7, name: 'Platform Admin', email: 'admin@platform.io', role: 'SUPER_ADMIN', clientName: 'Platform', clientId: 0, active: true, lastLogin: 'Just now', createdAt: 'Jan 1, 2025' },
 ];
 
-const ROLE_COLOR: Record<UserRole, string> = { SUPER_ADMIN:'#7c3aed', CLIENT_ADMIN:'#0284c7', CLIENT_USER:'#16a34a' };
+const ROLE_COLOR: Record<UserRole, string> = { SUPER_ADMIN: '#7c3aed', CLIENT_ADMIN: '#0284c7', CLIENT_USER: '#16a34a' };
 
-const EMPTY: UserForm = { name:'', email:'', role:'CLIENT_USER', clientId:'' };
+const EMPTY: UserForm = { name: '', email: '', role: 'CLIENT_USER', clientId: '' };
 
 function validate(f: UserForm): Errs {
   const e: Errs = {};
@@ -176,13 +176,13 @@ export function AllUsersPage() {
   }, []);
 
   const handleToggle = useCallback(async (u: PlatUser) => {
-    try { await apiFetch('PATCH', `/api/admin/users/${u.id}`, { active: !u.active }); } catch {}
+    try { await apiFetch('PATCH', `/api/admin/users/${u.id}`, { active: !u.active }); } catch { }
     setUsers(prev => prev.map(x => x.id === u.id ? { ...x, active: !x.active } : x));
   }, []);
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/admin/users/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/admin/users/${toDelete.id}`); } catch { }
     setUsers(prev => prev.filter(u => u.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);
@@ -199,10 +199,10 @@ export function AllUsersPage() {
 
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
         {[
-          { label: 'Total users',    value: users.length                                     },
-          { label: 'Active',         value: users.filter(u => u.active).length               },
-          { label: 'Inactive',       value: users.filter(u => !u.active).length              },
-          { label: 'Super admins',   value: users.filter(u => u.role === 'SUPER_ADMIN').length },
+          { label: 'Total users', value: users.length },
+          { label: 'Active', value: users.filter(u => u.active).length },
+          { label: 'Inactive', value: users.filter(u => !u.active).length },
+          { label: 'Super admins', value: users.filter(u => u.role === 'SUPER_ADMIN').length },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>

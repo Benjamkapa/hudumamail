@@ -8,23 +8,23 @@ import {
   Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import CheckCircleIcon   from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import ErrorIcon         from '@mui/icons-material/Error';
-import HistoryIcon       from '@mui/icons-material/History';
-import LanguageIcon      from '@mui/icons-material/Language';
-import MonitorHeartIcon  from '@mui/icons-material/MonitorHeart';
-import RefreshIcon       from '@mui/icons-material/Refresh';
-import SearchIcon        from '@mui/icons-material/Search';
-import StorageIcon       from '@mui/icons-material/Storage';
-import WarningAmberIcon  from '@mui/icons-material/WarningAmber';
-import AddIcon           from '@mui/icons-material/Add';
-import CloseIcon         from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import ErrorIcon from '@mui/icons-material/Error';
+import HistoryIcon from '@mui/icons-material/History';
+import LanguageIcon from '@mui/icons-material/Language';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SearchIcon from '@mui/icons-material/Search';
+import StorageIcon from '@mui/icons-material/Storage';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { GlassCard } from '../../../../dashboard/GlassCard';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -39,14 +39,14 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 // ─── System Health ────────────────────────────────────────────────────────────
 
 const SERVICES = [
-  { id: 1, name: 'Email sending queue',  status: 'operational', latency: 42,   uptime: 99.99 },
-  { id: 2, name: 'API gateway',          status: 'operational', latency: 18,   uptime: 99.98 },
-  { id: 3, name: 'Contact database',     status: 'operational', latency: 8,    uptime: 100   },
-  { id: 4, name: 'Webhook delivery',     status: 'degraded',    latency: 340,  uptime: 98.2  },
-  { id: 5, name: 'Analytics pipeline',   status: 'operational', latency: 120,  uptime: 99.95 },
-  { id: 6, name: 'Automation engine',    status: 'operational', latency: 65,   uptime: 99.97 },
-  { id: 7, name: 'File / media storage', status: 'operational', latency: 22,   uptime: 99.99 },
-  { id: 8, name: 'Auth service',         status: 'operational', latency: 12,   uptime: 100   },
+  { id: 1, name: 'Email sending queue', status: 'operational', latency: 42, uptime: 99.99 },
+  { id: 2, name: 'API gateway', status: 'operational', latency: 18, uptime: 99.98 },
+  { id: 3, name: 'Contact database', status: 'operational', latency: 8, uptime: 100 },
+  { id: 4, name: 'Webhook delivery', status: 'degraded', latency: 340, uptime: 98.2 },
+  { id: 5, name: 'Analytics pipeline', status: 'operational', latency: 120, uptime: 99.95 },
+  { id: 6, name: 'Automation engine', status: 'operational', latency: 65, uptime: 99.97 },
+  { id: 7, name: 'File / media storage', status: 'operational', latency: 22, uptime: 99.99 },
+  { id: 8, name: 'Auth service', status: 'operational', latency: 12, uptime: 100 },
 ];
 
 export function SystemHealthPage() {
@@ -65,8 +65,8 @@ export function SystemHealthPage() {
   const hasIssues = services.some(s => s.status !== 'operational');
   const statusIcon = (status: string) =>
     status === 'operational' ? <CheckCircleIcon sx={{ fontSize: 18, color: 'success.main' }} />
-    : status === 'degraded'  ? <WarningAmberIcon sx={{ fontSize: 18, color: 'warning.main' }} />
-    :                           <ErrorIcon sx={{ fontSize: 18, color: 'error.main' }} />;
+      : status === 'degraded' ? <WarningAmberIcon sx={{ fontSize: 18, color: 'warning.main' }} />
+        : <ErrorIcon sx={{ fontSize: 18, color: 'error.main' }} />;
 
   return (
     <Stack spacing={2.5}>
@@ -119,22 +119,22 @@ type LogLevel = 'info' | 'warning' | 'error';
 type AuditLog = { id: number; actor: string; action: string; resource: string; ip: string; level: LogLevel; time: string; };
 
 const SEED_LOGS: AuditLog[] = [
-  { id:1,  actor:'alice@acme.com',     action:'Campaign sent',              resource:'Summer Sale Blast',       ip:'41.80.12.34',   level:'info',    time:'Jul 15 · 14:32' },
-  { id:2,  actor:'bob@bright.io',     action:'API key generated',          resource:'Production key',          ip:'197.23.44.12',  level:'info',    time:'Jul 15 · 13:20' },
-  { id:3,  actor:'system',            action:'Bounce threshold exceeded',  resource:'Winback Campaign Q3',     ip:'—',             level:'warning', time:'Jul 15 · 12:10' },
-  { id:4,  actor:'admin@platform.io', action:'Client suspended',           resource:'GreenLeaf Co',            ip:'10.0.0.1',      level:'warning', time:'Jul 14 · 09:00' },
-  { id:5,  actor:'carol@techflow.com',action:'Contact list imported',      resource:'2,100 contacts',          ip:'154.66.23.91',  level:'info',    time:'Jul 13 · 16:45' },
-  { id:6,  actor:'system',            action:'Failed login attempts x5',   resource:'david@techflow.com',      ip:'203.45.67.12',  level:'error',   time:'Jul 13 · 02:11' },
-  { id:7,  actor:'admin@platform.io', action:'Plan changed',               resource:'Acme Corp → Pro',         ip:'10.0.0.1',      level:'info',    time:'Jul 12 · 11:30' },
-  { id:8,  actor:'system',            action:'Spam complaint rate exceeded',resource:'Momentum AG',            ip:'—',             level:'error',   time:'Jul 12 · 08:44' },
+  { id: 1, actor: 'alice@acme.com', action: 'Campaign sent', resource: 'Summer Sale Blast', ip: '41.80.12.34', level: 'info', time: 'Jul 15 · 14:32' },
+  { id: 2, actor: 'bob@bright.io', action: 'API key generated', resource: 'Production key', ip: '197.23.44.12', level: 'info', time: 'Jul 15 · 13:20' },
+  { id: 3, actor: 'system', action: 'Bounce threshold exceeded', resource: 'Winback Campaign Q3', ip: '—', level: 'warning', time: 'Jul 15 · 12:10' },
+  { id: 4, actor: 'admin@platform.io', action: 'Client suspended', resource: 'GreenLeaf Co', ip: '10.0.0.1', level: 'warning', time: 'Jul 14 · 09:00' },
+  { id: 5, actor: 'carol@techflow.com', action: 'Contact list imported', resource: '2,100 contacts', ip: '154.66.23.91', level: 'info', time: 'Jul 13 · 16:45' },
+  { id: 6, actor: 'system', action: 'Failed login attempts x5', resource: 'david@techflow.com', ip: '203.45.67.12', level: 'error', time: 'Jul 13 · 02:11' },
+  { id: 7, actor: 'admin@platform.io', action: 'Plan changed', resource: 'Acme Corp → Pro', ip: '10.0.0.1', level: 'info', time: 'Jul 12 · 11:30' },
+  { id: 8, actor: 'system', action: 'Spam complaint rate exceeded', resource: 'Momentum AG', ip: '—', level: 'error', time: 'Jul 12 · 08:44' },
 ];
 
-const LOG_COLOR: Record<LogLevel, 'info'|'warning'|'error'> = { info:'info', warning:'warning', error:'error' };
+const LOG_COLOR: Record<LogLevel, 'info' | 'warning' | 'error'> = { info: 'info', warning: 'warning', error: 'error' };
 
 export function AuditLogsPage() {
-  const [logs]    = useState<AuditLog[]>(SEED_LOGS);
-  const [filter,  setFilter]  = useState<LogLevel | 'all'>('all');
-  const [search,  setSearch]  = useState('');
+  const [logs] = useState<AuditLog[]>(SEED_LOGS);
+  const [filter, setFilter] = useState<LogLevel | 'all'>('all');
+  const [search, setSearch] = useState('');
 
   const displayed = logs.filter(l =>
     (filter === 'all' || l.level === filter) &&
@@ -152,7 +152,7 @@ export function AuditLogsPage() {
         <TextField size="small" placeholder="Search actor, action, or resource…" value={search} onChange={e => setSearch(e.target.value)} sx={{ flex: 1, maxWidth: 360 }}
           InputProps={{ startAdornment: <InputAdornment position="start"><SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} /></InputAdornment> }} />
         <Box sx={{ display: 'flex', gap: 0.75 }}>
-          {(['all','info','warning','error'] as const).map(f => (
+          {(['all', 'info', 'warning', 'error'] as const).map(f => (
             <Chip key={f} label={f === 'all' ? 'All' : f} size="small"
               variant={filter === f ? 'filled' : 'outlined'}
               color={filter === f ? (f === 'all' ? 'primary' : LOG_COLOR[f as LogLevel]) : 'default'}
@@ -192,16 +192,16 @@ export function AuditLogsPage() {
 
 // ─── admin/domains/index.tsx — Global Domains ─────────────────────────────────
 
-type GDomain = { id: number; domain: string; assignedTo: string; spf: boolean; dkim: boolean; dmarc: boolean; status: 'verified'|'pending'|'failed'; addedAt: string; };
+type GDomain = { id: number; domain: string; assignedTo: string; spf: boolean; dkim: boolean; dmarc: boolean; status: 'verified' | 'pending' | 'failed'; addedAt: string; };
 
 const SEED_DOMAINS: GDomain[] = [
-  { id:1, domain:'mail.acme.com',      assignedTo:'Acme Corp',    spf:true,  dkim:true,  dmarc:true,  status:'verified', addedAt:'Jan 10, 2025' },
-  { id:2, domain:'send.bright.io',     assignedTo:'BrightMedia',  spf:true,  dkim:true,  dmarc:false, status:'pending',  addedAt:'Mar 15, 2025' },
-  { id:3, domain:'mail.techflow.com',  assignedTo:'TechFlow Inc', spf:true,  dkim:true,  dmarc:true,  status:'verified', addedAt:'Nov 22, 2024' },
-  { id:4, domain:'em.momentum.de',     assignedTo:'Momentum AG',  spf:true,  dkim:true,  dmarc:true,  status:'verified', addedAt:'Sep 16, 2024' },
+  { id: 1, domain: 'mail.acme.com', assignedTo: 'Acme Corp', spf: true, dkim: true, dmarc: true, status: 'verified', addedAt: 'Jan 10, 2025' },
+  { id: 2, domain: 'send.bright.io', assignedTo: 'BrightMedia', spf: true, dkim: true, dmarc: false, status: 'pending', addedAt: 'Mar 15, 2025' },
+  { id: 3, domain: 'mail.techflow.com', assignedTo: 'TechFlow Inc', spf: true, dkim: true, dmarc: true, status: 'verified', addedAt: 'Nov 22, 2024' },
+  { id: 4, domain: 'em.momentum.de', assignedTo: 'Momentum AG', spf: true, dkim: true, dmarc: true, status: 'verified', addedAt: 'Sep 16, 2024' },
 ];
 
-const DOM_STATUS_COLOR: Record<string,'success'|'warning'|'error'> = { verified:'success', pending:'warning', failed:'error' };
+const DOM_STATUS_COLOR: Record<string, 'success' | 'warning' | 'error'> = { verified: 'success', pending: 'warning', failed: 'error' };
 
 export function GlobalDomainsPage() {
   const [domains, setDomains] = useState<GDomain[]>(SEED_DOMAINS);
@@ -215,7 +215,7 @@ export function GlobalDomainsPage() {
   };
 
   const handleDelete = async (d: GDomain) => {
-    try { await apiFetch('DELETE', `/api/admin/domains/${d.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/admin/domains/${d.id}`); } catch { }
     setDomains(prev => prev.filter(x => x.id !== d.id));
   };
 
@@ -242,7 +242,7 @@ export function GlobalDomainsPage() {
                   <TableCell><Typography variant="caption" color="text.secondary">{d.assignedTo}</Typography></TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={0.75}>
-                      {[['SPF', d.spf],['DKIM', d.dkim],['DMARC', d.dmarc]].map(([label, ok]) => (
+                      {[['SPF', d.spf], ['DKIM', d.dkim], ['DMARC', d.dmarc]].map(([label, ok]) => (
                         <Box key={label as string} sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
                           {ok ? <CheckCircleIcon sx={{ fontSize: 12, color: 'success.main' }} /> : <ErrorIcon sx={{ fontSize: 12, color: 'error.main' }} />}
                           <Typography variant="caption" color={ok ? 'success.main' : 'error.main'} fontWeight={600}>{label}</Typography>
@@ -271,12 +271,12 @@ export function GlobalDomainsPage() {
 // ─── admin/infrastructure/index.tsx ──────────────────────────────────────────
 
 const NODES = [
-  { id:1, name:'SMTP relay — primary',    region:'af-south-1',   ips:['41.80.12.10','41.80.12.11'], load:62, status:'online'  },
-  { id:2, name:'SMTP relay — secondary',  region:'eu-west-1',    ips:['185.220.34.5'],              load:31, status:'online'  },
-  { id:3, name:'Queue worker pool',       region:'af-south-1',   ips:['10.0.1.50–60'],              load:74, status:'online'  },
-  { id:4, name:'Analytics ingestion',     region:'eu-central-1', ips:['10.0.2.20'],                 load:18, status:'standby' },
-  { id:5, name:'Redis cache cluster',     region:'af-south-1',   ips:['10.0.3.10','10.0.3.11'],     load:44, status:'online'  },
-  { id:6, name:'Object storage (media)',  region:'us-east-1',    ips:['CDN edge'],                  load:12, status:'online'  },
+  { id: 1, name: 'SMTP relay — primary', region: 'af-south-1', ips: ['41.80.12.10', '41.80.12.11'], load: 62, status: 'online' },
+  { id: 2, name: 'SMTP relay — secondary', region: 'eu-west-1', ips: ['185.220.34.5'], load: 31, status: 'online' },
+  { id: 3, name: 'Queue worker pool', region: 'af-south-1', ips: ['10.0.1.50–60'], load: 74, status: 'online' },
+  { id: 4, name: 'Analytics ingestion', region: 'eu-central-1', ips: ['10.0.2.20'], load: 18, status: 'standby' },
+  { id: 5, name: 'Redis cache cluster', region: 'af-south-1', ips: ['10.0.3.10', '10.0.3.11'], load: 44, status: 'online' },
+  { id: 6, name: 'Object storage (media)', region: 'us-east-1', ips: ['CDN edge'], load: 12, status: 'online' },
 ];
 
 export function InfrastructurePage() {
@@ -288,9 +288,9 @@ export function InfrastructurePage() {
       </Stack>
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(3,1fr)' } }}>
         {[
-          { label:'Online nodes',  value: NODES.filter(n => n.status === 'online').length,  color:'success.main' },
-          { label:'Standby nodes', value: NODES.filter(n => n.status === 'standby').length, color:'warning.main' },
-          { label:'Avg. load',     value: `${Math.round(NODES.reduce((a,n) => a+n.load,0)/NODES.length)}%`, color:undefined },
+          { label: 'Online nodes', value: NODES.filter(n => n.status === 'online').length, color: 'success.main' },
+          { label: 'Standby nodes', value: NODES.filter(n => n.status === 'standby').length, color: 'warning.main' },
+          { label: 'Avg. load', value: `${Math.round(NODES.reduce((a, n) => a + n.load, 0) / NODES.length)}%`, color: undefined },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>
@@ -323,22 +323,22 @@ export function InfrastructurePage() {
 
 type ConfigItem = { key: string; value: string; group: string; desc: string; };
 const CONFIG: ConfigItem[] = [
-  { group:'Email limits',  key:'max_emails_per_hour',    value:'10000',   desc:'Maximum emails per hour per client account'             },
-  { group:'Email limits',  key:'bounce_threshold_pct',   value:'2.0',     desc:'Auto-pause campaigns above this bounce rate (%)'        },
-  { group:'Email limits',  key:'complaint_threshold_pct',value:'0.1',     desc:'Auto-pause above this spam complaint rate (%)'          },
-  { group:'Platform',      key:'trial_period_days',      value:'14',      desc:'Days of free trial for newly created accounts'          },
-  { group:'Platform',      key:'default_plan',           value:'Starter', desc:'Plan assigned to new accounts on registration'         },
-  { group:'Platform',      key:'max_contacts_per_import',value:'10000',   desc:'Maximum contacts per single CSV import'                 },
-  { group:'Security',      key:'session_timeout_mins',   value:'60',      desc:'User session timeout in minutes'                       },
-  { group:'Security',      key:'mfa_required_admins',    value:'false',   desc:'Require MFA for all Super Admin accounts'              },
-  { group:'Security',      key:'api_rate_limit_per_min', value:'300',     desc:'API requests per minute per API key'                   },
+  { group: 'Email limits', key: 'max_emails_per_hour', value: '10000', desc: 'Maximum emails per hour per client account' },
+  { group: 'Email limits', key: 'bounce_threshold_pct', value: '2.0', desc: 'Auto-pause campaigns above this bounce rate (%)' },
+  { group: 'Email limits', key: 'complaint_threshold_pct', value: '0.1', desc: 'Auto-pause above this spam complaint rate (%)' },
+  { group: 'Platform', key: 'trial_period_days', value: '14', desc: 'Days of free trial for newly created accounts' },
+  { group: 'Platform', key: 'default_plan', value: 'Starter', desc: 'Plan assigned to new accounts on registration' },
+  { group: 'Platform', key: 'max_contacts_per_import', value: '10000', desc: 'Maximum contacts per single CSV import' },
+  { group: 'Security', key: 'session_timeout_mins', value: '60', desc: 'User session timeout in minutes' },
+  { group: 'Security', key: 'mfa_required_admins', value: 'false', desc: 'Require MFA for all Super Admin accounts' },
+  { group: 'Security', key: 'api_rate_limit_per_min', value: '300', desc: 'API requests per minute per API key' },
 ];
 
 export function PlatformConfigPage() {
-  const [items, setItems]     = useState<ConfigItem[]>(CONFIG);
+  const [items, setItems] = useState<ConfigItem[]>(CONFIG);
   const [editItem, setEditItem] = useState<ConfigItem | null>(null);
   const [editValue, setEditValue] = useState('');
-  const [saving, setSaving]   = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const groups = [...new Set(items.map(i => i.group))];
 
@@ -403,17 +403,17 @@ export function PlatformConfigPage() {
 // ─── admin/compliance/index.tsx ───────────────────────────────────────────────
 
 const COMPLIANCE_ITEMS = [
-  { title:'CAN-SPAM compliance',  status:'compliant',   desc:'All campaigns include physical address and unsubscribe link.'                },
-  { title:'GDPR compliance',      status:'compliant',   desc:'DPAs in place. Contact deletion + data portability supported.'              },
-  { title:'CASL compliance',      status:'review',      desc:'Canadian Anti-Spam Law — consent record audits needed quarterly.'           },
-  { title:'DMARC enforcement',    status:'compliant',   desc:'All verified sending domains have DMARC policy = reject.'                   },
-  { title:'Data retention policy',status:'compliant',   desc:'Inactive contact data purged automatically after 3 years.'                 },
-  { title:'SOC 2 Type II audit',  status:'in-progress', desc:'Annual audit in progress with external auditor. ETA Q4 2025.'              },
-  { title:'ISO 27001',            status:'planned',     desc:'Certification targeted for 2026. Gap analysis in progress.'                 },
+  { title: 'CAN-SPAM compliance', status: 'compliant', desc: 'All campaigns include physical address and unsubscribe link.' },
+  { title: 'GDPR compliance', status: 'compliant', desc: 'DPAs in place. Contact deletion + data portability supported.' },
+  { title: 'CASL compliance', status: 'review', desc: 'Canadian Anti-Spam Law — consent record audits needed quarterly.' },
+  { title: 'DMARC enforcement', status: 'compliant', desc: 'All verified sending domains have DMARC policy = reject.' },
+  { title: 'Data retention policy', status: 'compliant', desc: 'Inactive contact data purged automatically after 3 years.' },
+  { title: 'SOC 2 Type II audit', status: 'in-progress', desc: 'Annual audit in progress with external auditor. ETA Q4 2025.' },
+  { title: 'ISO 27001', status: 'planned', desc: 'Certification targeted for 2026. Gap analysis in progress.' },
 ];
 
-const COMP_COLOR: Record<string,'success'|'warning'|'info'|'default'> = {
-  compliant:'success', review:'warning', 'in-progress':'info', planned:'default',
+const COMP_COLOR: Record<string, 'success' | 'warning' | 'info' | 'default'> = {
+  compliant: 'success', review: 'warning', 'in-progress': 'info', planned: 'default',
 };
 
 export function CompliancePage() {
@@ -425,10 +425,10 @@ export function CompliancePage() {
       </Stack>
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(4,1fr)' } }}>
         {[
-          { label:'Compliant',    value: COMPLIANCE_ITEMS.filter(i=>i.status==='compliant').length,    color:'success.main' },
-          { label:'Under review', value: COMPLIANCE_ITEMS.filter(i=>i.status==='review').length,       color:'warning.main' },
-          { label:'In progress',  value: COMPLIANCE_ITEMS.filter(i=>i.status==='in-progress').length,  color:'info.main'    },
-          { label:'Planned',      value: COMPLIANCE_ITEMS.filter(i=>i.status==='planned').length,      color:'text.secondary'},
+          { label: 'Compliant', value: COMPLIANCE_ITEMS.filter(i => i.status === 'compliant').length, color: 'success.main' },
+          { label: 'Under review', value: COMPLIANCE_ITEMS.filter(i => i.status === 'review').length, color: 'warning.main' },
+          { label: 'In progress', value: COMPLIANCE_ITEMS.filter(i => i.status === 'in-progress').length, color: 'info.main' },
+          { label: 'Planned', value: COMPLIANCE_ITEMS.filter(i => i.status === 'planned').length, color: 'text.secondary' },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>
@@ -444,7 +444,7 @@ export function CompliancePage() {
                 <Typography variant="subtitle2" fontWeight={700}>{i.title}</Typography>
                 <Typography variant="caption" color="text.secondary">{i.desc}</Typography>
               </Box>
-              <Chip label={i.status.replace('-',' ')} color={COMP_COLOR[i.status]} size="small" variant="outlined"
+              <Chip label={i.status.replace('-', ' ')} color={COMP_COLOR[i.status]} size="small" variant="outlined"
                 sx={{ fontSize: 11, textTransform: 'capitalize', flexShrink: 0 }} />
             </Box>
           </GlassCard>

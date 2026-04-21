@@ -15,15 +15,14 @@ export function AuthProvider(props: { children: React.ReactNode }) {
 
   const refresh = React.useCallback(async () => {
     try {
-      const res = await refreshApi();
       const stored = readStoredAuth();
-      if (!stored.user) {
+      if (!stored.refreshToken || !stored.user) {
         setState({ status: 'anonymous', accessToken: null, user: null });
         return;
       }
+      const res = await refreshApi({ refreshToken: stored.refreshToken });
       if (res.accessToken) {
-        // Token refreshed successfully, keep existing user
-        writeStoredAuth({ accessToken: res.accessToken, user: stored.user });
+        writeStoredAuth({ accessToken: res.accessToken, refreshToken: stored.refreshToken, user: stored.user });
         setState({ status: 'authenticated', accessToken: res.accessToken, user: stored.user });
         return;
       }
@@ -37,7 +36,6 @@ export function AuthProvider(props: { children: React.ReactNode }) {
     if (state.status !== 'loading') return;
     const stored = readStoredAuth();
     if (stored.accessToken && stored.user) {
-      // User already loaded, just authenticate
       setState({ status: 'authenticated', accessToken: stored.accessToken, user: stored.user });
       return;
     }
@@ -49,13 +47,13 @@ export function AuthProvider(props: { children: React.ReactNode }) {
   const login: AuthContextValue['login'] = React.useCallback(async ({ email, password }) => {
     const res = await loginApi({ email, password });
     const user = res.user || res;
-    writeStoredAuth({ accessToken: res.accessToken, user });
+    writeStoredAuth({ accessToken: res.accessToken, refreshToken: res.refreshToken, user });
     setState({ status: 'authenticated', accessToken: res.accessToken, user });
   }, []);
 
   const register: AuthContextValue['register'] = React.useCallback(async ({ companyName, name, email, password }) => {
-    await registerApi({ companyName, name, email, password });
-    // After register, user must login (backend doesn't auto-issue tokens)
+    const slug = companyName.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    await registerApi({ clientName: companyName, slug, name, email, password });
   }, []);
 
   const logout: AuthContextValue['logout'] = React.useCallback(async () => {
@@ -92,4 +90,3 @@ export function AuthProvider(props: { children: React.ReactNode }) {
 
   return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
 }
-

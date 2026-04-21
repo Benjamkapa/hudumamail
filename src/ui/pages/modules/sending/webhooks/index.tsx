@@ -20,27 +20,27 @@ import {
   TableContainer, TableHead, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
 
-import AddIcon           from '@mui/icons-material/Add';
-import CheckCircleIcon   from '@mui/icons-material/CheckCircle';
-import CloseIcon         from '@mui/icons-material/Close';
-import ContentCopyIcon   from '@mui/icons-material/ContentCopy';
+import AddIcon from '@mui/icons-material/Add';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import ErrorIcon         from '@mui/icons-material/Error';
-import ExpandMoreIcon    from '@mui/icons-material/ExpandMore';
-import MoreVertIcon      from '@mui/icons-material/MoreVert';
-import RefreshIcon       from '@mui/icons-material/Refresh';
-import SendIcon          from '@mui/icons-material/Send';
-import VpnKeyIcon        from '@mui/icons-material/VpnKey';
-import VisibilityIcon    from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
+import ErrorIcon from '@mui/icons-material/Error';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SendIcon from '@mui/icons-material/Send';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import WebhookIcon       from '@mui/icons-material/Webhook';
+import WebhookIcon from '@mui/icons-material/Webhook';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, { method, credentials: 'include', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
   if (!res.ok) throw new Error(res.statusText);
@@ -52,9 +52,9 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 
 type EventType =
   | 'email.delivered' | 'email.opened' | 'email.clicked'
-  | 'email.bounced'   | 'email.complained' | 'email.unsubscribed'
+  | 'email.bounced' | 'email.complained' | 'email.unsubscribed'
   | 'contact.created' | 'contact.updated'
-  | 'campaign.sent'   | 'campaign.completed';
+  | 'campaign.sent' | 'campaign.completed';
 
 type DeliveryStatus = 'success' | 'failed' | 'pending';
 
@@ -98,11 +98,11 @@ const EVENT_GROUPS: { label: string; events: { type: EventType; desc: string }[]
   {
     label: 'Email delivery',
     events: [
-      { type: 'email.delivered',    desc: 'Message accepted by recipient server' },
-      { type: 'email.opened',       desc: 'Recipient opened the email' },
-      { type: 'email.clicked',      desc: 'Recipient clicked a tracked link' },
-      { type: 'email.bounced',      desc: 'Hard or soft bounce received' },
-      { type: 'email.complained',   desc: 'Spam complaint (FBL report)' },
+      { type: 'email.delivered', desc: 'Message accepted by recipient server' },
+      { type: 'email.opened', desc: 'Recipient opened the email' },
+      { type: 'email.clicked', desc: 'Recipient clicked a tracked link' },
+      { type: 'email.bounced', desc: 'Hard or soft bounce received' },
+      { type: 'email.complained', desc: 'Spam complaint (FBL report)' },
       { type: 'email.unsubscribed', desc: 'Recipient unsubscribed via link' },
     ],
   },
@@ -116,7 +116,7 @@ const EVENT_GROUPS: { label: string; events: { type: EventType; desc: string }[]
   {
     label: 'Campaigns',
     events: [
-      { type: 'campaign.sent',      desc: 'Campaign started sending' },
+      { type: 'campaign.sent', desc: 'Campaign started sending' },
       { type: 'campaign.completed', desc: 'Campaign send complete' },
     ],
   },
@@ -127,17 +127,17 @@ const ALL_EVENTS: EventType[] = EVENT_GROUPS.flatMap(g => g.events.map(e => e.ty
 // ─── Seed data ────────────────────────────────────────────────────────────────
 
 function buildLogs(n: number): DeliveryLog[] {
-  const types: EventType[] = ['email.delivered','email.opened','email.clicked','email.bounced'];
+  const types: EventType[] = ['email.delivered', 'email.opened', 'email.clicked', 'email.bounced'];
   return Array.from({ length: n }, (_, i) => {
     const ok = Math.random() > 0.1;
     return {
-      id:            `log_${i}`,
-      eventType:     types[i % types.length],
-      statusCode:    ok ? 200 : [500, 503, 404][i % 3],
-      latencyMs:     Math.floor(80 + Math.random() * 300),
-      sentAt:        `2025-07-${String(15 - (i % 5)).padStart(2,'0')} ${String(10 + (i % 12)).padStart(2,'0')}:${String(i % 60).padStart(2,'0')}`,
-      status:        ok ? 'success' : 'failed',
-      responseBody:  ok ? '{"ok":true}' : '{"error":"Internal Server Error"}',
+      id: `log_${i}`,
+      eventType: types[i % types.length],
+      statusCode: ok ? 200 : [500, 503, 404][i % 3],
+      latencyMs: Math.floor(80 + Math.random() * 300),
+      sentAt: `2025-07-${String(15 - (i % 5)).padStart(2, '0')} ${String(10 + (i % 12)).padStart(2, '0')}:${String(i % 60).padStart(2, '0')}`,
+      status: ok ? 'success' : 'failed',
+      responseBody: ok ? '{"ok":true}' : '{"error":"Internal Server Error"}',
       payloadSnippet: `{"event":"${types[i % types.length]}","contact":"c_0${(i % 9) + 1}","ts":${Date.now() - i * 60000}}`,
     };
   });
@@ -148,7 +148,7 @@ const INITIAL_WEBHOOKS: Webhook[] = [
     id: 'wh_01', url: 'https://hooks.zapier.com/hooks/catch/12345/abc123/',
     description: 'Zapier automation trigger', secret: 'whsec_abc123def456ghi789',
     enabled: true,
-    events: ['email.delivered','email.bounced','email.complained','contact.created'],
+    events: ['email.delivered', 'email.bounced', 'email.complained', 'contact.created'],
     successRate: 98.4, lastDelivery: '2025-07-15 09:14', lastStatus: 'success',
     totalDeliveries: 1842, createdAt: '2025-03-10',
     logs: buildLogs(12),
@@ -157,7 +157,7 @@ const INITIAL_WEBHOOKS: Webhook[] = [
     id: 'wh_02', url: 'https://api.acme-crm.io/webhooks/email-events',
     description: 'CRM sync — email events', secret: 'whsec_xyz987uvw654rst321',
     enabled: true,
-    events: ['email.opened','email.clicked','email.unsubscribed','contact.updated'],
+    events: ['email.opened', 'email.clicked', 'email.unsubscribed', 'contact.updated'],
     successRate: 94.1, lastDelivery: '2025-07-15 09:08', lastStatus: 'failed',
     totalDeliveries: 6221, createdAt: '2025-01-22',
     logs: buildLogs(12),
@@ -190,13 +190,15 @@ function validateForm(form: WebhookForm): FormErrors {
 function StatusChip({ status, code }: { status: DeliveryStatus; code?: number }) {
   const cfg = {
     success: { color: '#22c55e', label: code ? `${code} OK` : 'Success' },
-    failed:  { color: '#ef4444', label: code ? `${code} Error` : 'Failed' },
+    failed: { color: '#ef4444', label: code ? `${code} Error` : 'Failed' },
     pending: { color: '#f59e0b', label: 'Pending' },
   }[status];
   return (
     <Chip label={cfg.label} size="small"
-      sx={{ fontSize: 10, height: 18, fontWeight: 700, fontFamily: 'monospace',
-        bgcolor: cfg.color + '18', color: cfg.color, border: `1px solid ${cfg.color}40` }} />
+      sx={{
+        fontSize: 10, height: 18, fontWeight: 700, fontFamily: 'monospace',
+        bgcolor: cfg.color + '18', color: cfg.color, border: `1px solid ${cfg.color}40`
+      }} />
   );
 }
 
@@ -204,15 +206,15 @@ function StatusChip({ status, code }: { status: DeliveryStatus; code?: number })
 
 function WebhookCard({ wh, canEdit, onEdit, onDelete, onToggle, onRetry, onCopy }: {
   wh: Webhook; canEdit: boolean;
-  onEdit:   (w: Webhook) => void;
+  onEdit: (w: Webhook) => void;
   onDelete: (w: Webhook) => void;
   onToggle: (w: Webhook) => void;
-  onRetry:  (w: Webhook, logId: string) => void;
-  onCopy:   (v: string) => void;
+  onRetry: (w: Webhook, logId: string) => void;
+  onCopy: (v: string) => void;
 }) {
-  const [logsOpen,   setLogsOpen]   = useState(false);
-  const [secretVis,  setSecretVis]  = useState(false);
-  const [anchor,     setAnchor]     = useState<null | HTMLElement>(null);
+  const [logsOpen, setLogsOpen] = useState(false);
+  const [secretVis, setSecretVis] = useState(false);
+  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
 
   const failedCount = wh.logs.filter(l => l.status === 'failed').length;
 
@@ -264,8 +266,8 @@ function WebhookCard({ wh, canEdit, onEdit, onDelete, onToggle, onRetry, onCopy 
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, mb: 1.5 }}>
         {[
           { label: 'Total deliveries', value: wh.totalDeliveries.toLocaleString() },
-          { label: 'Success rate',     value: `${wh.successRate}%`, color: wh.successRate >= 95 ? 'success.main' : wh.successRate >= 85 ? 'warning.main' : 'error.main' },
-          { label: 'Last delivery',    value: wh.lastDelivery ?? '—' },
+          { label: 'Success rate', value: `${wh.successRate}%`, color: wh.successRate >= 95 ? 'success.main' : wh.successRate >= 85 ? 'warning.main' : 'error.main' },
+          { label: 'Last delivery', value: wh.lastDelivery ?? '—' },
         ].map(s => (
           <Box key={s.label}>
             <Typography variant="caption" color="text.disabled" sx={{ display: 'block', fontSize: 10 }}>{s.label}</Typography>
@@ -281,8 +283,8 @@ function WebhookCard({ wh, canEdit, onEdit, onDelete, onToggle, onRetry, onCopy 
         {wh.events.length === ALL_EVENTS.length
           ? <Chip label="All events" size="small" sx={{ fontSize: 10, height: 18, fontWeight: 600 }} />
           : wh.events.slice(0, 4).map(e => (
-              <Chip key={e} label={e} size="small" sx={{ fontSize: 10, height: 18, fontFamily: 'monospace' }} />
-            ))}
+            <Chip key={e} label={e} size="small" sx={{ fontSize: 10, height: 18, fontFamily: 'monospace' }} />
+          ))}
         {wh.events.length > 4 && wh.events.length < ALL_EVENTS.length && (
           <Typography variant="caption" color="text.disabled">+{wh.events.length - 4}</Typography>
         )}
@@ -376,7 +378,7 @@ function WebhookDrawer({ open, onClose, editing, onSaved }: {
   editing: Webhook | null;
   onSaved: (w: Webhook, isEdit: boolean) => void;
 }) {
-  const [form,   setForm]   = useState<WebhookForm>(EMPTY_FORM);
+  const [form, setForm] = useState<WebhookForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
 
@@ -527,13 +529,13 @@ function WebhookDrawer({ open, onClose, editing, onSaved }: {
 
 export function SendingWebhooksPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [webhooks,  setWebhooks]  = useState<Webhook[]>(INITIAL_WEBHOOKS);
-  const [drawerOpen,setDrawerOpen]= useState(false);
-  const [editing,   setEditing]   = useState<Webhook | null>(null);
-  const [toDelete,  setToDelete]  = useState<Webhook | null>(null);
-  const [snack,     setSnack]     = useState<string | null>(null);
+  const [webhooks, setWebhooks] = useState<Webhook[]>(INITIAL_WEBHOOKS);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editing, setEditing] = useState<Webhook | null>(null);
+  const [toDelete, setToDelete] = useState<Webhook | null>(null);
+  const [snack, setSnack] = useState<string | null>(null);
 
   const handleSaved = useCallback((w: Webhook, isEdit: boolean) => {
     setWebhooks(prev => isEdit ? prev.map(x => x.id === w.id ? w : x) : [w, ...prev]);
@@ -542,21 +544,21 @@ export function SendingWebhooksPage() {
 
   const handleToggle = useCallback(async (w: Webhook) => {
     const next = !w.enabled;
-    try { await apiFetch('PATCH', `/api/sending/webhooks/${w.id}`, { enabled: next }); } catch {}
+    try { await apiFetch('PATCH', `/api/sending/webhooks/${w.id}`, { enabled: next }); } catch { }
     setWebhooks(prev => prev.map(x => x.id === w.id ? { ...x, enabled: next } : x));
     setSnack(`Webhook ${next ? 'enabled' : 'disabled'}.`);
   }, []);
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/sending/webhooks/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/sending/webhooks/${toDelete.id}`); } catch { }
     setWebhooks(prev => prev.filter(x => x.id !== toDelete.id));
     setToDelete(null);
     setSnack('Webhook deleted.');
   }, [toDelete]);
 
   const handleRetry = useCallback(async (w: Webhook, logId: string) => {
-    try { await apiFetch('POST', `/api/sending/webhooks/${w.id}/retry/${logId}`); } catch {}
+    try { await apiFetch('POST', `/api/sending/webhooks/${w.id}/retry/${logId}`); } catch { }
     setWebhooks(prev => prev.map(x => {
       if (x.id !== w.id) return x;
       return { ...x, logs: x.logs.map(l => l.id === logId ? { ...l, status: 'success' as const, statusCode: 200 } : l) };
@@ -565,8 +567,8 @@ export function SendingWebhooksPage() {
   }, []);
 
   const counts = useMemo(() => ({
-    total:   webhooks.length,
-    active:  webhooks.filter(w => w.enabled).length,
+    total: webhooks.length,
+    active: webhooks.filter(w => w.enabled).length,
     failing: webhooks.filter(w => w.enabled && w.successRate < 95).length,
   }), [webhooks]);
 
@@ -593,8 +595,8 @@ export function SendingWebhooksPage() {
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3,1fr)' } }}>
         {[
           { label: 'Active endpoints', value: counts.active, color: 'success.main' },
-          { label: 'Total endpoints',  value: counts.total,  color: undefined },
-          { label: 'Failing (< 95%)',  value: counts.failing, color: counts.failing > 0 ? 'error.main' : 'success.main' },
+          { label: 'Total endpoints', value: counts.total, color: undefined },
+          { label: 'Failing (< 95%)', value: counts.failing, color: counts.failing > 0 ? 'error.main' : 'success.main' },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>

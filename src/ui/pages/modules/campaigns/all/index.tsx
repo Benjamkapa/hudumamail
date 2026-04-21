@@ -46,27 +46,27 @@ import {
   Typography,
 } from '@mui/material';
 
-import AddIcon           from '@mui/icons-material/Add';
-import BarChartIcon      from '@mui/icons-material/BarChart';
-import CloseIcon         from '@mui/icons-material/Close';
-import ContentCopyIcon   from '@mui/icons-material/ContentCopy';
+import AddIcon from '@mui/icons-material/Add';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import MoreVertIcon      from '@mui/icons-material/MoreVert';
-import PauseCircleIcon   from '@mui/icons-material/PauseCircle';
-import PlayCircleIcon    from '@mui/icons-material/PlayCircle';
-import ScheduleSendIcon  from '@mui/icons-material/ScheduleSend';
-import SearchIcon        from '@mui/icons-material/Search';
-import SendIcon          from '@mui/icons-material/Send';
-import ViewListIcon      from '@mui/icons-material/ViewList';
-import ViewModuleIcon    from '@mui/icons-material/ViewModule';
+import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
+import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
@@ -81,9 +81,9 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 }
 
 type CampaignStatus = 'sent' | 'sending' | 'scheduled' | 'draft' | 'paused';
-type SortField      = 'name' | 'sent' | 'openRate' | 'clickRate' | 'createdAt';
-type SortDir        = 'asc' | 'desc';
-type ViewMode       = 'table' | 'grid';
+type SortField = 'name' | 'sent' | 'openRate' | 'clickRate' | 'createdAt';
+type SortDir = 'asc' | 'desc';
+type ViewMode = 'table' | 'grid';
 
 type Campaign = {
   id: string;
@@ -201,11 +201,11 @@ const WIZARD_STEPS = ['Details', 'Sender', 'Audience', 'Schedule'];
 function validateStep(step: number, form: CampaignForm): FormErrors {
   const errors: FormErrors = {};
   if (step === 0) {
-    if (!form.name.trim())    errors.name    = 'Campaign name is required';
+    if (!form.name.trim()) errors.name = 'Campaign name is required';
     if (!form.subject.trim()) errors.subject = 'Subject line is required';
   }
   if (step === 1) {
-    if (!form.fromName.trim())  errors.fromName  = 'From name is required';
+    if (!form.fromName.trim()) errors.fromName = 'From name is required';
     if (!form.fromEmail.trim()) errors.fromEmail = 'From email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.fromEmail)) errors.fromEmail = 'Enter a valid email';
     if (form.replyTo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.replyTo)) errors.replyTo = 'Enter a valid email';
@@ -222,12 +222,12 @@ function validateStep(step: number, form: CampaignForm): FormErrors {
   return errors;
 }
 
-const STATUS_CONFIG: Record<CampaignStatus, { label: string; color: 'success'|'info'|'warning'|'default'|'error' }> = {
-  sent:      { label: 'Sent',      color: 'success' },
-  sending:   { label: 'Sending',   color: 'info'    },
+const STATUS_CONFIG: Record<CampaignStatus, { label: string; color: 'success' | 'info' | 'warning' | 'default' | 'error' }> = {
+  sent: { label: 'Sent', color: 'success' },
+  sending: { label: 'Sending', color: 'info' },
   scheduled: { label: 'Scheduled', color: 'warning' },
-  draft:     { label: 'Draft',     color: 'default' },
-  paused:    { label: 'Paused',    color: 'error'   },
+  draft: { label: 'Draft', color: 'default' },
+  paused: { label: 'Paused', color: 'error' },
 };
 
 const ALL_STATUSES: CampaignStatus[] = ['sent', 'sending', 'scheduled', 'draft', 'paused'];
@@ -235,14 +235,14 @@ const ALL_STATUSES: CampaignStatus[] = ['sent', 'sending', 'scheduled', 'draft',
 // â”€â”€â”€ Seed data  â”€â”€â”€â”€
 
 const INITIAL_CAMPAIGNS: Campaign[] = [
-  { id: '',  name: 'Summer Sale Blast',        status: 'sent',      subject: 'Summer deals â€” up to 50% off',          previewText: "Don't miss out on our biggest sale", fromName: 'Acme Team',   fromEmail: 'hello@acme.com',  replyTo: 'hello@acme.com',  listName: 'All Subscribers',  sent: 4210,  openRate: 34.2, clickRate: 8.1,  bounceRate: 0.6, sentAt: 'Jul 12, 2025', createdAt: '2025-07-10' },
-  { id: '',  name: 'Product Update v2.4',       status: 'sent',      subject: 'New features you asked for are here',      previewText: 'Version 2.4 is live with 12 updates', fromName: 'Acme Team',  fromEmail: 'hello@acme.com',  replyTo: 'hello@acme.com',  listName: 'Active Users',     sent: 3870,  openRate: 29.7, clickRate: 6.4,  bounceRate: 0.9, sentAt: 'Jul 8, 2025',  createdAt: '2025-07-06' },
-  { id: '',  name: 'Re-engagement Flow',        status: 'sending',   subject: "We miss you here's a special offer",    previewText: 'Come back and save 20%',              fromName: 'Acme Team',   fromEmail: 'hello@acme.com',  replyTo: 'hello@acme.com',  listName: 'Inactive 90d',     sent: 1540,  openRate: 22.1, clickRate: 4.9,  bounceRate: 1.1, createdAt: '2025-07-14' },
-  { id: '',  name: 'Weekly Newsletter #48',     status: 'draft',     subject: '[Draft] Weekly roundup week 48',        previewText: 'Your weekly digest is ready',         fromName: 'Acme News',   fromEmail: 'news@acme.com',   replyTo: 'news@acme.com',   listName: 'Newsletter List',  sent: 0,     openRate: 0,    clickRate: 0,    bounceRate: 0,   createdAt: '2025-07-15' },
-  { id: '',  name: 'Onboarding Series #1',      status: 'sent',      subject: "Welcome! Here's how to get started",      previewText: 'Your account is ready',               fromName: 'Acme Team',   fromEmail: 'hello@acme.com',  replyTo: 'hello@acme.com',  listName: 'New Signups',      sent: 2980,  openRate: 41.3, clickRate: 12.6, bounceRate: 0.3, sentAt: 'Jul 3, 2025',  createdAt: '2025-07-01' },
-  { id: '',  name: 'Black Friday Teaser',       status: 'scheduled', subject: 'Black Friday is coming get ready',   previewText: 'Exclusive early access for you',      fromName: 'Acme Deals',  fromEmail: 'deals@acme.com',  replyTo: 'deals@acme.com',  listName: 'All Subscribers',  sent: 0,     openRate: 0,    clickRate: 0,    bounceRate: 0,   scheduledAt: 'Nov 1, 2025',  createdAt: '2025-07-13' },
-  { id: '',  name: 'Winback Campaign Q3',       status: 'paused',    subject: 'Come back — we have something for you',   previewText: 'Missed you lately',                   fromName: 'Acme Team',   fromEmail: 'hello@acme.com',  replyTo: 'hello@acme.com',  listName: 'Churned Users',    sent: 890,   openRate: 18.4, clickRate: 3.2,  bounceRate: 2.4, createdAt: '2025-06-28' },
-  { id: '',  name: 'Feature Announcement',      status: 'sent',      subject: 'Introducing AI-powered email suggestions',previewText: 'The future of email is here',         fromName: 'Acme Team',   fromEmail: 'hello@acme.com',  replyTo: 'hello@acme.com',  listName: 'All Subscribers',  sent: 5120,  openRate: 38.6, clickRate: 10.2, bounceRate: 0.4, sentAt: 'Jun 20, 2025', createdAt: '2025-06-18' },
+  { id: '', name: 'Summer Sale Blast', status: 'sent', subject: 'Summer deals â€” up to 50% off', previewText: "Don't miss out on our biggest sale", fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: 'hello@acme.com', listName: 'All Subscribers', sent: 4210, openRate: 34.2, clickRate: 8.1, bounceRate: 0.6, sentAt: 'Jul 12, 2025', createdAt: '2025-07-10' },
+  { id: '', name: 'Product Update v2.4', status: 'sent', subject: 'New features you asked for are here', previewText: 'Version 2.4 is live with 12 updates', fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: 'hello@acme.com', listName: 'Active Users', sent: 3870, openRate: 29.7, clickRate: 6.4, bounceRate: 0.9, sentAt: 'Jul 8, 2025', createdAt: '2025-07-06' },
+  { id: '', name: 'Re-engagement Flow', status: 'sending', subject: "We miss you here's a special offer", previewText: 'Come back and save 20%', fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: 'hello@acme.com', listName: 'Inactive 90d', sent: 1540, openRate: 22.1, clickRate: 4.9, bounceRate: 1.1, createdAt: '2025-07-14' },
+  { id: '', name: 'Weekly Newsletter #48', status: 'draft', subject: '[Draft] Weekly roundup week 48', previewText: 'Your weekly digest is ready', fromName: 'Acme News', fromEmail: 'news@acme.com', replyTo: 'news@acme.com', listName: 'Newsletter List', sent: 0, openRate: 0, clickRate: 0, bounceRate: 0, createdAt: '2025-07-15' },
+  { id: '', name: 'Onboarding Series #1', status: 'sent', subject: "Welcome! Here's how to get started", previewText: 'Your account is ready', fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: 'hello@acme.com', listName: 'New Signups', sent: 2980, openRate: 41.3, clickRate: 12.6, bounceRate: 0.3, sentAt: 'Jul 3, 2025', createdAt: '2025-07-01' },
+  { id: '', name: 'Black Friday Teaser', status: 'scheduled', subject: 'Black Friday is coming get ready', previewText: 'Exclusive early access for you', fromName: 'Acme Deals', fromEmail: 'deals@acme.com', replyTo: 'deals@acme.com', listName: 'All Subscribers', sent: 0, openRate: 0, clickRate: 0, bounceRate: 0, scheduledAt: 'Nov 1, 2025', createdAt: '2025-07-13' },
+  { id: '', name: 'Winback Campaign Q3', status: 'paused', subject: 'Come back — we have something for you', previewText: 'Missed you lately', fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: 'hello@acme.com', listName: 'Churned Users', sent: 890, openRate: 18.4, clickRate: 3.2, bounceRate: 2.4, createdAt: '2025-06-28' },
+  { id: '', name: 'Feature Announcement', status: 'sent', subject: 'Introducing AI-powered email suggestions', previewText: 'The future of email is here', fromName: 'Acme Team', fromEmail: 'hello@acme.com', replyTo: 'hello@acme.com', listName: 'All Subscribers', sent: 5120, openRate: 38.6, clickRate: 10.2, bounceRate: 0.4, sentAt: 'Jun 20, 2025', createdAt: '2025-06-18' },
 ];
 
 // â”€â”€â”€ Helpers  â”€â”€â”€â”€â”€â”€
@@ -255,7 +255,7 @@ function StatusChip({ status }: { status: CampaignStatus }) {
   );
 }
 
-function RateBar({ value, color = 'primary' }: { value: number; color?: 'primary'|'success'|'error' }) {
+function RateBar({ value, color = 'primary' }: { value: number; color?: 'primary' | 'success' | 'error' }) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 80 }}>
       <LinearProgress variant="determinate" value={Math.min(value, 100)} color={color}
@@ -272,12 +272,12 @@ function RateBar({ value, color = 'primary' }: { value: number; color?: 'primary
 type ActionProps = {
   campaign: Campaign;
   userRole?: Role;
-  onEdit:        (c: Campaign) => void;
-  onDuplicate:   (c: Campaign) => void;
-  onSchedule:    (c: Campaign) => void;
+  onEdit: (c: Campaign) => void;
+  onDuplicate: (c: Campaign) => void;
+  onSchedule: (c: Campaign) => void;
   onPauseResume: (c: Campaign) => void;
-  onDelete:      (c: Campaign) => void;
-  onViewReport:  (c: Campaign) => void;
+  onDelete: (c: Campaign) => void;
+  onViewReport: (c: Campaign) => void;
 };
 
 function CampaignActions({
@@ -328,7 +328,7 @@ function CampaignActions({
           <MenuItem dense onClick={() => { onPauseResume(campaign); setAnchor(null); }}>
             {campaign.status === 'sending'
               ? <><PauseCircleIcon sx={{ fontSize: 16, mr: 1.5, color: 'warning.main' }} /> Pause sending</>
-              : <><PlayCircleIcon  sx={{ fontSize: 16, mr: 1.5, color: 'success.main' }} /> Resume sending</>}
+              : <><PlayCircleIcon sx={{ fontSize: 16, mr: 1.5, color: 'success.main' }} /> Resume sending</>}
           </MenuItem>
         )}
 
@@ -371,10 +371,10 @@ function CampaignCard(props: ActionProps) {
       {campaign.sent > 0 ? (
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
           {[
-            { label: 'Sent',       value: campaign.sent.toLocaleString(),  color: undefined },
-            { label: 'Open rate',  value: `${campaign.openRate}%`,         color: campaign.openRate  >= 25 ? 'success.main' : 'text.primary' },
-            { label: 'Click rate', value: `${campaign.clickRate}%`,        color: undefined },
-            { label: 'Bounce',     value: `${campaign.bounceRate}%`,       color: campaign.bounceRate >= 2  ? 'error.main'   : 'text.secondary' },
+            { label: 'Sent', value: campaign.sent.toLocaleString(), color: undefined },
+            { label: 'Open rate', value: `${campaign.openRate}%`, color: campaign.openRate >= 25 ? 'success.main' : 'text.primary' },
+            { label: 'Click rate', value: `${campaign.clickRate}%`, color: undefined },
+            { label: 'Bounce', value: `${campaign.bounceRate}%`, color: campaign.bounceRate >= 2 ? 'error.main' : 'text.secondary' },
           ].map(s => (
             <Box key={s.label}>
               <Typography variant="caption" color="text.disabled" sx={{ display: 'block', mb: 0.2 }}>
@@ -409,8 +409,8 @@ type CampaignModalProps = {
 };
 
 function CampaignModal({ open, onClose, editing, onSaved }: CampaignModalProps) {
-  const [step,   setStep]   = useState(0);
-  const [form,   setForm]   = useState<CampaignForm>(EMPTY_FORM);
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState<CampaignForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
 
@@ -422,16 +422,16 @@ function CampaignModal({ open, onClose, editing, onSaved }: CampaignModalProps) 
     setErrors({});
     if (editing) {
       setForm({
-        name:        editing.name,
-        subject:     editing.subject,
+        name: editing.name,
+        subject: editing.subject,
         previewText: editing.previewText,
-        fromName:    editing.fromName,
-        fromEmail:   editing.fromEmail,
-        replyTo:     editing.replyTo,
-        listName:    editing.listName,
-        sendMode:    editing.status === 'scheduled' ? 'schedule'
-                   : editing.status === 'draft'     ? 'draft'
-                   : 'draft',
+        fromName: editing.fromName,
+        fromEmail: editing.fromEmail,
+        replyTo: editing.replyTo,
+        listName: editing.listName,
+        sendMode: editing.status === 'scheduled' ? 'schedule'
+          : editing.status === 'draft' ? 'draft'
+            : 'draft',
         scheduledAt: toLocalInput(editing.scheduledAt),
       });
     } else {
@@ -463,19 +463,19 @@ function CampaignModal({ open, onClose, editing, onSaved }: CampaignModalProps) 
     setSaving(true);
 
     const status: CampaignStatus =
-      form.sendMode === 'now'      ? 'sending'   :
-      form.sendMode === 'schedule' ? 'scheduled' :
-                                      'draft';
+      form.sendMode === 'now' ? 'sending' :
+        form.sendMode === 'schedule' ? 'scheduled' :
+          'draft';
 
     const payload = {
-      name:        form.name,
-      subject:     form.subject,
+      name: form.name,
+      subject: form.subject,
       previewText: form.previewText,
-      fromName:    form.fromName,
-      fromEmail:   form.fromEmail,
-      replyTo:     form.replyTo || form.fromEmail,
-      listName:    form.listName,
-      sendMode:    form.sendMode,
+      fromName: form.fromName,
+      fromEmail: form.fromEmail,
+      replyTo: form.replyTo || form.fromEmail,
+      listName: form.listName,
+      sendMode: form.sendMode,
       scheduledAt: form.sendMode === 'schedule' ? new Date(form.scheduledAt).toISOString() : undefined,
     };
 
@@ -505,8 +505,8 @@ function CampaignModal({ open, onClose, editing, onSaved }: CampaignModalProps) 
         }, true);
       } else {
         onSaved({
-          id:        String(Date.now()),
-          sent:      0, openRate: 0, clickRate: 0, bounceRate: 0,
+          id: String(Date.now()),
+          sent: 0, openRate: 0, clickRate: 0, bounceRate: 0,
           createdAt: new Date().toISOString().slice(0, 10),
           name: form.name,
           subject: form.subject,
@@ -646,8 +646,8 @@ function CampaignModal({ open, onClose, editing, onSaved }: CampaignModalProps) 
                 {form.sendMode === 'draft'
                   ? 'Saved but not sent until you manually trigger it.'
                   : form.sendMode === 'schedule'
-                  ? 'Automatically sent at the date and time you pick.'
-                  : 'Queued immediately after saving.'}
+                    ? 'Automatically sent at the date and time you pick.'
+                    : 'Queued immediately after saving.'}
               </FormHelperText>
             </FormControl>
 
@@ -674,14 +674,16 @@ function CampaignModal({ open, onClose, editing, onSaved }: CampaignModalProps) 
                 Summary
               </Typography>
               {[
-                { label: 'Name',      value: form.name },
-                { label: 'Subject',   value: form.subject },
-                { label: 'From',      value: form.fromName ? `${form.fromName} <${form.fromEmail}>` : 'â€”' },
-                { label: 'Audience',  value: form.listName || 'â€”' },
-                { label: 'Send mode', value:
-                    form.sendMode === 'draft'    ? 'Save as draft' :
-                    form.sendMode === 'schedule' ? 'Scheduled — ' + (formatDate(form.scheduledAt) || 'not set') :
-                                                   'Send immediately' },
+                { label: 'Name', value: form.name },
+                { label: 'Subject', value: form.subject },
+                { label: 'From', value: form.fromName ? `${form.fromName} <${form.fromEmail}>` : 'â€”' },
+                { label: 'Audience', value: form.listName || 'â€”' },
+                {
+                  label: 'Send mode', value:
+                    form.sendMode === 'draft' ? 'Save as draft' :
+                      form.sendMode === 'schedule' ? 'Scheduled — ' + (formatDate(form.scheduledAt) || 'not set') :
+                        'Send immediately'
+                },
               ].map(row => (
                 <Box key={row.label} sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
                   <Typography variant="caption" color="text.disabled" sx={{ minWidth: 72 }}>
@@ -711,16 +713,16 @@ function CampaignModal({ open, onClose, editing, onSaved }: CampaignModalProps) 
           <Button onClick={handleSave} variant="contained" size="small" disabled={saving}
             startIcon={<SendIcon fontSize="small" />}>
             {saving ? 'Saving...' :
-              form.sendMode === 'now'      ? 'Save & send' :
-              form.sendMode === 'schedule' ? (editing ? 'Update schedule' : 'Schedule campaign') :
-                                             (editing ? 'Save changes' : 'Save as draft')}
+              form.sendMode === 'now' ? 'Save & send' :
+                form.sendMode === 'schedule' ? (editing ? 'Update schedule' : 'Schedule campaign') :
+                  (editing ? 'Save changes' : 'Save as draft')}
           </Button>
         )}
       </DialogActions>
     </Dialog>
   );
 }
-  
+
 
 function DeleteDialog({
   campaign, onConfirm, onCancel,
@@ -743,19 +745,19 @@ function DeleteDialog({
 
 export function AllCampaignsPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [campaigns,    setCampaigns]    = useState<Campaign[]>([]);
-  const [loading,      setLoading]      = useState(true);
-  const [loadError,    setLoadError]    = useState<string | null>(null);
-  const [viewMode,     setViewMode]     = useState<ViewMode>('table');
-  const [search,       setSearch]       = useState('');
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | 'all'>('all');
-  const [sortField,    setSortField]    = useState<SortField>('createdAt');
-  const [sortDir,      setSortDir]      = useState<SortDir>('desc');
-  const [modalOpen,    setModalOpen]    = useState(false);
-  const [editing,      setEditing]      = useState<Campaign | null>(null);
-  const [toDelete,     setToDelete]     = useState<Campaign | null>(null);
+  const [sortField, setSortField] = useState<SortField>('createdAt');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<Campaign | null>(null);
+  const [toDelete, setToDelete] = useState<Campaign | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -819,11 +821,11 @@ export function AllCampaignsPage() {
       // Offline fallback
       const copy: Campaign = {
         ...c,
-        id:        String(Date.now()),
-        name:      `${c.name} (copy)`,
-        status:    'draft',
-        sent:      0, openRate: 0, clickRate: 0, bounceRate: 0,
-        sentAt:    undefined, scheduledAt: undefined,
+        id: String(Date.now()),
+        name: `${c.name} (copy)`,
+        status: 'draft',
+        sent: 0, openRate: 0, clickRate: 0, bounceRate: 0,
+        sentAt: undefined, scheduledAt: undefined,
         createdAt: new Date().toISOString().slice(0, 10),
       };
       setCampaigns(prev => [copy, ...prev]);
@@ -833,37 +835,37 @@ export function AllCampaignsPage() {
   // â”€â”€ Pause / Resume â”€â”€
   const handlePauseResume = useCallback(async (c: Campaign) => {
     const next: CampaignStatus = c.status === 'sending' ? 'paused' : 'sending';
-    try { await apiFetch('PATCH', `/api/campaigns/${c.id}`, { status: next }); } catch {}
+    try { await apiFetch('PATCH', `/api/campaigns/${c.id}`, { status: next }); } catch { }
     setCampaigns(prev => prev.map(x => x.id === c.id ? { ...x, status: next } : x));
   }, []);
 
   // â”€â”€ Delete â”€â”€
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/campaigns/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/campaigns/${toDelete.id}`); } catch { }
     setCampaigns(prev => prev.filter(x => x.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);
 
   // â”€â”€ Action props builder â”€â”€
   const actionProps = (c: Campaign): ActionProps => ({
-    campaign:      c,
-    userRole:      user?.role,
-    onEdit:        () => { setEditing(c); setModalOpen(true); },
-    onDuplicate:   handleDuplicate,
-    onSchedule:    () => { setEditing(c); setModalOpen(true); }, // opens modal pre-filled
+    campaign: c,
+    userRole: user?.role,
+    onEdit: () => { setEditing(c); setModalOpen(true); },
+    onDuplicate: handleDuplicate,
+    onSchedule: () => { setEditing(c); setModalOpen(true); }, // opens modal pre-filled
     onPauseResume: handlePauseResume,
-    onDelete:      setToDelete,
-    onViewReport:  () => { /* navigate to analytics */ },
+    onDelete: setToDelete,
+    onViewReport: () => { /* navigate to analytics */ },
   });
 
   // â”€â”€ Summary counts â”€â”€
   const counts = useMemo(() => ({
-    total:     campaigns.length,
-    sent:      campaigns.filter(c => c.status === 'sent').length,
-    sending:   campaigns.filter(c => c.status === 'sending').length,
+    total: campaigns.length,
+    sent: campaigns.filter(c => c.status === 'sent').length,
+    sending: campaigns.filter(c => c.status === 'sending').length,
     scheduled: campaigns.filter(c => c.status === 'scheduled').length,
-    draft:     campaigns.filter(c => c.status === 'draft').length,
+    draft: campaigns.filter(c => c.status === 'draft').length,
   }), [campaigns]);
 
   return (
@@ -892,11 +894,11 @@ export function AllCampaignsPage() {
       {/* â”€â”€ Summary chips â”€â”€ */}
       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
         {[
-          { label: 'Total',     value: counts.total,     color: 'default'  },
-          { label: 'Sent',      value: counts.sent,      color: 'success'  },
-          { label: 'Sending',   value: counts.sending,   color: 'info'     },
-          { label: 'Scheduled', value: counts.scheduled, color: 'warning'  },
-          { label: 'Drafts',    value: counts.draft,     color: 'default'  },
+          { label: 'Total', value: counts.total, color: 'default' },
+          { label: 'Sent', value: counts.sent, color: 'success' },
+          { label: 'Sending', value: counts.sending, color: 'info' },
+          { label: 'Scheduled', value: counts.scheduled, color: 'warning' },
+          { label: 'Drafts', value: counts.draft, color: 'default' },
         ].map(s => (
           <Chip key={s.label} label={`${s.label}: ${s.value}`} color={s.color as any}
             variant={s.label === 'Total' ? 'filled' : 'outlined'} size="small"
@@ -909,10 +911,12 @@ export function AllCampaignsPage() {
         <TextField
           size="small" placeholder="Search campaigns" value={search}
           onChange={e => setSearch(e.target.value)}
-          InputProps={{ startAdornment:
-            <InputAdornment position="start">
-              <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
-            </InputAdornment> }}
+          InputProps={{
+            startAdornment:
+              <InputAdornment position="start">
+                <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+              </InputAdornment>
+          }}
           sx={{ minWidth: 220, flex: 1, maxWidth: 340 }} />
 
         {/* Status filter chips */}
@@ -1042,10 +1046,10 @@ export function AllCampaignsPage() {
                     <TableCell align="right">
                       {c.bounceRate > 0
                         ? <Typography variant="body2"
-                            color={c.bounceRate >= 2 ? 'error.main' : 'text.secondary'}
-                            fontWeight={c.bounceRate >= 2 ? 700 : 400}>
-                            {c.bounceRate}%
-                          </Typography>
+                          color={c.bounceRate >= 2 ? 'error.main' : 'text.secondary'}
+                          fontWeight={c.bounceRate >= 2 ? 700 : 400}>
+                          {c.bounceRate}%
+                        </Typography>
                         : <Typography variant="body2" color="text.disabled">â€”</Typography>}
                     </TableCell>
                     <TableCell align="right" sx={{ whiteSpace: 'nowrap', color: 'text.secondary', fontSize: 12 }}>
@@ -1064,8 +1068,10 @@ export function AllCampaignsPage() {
 
       {/* â”€â”€ GRID VIEW â”€â”€ */}
       {viewMode === 'grid' && displayed.length > 0 && (
-        <Box sx={{ display: 'grid', gap: 2, alignItems: 'start',
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2,1fr)', lg: 'repeat(3,1fr)', xl: 'repeat(4,1fr)' } }}>
+        <Box sx={{
+          display: 'grid', gap: 2, alignItems: 'start',
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2,1fr)', lg: 'repeat(3,1fr)', xl: 'repeat(4,1fr)' }
+        }}>
           {displayed.map(c => <CampaignCard key={c.id} {...actionProps(c)} />)}
         </Box>
       )}

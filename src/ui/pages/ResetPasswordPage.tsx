@@ -49,39 +49,41 @@ export function ResetPasswordPage() {
           </Typography>
         </Stack>
 
-            <form
-              onSubmit={handleSubmit(async (values) => {
-                setOk(null);
-                setServerError(null);
-                try {
-                  const res = await resetPasswordApi({ token: values.token, password: values.password });
-                  setOk(res.message ?? 'Password reset successful');
-                } catch (e: any) {
-                  setServerError(e?.response?.data?.error ?? 'Reset failed');
-                }
-              })}
-            >
-              <Stack spacing={1.5}>
-                <TextField label="Reset token" error={!!errors.token} helperText={errors.token?.message} {...register('token')} />
-                <TextField
-                  label="New password"
-                  type="password"
-                  error={!!errors.password}
-                  helperText={errors.password?.message ?? 'Min 8 chars, with 1 uppercase and 1 number'}
-                  {...register('password')}
-                />
-                <TextField
-                  label="Confirm password"
-                  type="password"
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword?.message}
-                  {...register('confirmPassword')}
-                />
-                <Button type="submit" variant="contained" disabled={isSubmitting} fullWidth>
-                  Update password
-                </Button>
-              </Stack>
-            </form>
+            {!ok && (
+              <form
+                onSubmit={handleSubmit(async (values) => {
+                  setOk(null);
+                  setServerError(null);
+                  try {
+                    const res = await resetPasswordApi({ token: values.token, password: values.password });
+                    setOk(res.message ?? 'Password reset successful');
+                  } catch (e: any) {
+                    setServerError(e?.response?.data?.error ?? 'Reset failed');
+                  }
+                })}
+              >
+                <Stack spacing={1.5}>
+                  <TextField label="Reset token" error={!!errors.token} helperText={errors.token?.message} {...register('token')} />
+                  <TextField
+                    label="New password"
+                    type="password"
+                    error={!!errors.password}
+                    helperText={errors.password?.message ?? 'Min 8 chars, with 1 uppercase and 1 number'}
+                    {...register('password')}
+                  />
+                  <TextField
+                    label="Confirm password"
+                    type="password"
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword?.message}
+                    {...register('confirmPassword')}
+                  />
+                  <Button type="submit" variant="contained" disabled={isSubmitting} fullWidth>
+                    Update password
+                  </Button>
+                </Stack>
+              </form>
+            )}
 
             {serverError && <Alert severity="error">{serverError}</Alert>}
             {ok && (

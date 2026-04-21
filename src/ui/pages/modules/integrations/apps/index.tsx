@@ -19,25 +19,25 @@ import {
   Select, Snackbar, Stack, Switch, TextField, Tooltip, Typography,
 } from '@mui/material';
 
-import AddIcon            from '@mui/icons-material/Add';
-import CheckCircleIcon    from '@mui/icons-material/CheckCircle';
-import CloseIcon          from '@mui/icons-material/Close';
-import ExtensionIcon      from '@mui/icons-material/Extension';
-import LinkIcon           from '@mui/icons-material/Link';
-import LinkOffIcon        from '@mui/icons-material/LinkOff';
-import RefreshIcon        from '@mui/icons-material/Refresh';
-import SearchIcon         from '@mui/icons-material/Search';
-import SettingsIcon       from '@mui/icons-material/Settings';
-import SyncIcon           from '@mui/icons-material/Sync';
-import TuneIcon           from '@mui/icons-material/Tune';
+import AddIcon from '@mui/icons-material/Add';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import ExtensionIcon from '@mui/icons-material/Extension';
+import LinkIcon from '@mui/icons-material/Link';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SearchIcon from '@mui/icons-material/Search';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SyncIcon from '@mui/icons-material/Sync';
+import TuneIcon from '@mui/icons-material/Tune';
 
-import { GlassCard }     from '../../../../dashboard/GlassCard';
-import { useAuth }       from '../../../../../state/auth/useAuth';
-import { Role }          from '../../../../../types/auth';
+import { GlassCard } from '../../../../dashboard/GlassCard';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -52,7 +52,7 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type AppCategory = 'CRM' | 'E-commerce' | 'Analytics' | 'Productivity' | 'Developer';
-type SyncStatus  = 'idle' | 'syncing' | 'error';
+type SyncStatus = 'idle' | 'syncing' | 'error';
 
 type AppIntegration = {
   id: string;
@@ -85,11 +85,11 @@ type ConfigField = {
 // ─── Category config ──────────────────────────────────────────────────────────
 
 const CAT_COLOR: Record<AppCategory, string> = {
-  CRM:          '#0ea5e9',
+  CRM: '#0ea5e9',
   'E-commerce': '#f97316',
-  Analytics:    '#22c55e',
+  Analytics: '#22c55e',
   Productivity: '#8b5cf6',
-  Developer:    '#6366f1',
+  Developer: '#6366f1',
 };
 
 const ALL_CATEGORIES: AppCategory[] = ['CRM', 'E-commerce', 'Analytics', 'Productivity', 'Developer'];
@@ -107,9 +107,9 @@ const APP_CATALOGUE: AppIntegration[] = [
     lastSynced: '2025-07-15 08:55', syncStatus: 'idle', syncCount: 4821,
     features: ['Sync contacts', 'Import deal stages', 'Sync email activity', 'Bi-directional updates'],
     configFields: [
-      { key: 'apiKey',    label: 'API key',       type: 'password', placeholder: 'pat-na1-••••••••', required: true },
-      { key: 'portalId',  label: 'Portal ID',     type: 'text',     placeholder: '12345678',          required: true },
-      { key: 'syncMode',  label: 'Sync direction',type: 'select',   options: ['Bi-directional', 'Send → HubSpot', 'HubSpot → Send'], required: true },
+      { key: 'apiKey', label: 'API key', type: 'password', placeholder: 'pat-na1-••••••••', required: true },
+      { key: 'portalId', label: 'Portal ID', type: 'text', placeholder: '12345678', required: true },
+      { key: 'syncMode', label: 'Sync direction', type: 'select', options: ['Bi-directional', 'Send → HubSpot', 'HubSpot → Send'], required: true },
     ],
     config: { apiKey: 'pat-na1-redacted', portalId: '93847162', syncMode: 'Bi-directional' },
   },
@@ -121,9 +121,9 @@ const APP_CATALOGUE: AppIntegration[] = [
     connected: false, syncStatus: 'idle',
     features: ['Sync leads & contacts', 'Track email engagement', 'Campaign member sync'],
     configFields: [
-      { key: 'instanceUrl', label: 'Instance URL', type: 'text',     placeholder: 'https://xxx.salesforce.com', required: true },
-      { key: 'clientId',    label: 'Client ID',    type: 'text',     placeholder: 'Connected App Client ID', required: true },
-      { key: 'clientSecret',label: 'Client secret',type: 'password', placeholder: '••••••••', required: true },
+      { key: 'instanceUrl', label: 'Instance URL', type: 'text', placeholder: 'https://xxx.salesforce.com', required: true },
+      { key: 'clientId', label: 'Client ID', type: 'text', placeholder: 'Connected App Client ID', required: true },
+      { key: 'clientSecret', label: 'Client secret', type: 'password', placeholder: '••••••••', required: true },
     ],
     config: {},
   },
@@ -150,9 +150,9 @@ const APP_CATALOGUE: AppIntegration[] = [
     lastSynced: '2025-07-15 09:01', syncStatus: 'idle', syncCount: 2340,
     features: ['Import customers', 'Sync purchase history', 'Abandoned cart trigger', 'Product recommendations'],
     configFields: [
-      { key: 'shopDomain',  label: 'Shop domain',  type: 'text',     placeholder: 'your-store.myshopify.com', required: true },
+      { key: 'shopDomain', label: 'Shop domain', type: 'text', placeholder: 'your-store.myshopify.com', required: true },
       { key: 'accessToken', label: 'Access token', type: 'password', placeholder: 'shpat_••••••••', required: true },
-      { key: 'syncOrders',  label: 'Sync past orders', type: 'select', options: ['Yes — all orders', 'Last 30 days', 'Last 90 days', 'No'] },
+      { key: 'syncOrders', label: 'Sync past orders', type: 'select', options: ['Yes — all orders', 'Last 30 days', 'Last 90 days', 'No'] },
     ],
     config: { shopDomain: 'acme.myshopify.com', accessToken: 'shpat_redacted', syncOrders: 'Last 90 days' },
   },
@@ -164,9 +164,9 @@ const APP_CATALOGUE: AppIntegration[] = [
     connected: false, syncStatus: 'idle',
     features: ['Import customers', 'Order event triggers', 'Abandoned cart', 'Coupon personalisation'],
     configFields: [
-      { key: 'siteUrl',       label: 'Site URL',       type: 'text',     placeholder: 'https://yourstore.com', required: true },
-      { key: 'consumerKey',   label: 'Consumer key',   type: 'text',     placeholder: 'ck_••••••••', required: true },
-      { key: 'consumerSecret',label: 'Consumer secret',type: 'password', placeholder: 'cs_••••••••', required: true },
+      { key: 'siteUrl', label: 'Site URL', type: 'text', placeholder: 'https://yourstore.com', required: true },
+      { key: 'consumerKey', label: 'Consumer key', type: 'text', placeholder: 'ck_••••••••', required: true },
+      { key: 'consumerSecret', label: 'Consumer secret', type: 'password', placeholder: 'cs_••••••••', required: true },
     ],
     config: {},
   },
@@ -181,7 +181,7 @@ const APP_CATALOGUE: AppIntegration[] = [
     features: ['Track campaign clicks in GA4', 'Conversion events', 'UTM parameter passthrough'],
     configFields: [
       { key: 'measurementId', label: 'Measurement ID', type: 'text', placeholder: 'G-XXXXXXXXXX', required: true },
-      { key: 'apiSecret',     label: 'API secret',     type: 'password', placeholder: 'GA4 Measurement Protocol secret', required: true },
+      { key: 'apiSecret', label: 'API secret', type: 'password', placeholder: 'GA4 Measurement Protocol secret', required: true },
     ],
     config: {},
   },
@@ -222,7 +222,7 @@ const APP_CATALOGUE: AppIntegration[] = [
     features: ['Campaign sent notifications', 'Bounce / complaint alerts', 'Weekly digest reports'],
     configFields: [
       { key: 'webhookUrl', label: 'Incoming webhook URL', type: 'text', placeholder: 'https://hooks.slack.com/services/…', required: true },
-      { key: 'channel',    label: 'Default channel',      type: 'text', placeholder: '#marketing-alerts' },
+      { key: 'channel', label: 'Default channel', type: 'text', placeholder: '#marketing-alerts' },
     ],
     config: {},
   },
@@ -249,7 +249,7 @@ const APP_CATALOGUE: AppIntegration[] = [
     features: ['Transactional routing', 'Message streams', 'Delivery webhooks passthrough'],
     configFields: [
       { key: 'serverToken', label: 'Server token', type: 'password', placeholder: 'Postmark server API token', required: true },
-      { key: 'stream',      label: 'Message stream', type: 'select', options: ['outbound', 'transactional', 'broadcasts'] },
+      { key: 'stream', label: 'Message stream', type: 'select', options: ['outbound', 'transactional', 'broadcasts'] },
     ],
     config: {},
   },
@@ -261,9 +261,9 @@ const APP_CATALOGUE: AppIntegration[] = [
     connected: false, syncStatus: 'idle',
     features: ['BYOS (Bring Your Own Sender)', 'Custom IP pools', 'SES event publishing'],
     configFields: [
-      { key: 'region',          label: 'AWS region',       type: 'select', options: ['us-east-1','eu-west-1','ap-southeast-1'], required: true },
-      { key: 'accessKeyId',     label: 'Access key ID',    type: 'text',     placeholder: 'AKIAIOSFODNN7EXAMPLE', required: true },
-      { key: 'secretAccessKey', label: 'Secret access key',type: 'password', placeholder: '••••••••', required: true },
+      { key: 'region', label: 'AWS region', type: 'select', options: ['us-east-1', 'eu-west-1', 'ap-southeast-1'], required: true },
+      { key: 'accessKeyId', label: 'Access key ID', type: 'text', placeholder: 'AKIAIOSFODNN7EXAMPLE', required: true },
+      { key: 'secretAccessKey', label: 'Secret access key', type: 'password', placeholder: '••••••••', required: true },
     ],
     config: {},
   },
@@ -275,10 +275,10 @@ function fmtRelative(iso: string | null | undefined) {
   if (!iso) return null;
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 2)   return 'Just now';
-  if (mins < 60)  return `${mins}m ago`;
+  if (mins < 2) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24)   return `${hrs}h ago`;
+  if (hrs < 24) return `${hrs}h ago`;
   return iso;
 }
 
@@ -323,7 +323,7 @@ function ConfigDrawer({ app, open, onClose, onSave }: {
 
   const handleSave = async () => {
     setSaving(true);
-    try { await apiFetch('PUT', `/api/integrations/apps/${app.id}/config`, config); } catch {}
+    try { await apiFetch('PUT', `/api/integrations/apps/${app.id}/config`, config); } catch { }
     setSaving(false);
     onSave(app.id, config);
     onClose();
@@ -416,13 +416,14 @@ function DisconnectDialog({ app, onConfirm, onCancel }: {
 function AppCard({ app, canEdit, onConnect, onDisconnect, onConfigure, onSync }: {
   app: AppIntegration;
   canEdit: boolean;
-  onConnect:    (a: AppIntegration) => void;
+  onConnect: (a: AppIntegration) => void;
   onDisconnect: (a: AppIntegration) => void;
-  onConfigure:  (a: AppIntegration) => void;
-  onSync:       (a: AppIntegration) => void;
+  onConfigure: (a: AppIntegration) => void;
+  onSync: (a: AppIntegration) => void;
 }) {
   return (
-    <GlassCard sx={{ p: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5, position: 'relative',
+    <GlassCard sx={{
+      p: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5, position: 'relative',
       outline: app.connected ? '1.5px solid' : 'none',
       outlineColor: 'success.light',
     }}>
@@ -432,8 +433,10 @@ function AppCard({ app, canEdit, onConnect, onDisconnect, onConfigure, onSync }:
           icon={<CheckCircleIcon sx={{ fontSize: '11px !important' }} />}
           label="Connected"
           size="small" color="success"
-          sx={{ position: 'absolute', top: 12, right: 12, fontSize: 10, height: 20,
-            '& .MuiChip-icon': { ml: 0.5 } }} />
+          sx={{
+            position: 'absolute', top: 12, right: 12, fontSize: 10, height: 20,
+            '& .MuiChip-icon': { ml: 0.5 }
+          }} />
       )}
 
       {/* Logo + name */}
@@ -442,7 +445,8 @@ function AppCard({ app, canEdit, onConnect, onDisconnect, onConfigure, onSync }:
         <Box sx={{ minWidth: 0 }}>
           <Typography variant="subtitle2" fontWeight={800}>{app.name}</Typography>
           <Chip label={app.category} size="small"
-            sx={{ fontSize: 10, height: 18, mt: 0.25, fontWeight: 600,
+            sx={{
+              fontSize: 10, height: 18, mt: 0.25, fontWeight: 600,
               bgcolor: CAT_COLOR[app.category] + '18',
               color: CAT_COLOR[app.category],
               border: `1px solid ${CAT_COLOR[app.category]}40`,
@@ -527,15 +531,15 @@ function AppCard({ app, canEdit, onConnect, onDisconnect, onConfigure, onSync }:
 
 export function IntegrationsAppsPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [apps,         setApps]         = useState<AppIntegration[]>(APP_CATALOGUE);
-  const [search,       setSearch]       = useState('');
-  const [catFilter,    setCatFilter]    = useState<AppCategory | 'all'>('all');
-  const [configApp,    setConfigApp]    = useState<AppIntegration | null>(null);
-  const [disconnectApp,setDisconnectApp]= useState<AppIntegration | null>(null);
-  const [snack,        setSnack]        = useState<string | null>(null);
-  const [configOpen,   setConfigOpen]   = useState(false);
+  const [apps, setApps] = useState<AppIntegration[]>(APP_CATALOGUE);
+  const [search, setSearch] = useState('');
+  const [catFilter, setCatFilter] = useState<AppCategory | 'all'>('all');
+  const [configApp, setConfigApp] = useState<AppIntegration | null>(null);
+  const [disconnectApp, setDisconnectApp] = useState<AppIntegration | null>(null);
+  const [snack, setSnack] = useState<string | null>(null);
+  const [configOpen, setConfigOpen] = useState(false);
 
   const displayed = useMemo(() => {
     let list = [...apps];
@@ -563,13 +567,13 @@ export function IntegrationsAppsPage() {
       if (a.id !== appId) return a;
       return {
         ...a,
-        connected:   true,
+        connected: true,
         config,
         connectedBy: 'You',
         connectedAt: new Date().toISOString().slice(0, 10),
-        lastSynced:  'Just now',
-        syncStatus:  'idle',
-        syncCount:   a.syncCount ?? 0,
+        lastSynced: 'Just now',
+        syncStatus: 'idle',
+        syncCount: a.syncCount ?? 0,
       };
     }));
     setSnack(`Connected to ${apps.find(a => a.id === appId)?.name ?? 'app'}.`);
@@ -577,7 +581,7 @@ export function IntegrationsAppsPage() {
 
   const handleDisconnect = useCallback(async () => {
     if (!disconnectApp) return;
-    try { await apiFetch('DELETE', `/api/integrations/apps/${disconnectApp.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/integrations/apps/${disconnectApp.id}`); } catch { }
     setApps(prev => prev.map(a => a.id === disconnectApp.id
       ? { ...a, connected: false, connectedBy: undefined, connectedAt: undefined, lastSynced: undefined, syncCount: undefined }
       : a));
@@ -587,7 +591,7 @@ export function IntegrationsAppsPage() {
 
   const handleSync = useCallback(async (app: AppIntegration) => {
     setApps(prev => prev.map(a => a.id === app.id ? { ...a, syncStatus: 'syncing' } : a));
-    try { await apiFetch('POST', `/api/integrations/apps/${app.id}/sync`); } catch {}
+    try { await apiFetch('POST', `/api/integrations/apps/${app.id}/sync`); } catch { }
     await new Promise(r => setTimeout(r, 1500));
     setApps(prev => prev.map(a => a.id === app.id
       ? { ...a, syncStatus: 'idle', lastSynced: 'Just now', syncCount: (a.syncCount ?? 0) + Math.floor(Math.random() * 50) }
@@ -631,10 +635,10 @@ export function IntegrationsAppsPage() {
       {connectedApps.length > 0 && (
         <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
           {[
-            { label: 'Connected apps', value: counts.connected,                                            color: 'success.main' },
-            { label: 'Total synced',   value: connectedApps.reduce((a,x)=>a+(x.syncCount??0),0).toLocaleString(), color: undefined },
-            { label: 'Available',      value: counts.available,                                            color: undefined },
-            { label: 'Categories',     value: ALL_CATEGORIES.length,                                       color: undefined },
+            { label: 'Connected apps', value: counts.connected, color: 'success.main' },
+            { label: 'Total synced', value: connectedApps.reduce((a, x) => a + (x.syncCount ?? 0), 0).toLocaleString(), color: undefined },
+            { label: 'Available', value: counts.available, color: undefined },
+            { label: 'Categories', value: ALL_CATEGORIES.length, color: undefined },
           ].map(s => (
             <GlassCard key={s.label} sx={{ p: 2 }}>
               <Typography variant="caption" color="text.secondary">{s.label}</Typography>

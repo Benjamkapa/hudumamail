@@ -45,30 +45,30 @@ import {
   Badge,
 } from '@mui/material';
 
-import AddIcon           from '@mui/icons-material/Add';
-import ArticleIcon       from '@mui/icons-material/Article';
-import CloseIcon         from '@mui/icons-material/Close';
-import CodeIcon          from '@mui/icons-material/Code';
-import ContentCopyIcon   from '@mui/icons-material/ContentCopy';
+import AddIcon from '@mui/icons-material/Add';
+import ArticleIcon from '@mui/icons-material/Article';
+import CloseIcon from '@mui/icons-material/Close';
+import CodeIcon from '@mui/icons-material/Code';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import LabelIcon         from '@mui/icons-material/Label';
-import MoreVertIcon      from '@mui/icons-material/MoreVert';
-import SearchIcon        from '@mui/icons-material/Search';
-import SendIcon          from '@mui/icons-material/Send';
-import ViewListIcon      from '@mui/icons-material/ViewList';
-import ViewModuleIcon    from '@mui/icons-material/ViewModule';
-import BarChartIcon      from '@mui/icons-material/BarChart';
-import OpenInNewIcon     from '@mui/icons-material/OpenInNew';
-import { useNavigate }   from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
+import LabelIcon from '@mui/icons-material/Label';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useNavigate } from 'react-router-dom';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
@@ -85,9 +85,9 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type TemplateCategory = 'Promotional' | 'Transactional' | 'Newsletter' | 'Onboarding' | 'Re-engagement' | 'Announcement';
-type SortField        = 'name' | 'category' | 'usageCount' | 'updatedAt' | 'createdAt';
-type SortDir          = 'asc' | 'desc';
-type ViewMode         = 'grid' | 'table';
+type SortField = 'name' | 'category' | 'usageCount' | 'updatedAt' | 'createdAt';
+type SortDir = 'asc' | 'desc';
+type ViewMode = 'grid' | 'table';
 
 type Template = {
   id: string;
@@ -115,16 +115,16 @@ type FormErrors = Partial<Record<keyof TemplateForm, string>>;
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CATEGORIES: TemplateCategory[] = [
-  'Promotional','Transactional','Newsletter','Onboarding','Re-engagement','Announcement',
+  'Promotional', 'Transactional', 'Newsletter', 'Onboarding', 'Re-engagement', 'Announcement',
 ];
 
 const CATEGORY_COLOR: Record<TemplateCategory, string> = {
-  Promotional:    '#6366f1',
-  Transactional:  '#0ea5e9',
-  Newsletter:     '#8b5cf6',
-  Onboarding:     '#22c55e',
-  'Re-engagement':'#f97316',
-  Announcement:   '#ec4899',
+  Promotional: '#6366f1',
+  Transactional: '#0ea5e9',
+  Newsletter: '#8b5cf6',
+  Onboarding: '#22c55e',
+  'Re-engagement': '#f97316',
+  Announcement: '#ec4899',
 };
 
 // ─── Seed data ────────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_01', name: 'Summer Sale Hero',
     subject: '☀️ Up to 50% off — this weekend only',
-    category: 'Promotional', tags: ['sale','seasonal','hero'],
+    category: 'Promotional', tags: ['sale', 'seasonal', 'hero'],
     previewBg: 'linear-gradient(135deg,#fbbf24 0%,#f97316 100%)',
     previewAccent: '#f97316',
     htmlSnippet: '<table width="600"><tr><td style="background:#f97316;padding:40px;text-align:center"><h1 style="color:#fff">Summer Sale</h1>',
@@ -142,7 +142,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_02', name: 'Welcome Email',
     subject: "Welcome! Here's how to get started",
-    category: 'Onboarding', tags: ['welcome','new-user','onboarding'],
+    category: 'Onboarding', tags: ['welcome', 'new-user', 'onboarding'],
     previewBg: 'linear-gradient(135deg,#a7f3d0 0%,#6ee7b7 100%)',
     previewAccent: '#22c55e',
     htmlSnippet: '<table width="600"><tr><td style="background:#22c55e;padding:32px"><h1 style="color:#fff">Welcome aboard!</h1>',
@@ -151,7 +151,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_03', name: 'Monthly Newsletter',
     subject: 'Your monthly digest — {{month}} edition',
-    category: 'Newsletter', tags: ['newsletter','monthly','digest'],
+    category: 'Newsletter', tags: ['newsletter', 'monthly', 'digest'],
     previewBg: 'linear-gradient(135deg,#ddd6fe 0%,#a78bfa 100%)',
     previewAccent: '#8b5cf6',
     htmlSnippet: '<table width="600"><tr><td style="background:#fff;border-top:4px solid #8b5cf6;padding:32px">',
@@ -160,7 +160,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_04', name: 'Password Reset',
     subject: 'Reset your password',
-    category: 'Transactional', tags: ['transactional','password','security'],
+    category: 'Transactional', tags: ['transactional', 'password', 'security'],
     previewBg: 'linear-gradient(135deg,#bae6fd 0%,#38bdf8 100%)',
     previewAccent: '#0ea5e9',
     htmlSnippet: '<table width="600"><tr><td style="background:#f8fafc;padding:40px;text-align:center"><img src="logo.png">',
@@ -169,7 +169,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_05', name: 'Win-back Campaign',
     subject: "We miss you — here's 20% off",
-    category: 'Re-engagement', tags: ['winback','discount','churned'],
+    category: 'Re-engagement', tags: ['winback', 'discount', 'churned'],
     previewBg: 'linear-gradient(135deg,#fed7aa 0%,#fb923c 100%)',
     previewAccent: '#f97316',
     htmlSnippet: '<table width="600"><tr><td style="background:#fff7ed;padding:40px"><h2 style="color:#ea580c">',
@@ -178,7 +178,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_06', name: 'Product Launch',
     subject: '🚀 Introducing {{product_name}}',
-    category: 'Announcement', tags: ['launch','product','announcement'],
+    category: 'Announcement', tags: ['launch', 'product', 'announcement'],
     previewBg: 'linear-gradient(135deg,#fbcfe8 0%,#f472b6 100%)',
     previewAccent: '#ec4899',
     htmlSnippet: '<table width="600"><tr><td style="background:linear-gradient(#ec4899,#db2777);padding:48px;text-align:center">',
@@ -187,7 +187,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_07', name: 'Order Confirmation',
     subject: 'Your order #{{order_id}} is confirmed',
-    category: 'Transactional', tags: ['transactional','order','receipt'],
+    category: 'Transactional', tags: ['transactional', 'order', 'receipt'],
     previewBg: 'linear-gradient(135deg,#cffafe 0%,#67e8f9 100%)',
     previewAccent: '#06b6d4',
     htmlSnippet: '<table width="600"><tr><td style="background:#fff;border-top:4px solid #06b6d4;padding:32px">',
@@ -196,7 +196,7 @@ const INITIAL_TEMPLATES: Template[] = [
   {
     id: 't_08', name: 'Black Friday Blast',
     subject: '⚡ Black Friday — 60% off everything',
-    category: 'Promotional', tags: ['sale','black-friday','urgent'],
+    category: 'Promotional', tags: ['sale', 'black-friday', 'urgent'],
     previewBg: 'linear-gradient(135deg,#1e1b4b 0%,#4f46e5 100%)',
     previewAccent: '#6366f1',
     htmlSnippet: '<table width="600"><tr><td style="background:#0f0f23;padding:40px;text-align:center"><h1 style="color:#facc15">BLACK FRIDAY</h1>',
@@ -216,7 +216,7 @@ function fmtDate(iso: string) {
 
 function validateForm(form: TemplateForm): FormErrors {
   const errors: FormErrors = {};
-  if (!form.name.trim())    errors.name    = 'Template name is required';
+  if (!form.name.trim()) errors.name = 'Template name is required';
   if (!form.subject.trim()) errors.subject = 'Subject line is required';
   return errors;
 }
@@ -231,8 +231,8 @@ function CategoryChip({ category, size = 'small' }: { category: TemplateCategory
       sx={{
         fontSize: 10, height: 20, fontWeight: 600,
         bgcolor: CATEGORY_COLOR[category] + '18',
-        color:   CATEGORY_COLOR[category],
-        border:  `1px solid ${CATEGORY_COLOR[category]}40`,
+        color: CATEGORY_COLOR[category],
+        border: `1px solid ${CATEGORY_COLOR[category]}40`,
       }}
     />
   );
@@ -293,10 +293,10 @@ function TemplateThumbnail({ template, height = 120 }: { template: Template; hei
 type ActionProps = {
   template: Template;
   canEdit: boolean;
-  onEdit:      (t: Template) => void;
+  onEdit: (t: Template) => void;
   onDuplicate: (t: Template) => void;
-  onDelete:    (t: Template) => void;
-  onOpenEditor:(t: Template) => void;
+  onDelete: (t: Template) => void;
+  onOpenEditor: (t: Template) => void;
 };
 
 function TemplateActions({ template, canEdit, onEdit, onDuplicate, onDelete, onOpenEditor }: ActionProps) {
@@ -342,8 +342,10 @@ function TemplateActions({ template, canEdit, onEdit, onDuplicate, onDelete, onO
 function TemplateCard(props: ActionProps) {
   const { template } = props;
   return (
-    <GlassCard sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden',
-      '&:hover .tmpl-overlay': { opacity: 1 } }}>
+    <GlassCard sx={{
+      display: 'flex', flexDirection: 'column', overflow: 'hidden',
+      '&:hover .tmpl-overlay': { opacity: 1 }
+    }}>
       {/* Thumbnail */}
       <Box sx={{ position: 'relative' }}>
         <TemplateThumbnail template={template} height={130} />
@@ -383,8 +385,10 @@ function TemplateCard(props: ActionProps) {
           ))}
         </Box>
 
-        <Box sx={{ mt: 'auto', pt: 1, borderTop: 1, borderColor: 'divider',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{
+          mt: 'auto', pt: 1, borderTop: 1, borderColor: 'divider',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+        }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <BarChartIcon sx={{ fontSize: 13, color: 'text.disabled' }} />
             <Typography variant="caption" color="text.disabled">
@@ -410,7 +414,7 @@ type DrawerProps = {
 };
 
 function TemplateDrawer({ open, onClose, editing, onSaved }: DrawerProps) {
-  const [form,   setForm]   = useState<TemplateForm>(EMPTY_FORM);
+  const [form, setForm] = useState<TemplateForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
 
@@ -419,10 +423,10 @@ function TemplateDrawer({ open, onClose, editing, onSaved }: DrawerProps) {
     setLastEditing(editing);
     setErrors({});
     setForm(editing ? {
-      name:     editing.name,
-      subject:  editing.subject,
+      name: editing.name,
+      subject: editing.subject,
       category: editing.category,
-      tags:     editing.tags.join(', '),
+      tags: editing.tags.join(', '),
     } : EMPTY_FORM);
   }
 
@@ -437,10 +441,10 @@ function TemplateDrawer({ open, onClose, editing, onSaved }: DrawerProps) {
     setSaving(true);
 
     const payload = {
-      name:     form.name.trim(),
-      subject:  form.subject.trim(),
+      name: form.name.trim(),
+      subject: form.subject.trim(),
       category: form.category,
-      tags:     form.tags.split(',').map(t => t.trim()).filter(Boolean),
+      tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
     };
     const now = new Date().toISOString();
 
@@ -582,17 +586,17 @@ function DeleteDialog({ template, onConfirm, onCancel }: {
 export function TemplatesPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [templates,    setTemplates]    = useState<Template[]>(INITIAL_TEMPLATES);
-  const [viewMode,     setViewMode]     = useState<ViewMode>('grid');
-  const [search,       setSearch]       = useState('');
-  const [catFilter,    setCatFilter]    = useState<TemplateCategory | 'all'>('all');
-  const [sortField,    setSortField]    = useState<SortField>('updatedAt');
-  const [sortDir,      setSortDir]      = useState<SortDir>('desc');
-  const [drawerOpen,   setDrawerOpen]   = useState(false);
-  const [editing,      setEditing]      = useState<Template | null>(null);
-  const [toDelete,     setToDelete]     = useState<Template | null>(null);
+  const [templates, setTemplates] = useState<Template[]>(INITIAL_TEMPLATES);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [search, setSearch] = useState('');
+  const [catFilter, setCatFilter] = useState<TemplateCategory | 'all'>('all');
+  const [sortField, setSortField] = useState<SortField>('updatedAt');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editing, setEditing] = useState<Template | null>(null);
+  const [toDelete, setToDelete] = useState<Template | null>(null);
 
   const handleSort = useCallback((field: SortField) => {
     setSortDir(prev => sortField === field && prev === 'desc' ? 'asc' : 'desc');
@@ -643,8 +647,8 @@ export function TemplatesPage() {
       const now = new Date().toISOString();
       setTemplates(prev => [{
         ...t,
-        id:        `t_${Date.now()}`,
-        name:      `${t.name} (copy)`,
+        id: `t_${Date.now()}`,
+        name: `${t.name} (copy)`,
         usageCount: 0,
         createdAt: now,
         updatedAt: now,
@@ -654,7 +658,7 @@ export function TemplatesPage() {
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/templates/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/templates/${toDelete.id}`); } catch { }
     setTemplates(prev => prev.filter(x => x.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);
@@ -664,7 +668,7 @@ export function TemplatesPage() {
   }, [navigate]);
 
   const counts = useMemo(() => ({
-    total:     templates.length,
+    total: templates.length,
     byCategory: Object.fromEntries(
       CATEGORIES.map(c => [c, templates.filter(t => t.category === c).length])
     ),
@@ -672,15 +676,17 @@ export function TemplatesPage() {
 
   const actionProps = (t: Template): ActionProps => ({
     template: t, canEdit,
-    onEdit:       () => { setEditing(t); setDrawerOpen(true); },
-    onDuplicate:  handleDuplicate,
-    onDelete:     setToDelete,
+    onEdit: () => { setEditing(t); setDrawerOpen(true); },
+    onDuplicate: handleDuplicate,
+    onDelete: setToDelete,
     onOpenEditor: handleOpenEditor,
   });
 
   const renderGrid = (items: Template[]) => (
-    <Box sx={{ display: 'grid', gap: 2, alignItems: 'start',
-      gridTemplateColumns: { xs: '1fr', sm: 'repeat(2,1fr)', lg: 'repeat(3,1fr)', xl: 'repeat(4,1fr)' } }}>
+    <Box sx={{
+      display: 'grid', gap: 2, alignItems: 'start',
+      gridTemplateColumns: { xs: '1fr', sm: 'repeat(2,1fr)', lg: 'repeat(3,1fr)', xl: 'repeat(4,1fr)' }
+    }}>
       {items.map(t => <TemplateCard key={t.id} {...actionProps(t)} />)}
     </Box>
   );
@@ -724,10 +730,12 @@ export function TemplatesPage() {
         <TextField
           size="small" placeholder="Search templates…" value={search}
           onChange={e => setSearch(e.target.value)}
-          InputProps={{ startAdornment:
-            <InputAdornment position="start">
-              <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
-            </InputAdornment> }}
+          InputProps={{
+            startAdornment:
+              <InputAdornment position="start">
+                <SearchIcon sx={{ fontSize: 18, color: 'text.disabled' }} />
+              </InputAdornment>
+          }}
           sx={{ minWidth: 220, flex: 1, maxWidth: 340 }} />
 
         {/* Category filter */}
@@ -806,8 +814,10 @@ export function TemplatesPage() {
             {groupedDisplay.map(([cat, items]) => (
               <Box key={cat}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-                  <Box sx={{ width: 10, height: 10, borderRadius: '50%',
-                    bgcolor: CATEGORY_COLOR[cat as TemplateCategory] }} />
+                  <Box sx={{
+                    width: 10, height: 10, borderRadius: '50%',
+                    bgcolor: CATEGORY_COLOR[cat as TemplateCategory]
+                  }} />
                   <Typography variant="subtitle2" fontWeight={700} color="text.secondary"
                     sx={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.06em' }}>
                     {cat}

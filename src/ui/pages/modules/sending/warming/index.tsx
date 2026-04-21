@@ -18,23 +18,23 @@ import {
   TableContainer, TableHead, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
 
-import AddIcon                from '@mui/icons-material/Add';
-import CheckCircleIcon        from '@mui/icons-material/CheckCircle';
-import CloseIcon              from '@mui/icons-material/Close';
-import DeleteOutlineIcon      from '@mui/icons-material/DeleteOutline';
+import AddIcon from '@mui/icons-material/Add';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import MoreVertIcon           from '@mui/icons-material/MoreVert';
-import PauseCircleIcon        from '@mui/icons-material/PauseCircle';
-import PlayCircleIcon         from '@mui/icons-material/PlayCircle';
-import RefreshIcon            from '@mui/icons-material/Refresh';
-import TrendingUpIcon         from '@mui/icons-material/TrendingUp';
-import WarningAmberIcon       from '@mui/icons-material/WarningAmber';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, { method, credentials: 'include', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
   if (!res.ok) throw new Error(res.statusText);
@@ -68,11 +68,11 @@ type WarmingPlan = {
 
 // ─── Status config ────────────────────────────────────────────────────────────
 
-const STATUS_CFG: Record<WarmingStatus, { label: string; color: 'success'|'warning'|'default'|'info'; icon: React.ReactNode }> = {
-  active:    { label: 'Active',    color: 'success', icon: <LocalFireDepartmentIcon sx={{ fontSize: 13 }} /> },
-  paused:    { label: 'Paused',    color: 'warning', icon: <PauseCircleIcon         sx={{ fontSize: 13 }} /> },
-  completed: { label: 'Completed', color: 'info',    icon: <CheckCircleIcon          sx={{ fontSize: 13 }} /> },
-  pending:   { label: 'Pending',   color: 'default', icon: <TrendingUpIcon           sx={{ fontSize: 13 }} /> },
+const STATUS_CFG: Record<WarmingStatus, { label: string; color: 'success' | 'warning' | 'default' | 'info'; icon: React.ReactNode }> = {
+  active: { label: 'Active', color: 'success', icon: <LocalFireDepartmentIcon sx={{ fontSize: 13 }} /> },
+  paused: { label: 'Paused', color: 'warning', icon: <PauseCircleIcon sx={{ fontSize: 13 }} /> },
+  completed: { label: 'Completed', color: 'info', icon: <CheckCircleIcon sx={{ fontSize: 13 }} /> },
+  pending: { label: 'Pending', color: 'default', icon: <TrendingUpIcon sx={{ fontSize: 13 }} /> },
 };
 
 // ─── Seed — standard 30-day ramp schedule ─────────────────────────────────────
@@ -93,9 +93,9 @@ function buildSchedule(currentDay: number): WarmingDay[] {
     return {
       day,
       limit,
-      sent:       isPast ? Math.floor(limit * (0.85 + Math.random() * 0.14)) : isToday ? Math.floor(limit * 0.6) : 0,
+      sent: isPast ? Math.floor(limit * (0.85 + Math.random() * 0.14)) : isToday ? Math.floor(limit * 0.6) : 0,
       bounceRate: isPast ? parseFloat((Math.random() * 0.8).toFixed(2)) : undefined,
-      openRate:   isPast ? parseFloat((18 + Math.random() * 14).toFixed(1)) : undefined,
+      openRate: isPast ? parseFloat((18 + Math.random() * 14).toFixed(1)) : undefined,
     };
   });
 }
@@ -123,7 +123,7 @@ const INITIAL_PLANS: WarmingPlan[] = [
 
 function fmtNum(n: number) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `${(n / 1_000).toFixed(0)}K`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
   return String(n);
 }
 
@@ -135,7 +135,7 @@ function ScheduleChart({ plan }: { plan: WarmingPlan }) {
   return (
     <Box sx={{ display: 'flex', gap: 0.3, alignItems: 'flex-end', height: 36, mt: 1 }}>
       {visible.map(d => {
-        const h    = Math.max(4, (d.limit / max) * 36);
+        const h = Math.max(4, (d.limit / max) * 36);
         const past = d.day < plan.currentDay;
         const today = d.day === plan.currentDay;
         return (
@@ -161,10 +161,10 @@ function PlanCard({ plan, canEdit, onToggle, onDelete }: {
   onDelete: (p: WarmingPlan) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const [anchor,   setAnchor]   = useState<null | HTMLElement>(null);
-  const cfg      = STATUS_CFG[plan.status];
+  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+  const cfg = STATUS_CFG[plan.status];
   const progress = Math.round((plan.currentDay / plan.totalDays) * 100);
-  const today    = plan.schedule[plan.currentDay - 1];
+  const today = plan.schedule[plan.currentDay - 1];
 
   return (
     <GlassCard sx={{ p: 2.5 }}>
@@ -192,7 +192,7 @@ function PlanCard({ plan, canEdit, onToggle, onDelete }: {
             <MenuItem dense onClick={() => { onToggle(plan); setAnchor(null); }}>
               {plan.status === 'active'
                 ? <><PauseCircleIcon sx={{ fontSize: 16, mr: 1.5, color: 'text.secondary' }} /> Pause warming</>
-                : <><PlayCircleIcon  sx={{ fontSize: 16, mr: 1.5, color: 'text.secondary' }} /> Resume warming</>}
+                : <><PlayCircleIcon sx={{ fontSize: 16, mr: 1.5, color: 'text.secondary' }} /> Resume warming</>}
             </MenuItem>
           )}
           <Divider />
@@ -220,8 +220,8 @@ function PlanCard({ plan, canEdit, onToggle, onDelete }: {
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 1, mt: 2 }}>
           {[
             { label: "Today's limit", value: fmtNum(today.limit) },
-            { label: 'Sent today',    value: today.sent > 0 ? fmtNum(today.sent) : '—' },
-            { label: 'Est. done',     value: plan.estimatedCompletion },
+            { label: 'Sent today', value: today.sent > 0 ? fmtNum(today.sent) : '—' },
+            { label: 'Est. done', value: plan.estimatedCompletion },
           ].map(s => (
             <Box key={s.label}>
               <Typography variant="caption" color="text.disabled" sx={{ display: 'block', fontSize: 10 }}>{s.label}</Typography>
@@ -264,7 +264,7 @@ function PlanCard({ plan, canEdit, onToggle, onDelete }: {
             <TableBody>
               {plan.schedule.map(d => {
                 const isToday = d.day === plan.currentDay;
-                const isPast  = d.day < plan.currentDay;
+                const isPast = d.day < plan.currentDay;
                 return (
                   <TableRow key={d.day} sx={{
                     bgcolor: isToday ? 'primary.50' : 'transparent',
@@ -312,10 +312,10 @@ function AddIpDialog({ open, onClose, onAdded }: {
   open: boolean; onClose: () => void;
   onAdded: (p: WarmingPlan) => void;
 }) {
-  const [ip,    setIp]    = useState('');
+  const [ip, setIp] = useState('');
   const [label, setLabel] = useState('');
   const [error, setError] = useState('');
-  const [saving,setSaving]= useState(false);
+  const [saving, setSaving] = useState(false);
 
   const handleAdd = async () => {
     if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(ip.trim())) { setError('Enter a valid IPv4 address'); return; }
@@ -331,7 +331,7 @@ function AddIpDialog({ open, onClose, onAdded }: {
       startedAt: new Date().toISOString().slice(0, 10),
       estimatedCompletion: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
     };
-    try { await apiFetch('POST', '/api/sending/warming', { ipAddress: ip, label }); } catch {}
+    try { await apiFetch('POST', '/api/sending/warming', { ipAddress: ip, label }); } catch { }
     setSaving(false);
     onAdded(plan);
     setIp(''); setLabel(''); setError('');
@@ -376,31 +376,31 @@ function AddIpDialog({ open, onClose, onAdded }: {
 
 export function SendingWarmingPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [plans,   setPlans]   = useState<WarmingPlan[]>(INITIAL_PLANS);
+  const [plans, setPlans] = useState<WarmingPlan[]>(INITIAL_PLANS);
   const [addOpen, setAddOpen] = useState(false);
-  const [toDelete,setToDelete]= useState<WarmingPlan | null>(null);
-  const [snack,   setSnack]   = useState<string | null>(null);
+  const [toDelete, setToDelete] = useState<WarmingPlan | null>(null);
+  const [snack, setSnack] = useState<string | null>(null);
 
   const handleToggle = useCallback(async (p: WarmingPlan) => {
     const next: WarmingStatus = p.status === 'active' ? 'paused' : 'active';
-    try { await apiFetch('PATCH', `/api/sending/warming/${p.id}`, { status: next }); } catch {}
+    try { await apiFetch('PATCH', `/api/sending/warming/${p.id}`, { status: next }); } catch { }
     setPlans(prev => prev.map(x => x.id === p.id ? { ...x, status: next } : x));
     setSnack(`Warm-up ${next === 'active' ? 'resumed' : 'paused'} for ${p.ipAddress}.`);
   }, []);
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/sending/warming/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/sending/warming/${toDelete.id}`); } catch { }
     setPlans(prev => prev.filter(x => x.id !== toDelete.id));
     setToDelete(null);
     setSnack('Warming plan removed.');
   }, [toDelete]);
 
   const counts = useMemo(() => ({
-    active:    plans.filter(p => p.status === 'active').length,
-    paused:    plans.filter(p => p.status === 'paused').length,
+    active: plans.filter(p => p.status === 'active').length,
+    paused: plans.filter(p => p.status === 'paused').length,
     completed: plans.filter(p => p.status === 'completed').length,
   }), [plans]);
 
@@ -433,9 +433,9 @@ export function SendingWarmingPage() {
       {/* Summary */}
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3,1fr)' } }}>
         {[
-          { label: 'Active warm-ups', value: counts.active,    color: 'success.main' },
-          { label: 'Paused',          value: counts.paused,    color: 'warning.main' },
-          { label: 'Completed IPs',   value: counts.completed, color: 'info.main'    },
+          { label: 'Active warm-ups', value: counts.active, color: 'success.main' },
+          { label: 'Paused', value: counts.paused, color: 'warning.main' },
+          { label: 'Completed IPs', value: counts.completed, color: 'info.main' },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>

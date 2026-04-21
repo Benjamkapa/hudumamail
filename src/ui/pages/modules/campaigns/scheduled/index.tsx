@@ -7,18 +7,18 @@ import {
   Stack, Step, StepLabel, Stepper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import ScheduleSendIcon  from '@mui/icons-material/ScheduleSend';
-import SearchIcon        from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const BASE = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const BASE = () => (import.meta as any).env?.VITE_API_URL;
 
 type Scheduled = {
   id: string; name: string; subject: string; previewText: string;
@@ -70,7 +70,7 @@ const mapScheduled = (c: ApiCampaign): Scheduled => {
     scheduledAt: c.scheduledAt ?? '',
     estimatedRecipients: c.totalCount ?? 0,
   };
-};type SchedForm = {
+}; type SchedForm = {
   name: string; subject: string; previewText: string;
   fromName: string; fromEmail: string; replyTo: string;
   listName: string; scheduledAt: string;
@@ -79,23 +79,23 @@ const mapScheduled = (c: ApiCampaign): Scheduled => {
 type Errors = Partial<Record<keyof SchedForm, string>>;
 
 const SEED: Scheduled[] = [
-  { id: '', name: 'Black Friday Teaser',     subject: '🛒 Black Friday is coming — get ready',  previewText: 'Early access for you',   fromName: 'Acme Deals', fromEmail: 'deals@acme.com', replyTo: '',               listName: 'All Subscribers', scheduledAt: '2025-11-01T09:00', estimatedRecipients: 12400 },
-  { id: '', name: 'Cyber Monday Flash Sale', subject: '⚡ 24-hour flash sale starts NOW',        previewText: 'Shop before it sells out',fromName: 'Acme Deals', fromEmail: 'deals@acme.com', replyTo: '',               listName: 'VIP Customers',   scheduledAt: '2025-12-02T08:00', estimatedRecipients: 3200  },
-  { id: '', name: 'Year-End Review',         subject: 'A look back at an incredible year',      previewText: 'Your year in review',    fromName: 'Acme News',  fromEmail: 'news@acme.com',  replyTo: '',               listName: 'Newsletter List', scheduledAt: '2025-12-28T10:00', estimatedRecipients: 8700  },
+  { id: '', name: 'Black Friday Teaser', subject: '🛒 Black Friday is coming — get ready', previewText: 'Early access for you', fromName: 'Acme Deals', fromEmail: 'deals@acme.com', replyTo: '', listName: 'All Subscribers', scheduledAt: '2025-11-01T09:00', estimatedRecipients: 12400 },
+  { id: '', name: 'Cyber Monday Flash Sale', subject: '⚡ 24-hour flash sale starts NOW', previewText: 'Shop before it sells out', fromName: 'Acme Deals', fromEmail: 'deals@acme.com', replyTo: '', listName: 'VIP Customers', scheduledAt: '2025-12-02T08:00', estimatedRecipients: 3200 },
+  { id: '', name: 'Year-End Review', subject: 'A look back at an incredible year', previewText: 'Your year in review', fromName: 'Acme News', fromEmail: 'news@acme.com', replyTo: '', listName: 'Newsletter List', scheduledAt: '2025-12-28T10:00', estimatedRecipients: 8700 },
 ];
 
-const LISTS = ['All Subscribers','Active Users','Inactive 90d','Newsletter List','New Signups','VIP Customers','Churned Users'];
-const EMPTY: SchedForm = { name:'', subject:'', previewText:'', fromName:'', fromEmail:'', replyTo:'', listName:'', scheduledAt:'' };
-const STEPS = ['Details','Sender','Audience','Schedule'];
+const LISTS = ['All Subscribers', 'Active Users', 'Inactive 90d', 'Newsletter List', 'New Signups', 'VIP Customers', 'Churned Users'];
+const EMPTY: SchedForm = { name: '', subject: '', previewText: '', fromName: '', fromEmail: '', replyTo: '', listName: '', scheduledAt: '' };
+const STEPS = ['Details', 'Sender', 'Audience', 'Schedule'];
 
 function validate(step: number, f: SchedForm): Errors {
   const e: Errors = {};
   if (step === 0) {
-    if (!f.name.trim())    e.name    = 'Required';
+    if (!f.name.trim()) e.name = 'Required';
     if (!f.subject.trim()) e.subject = 'Required';
   }
   if (step === 1) {
-    if (!f.fromName.trim())  e.fromName  = 'Required';
+    if (!f.fromName.trim()) e.fromName = 'Required';
     if (!f.fromEmail.trim()) e.fromEmail = 'Required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.fromEmail)) e.fromEmail = 'Enter a valid email';
   }
@@ -103,7 +103,7 @@ function validate(step: number, f: SchedForm): Errors {
     if (!f.listName) e.listName = 'Select a list';
   }
   if (step === 3) {
-    if (!f.scheduledAt)                             e.scheduledAt = 'Pick a date and time';
+    if (!f.scheduledAt) e.scheduledAt = 'Pick a date and time';
     else if (new Date(f.scheduledAt) <= new Date()) e.scheduledAt = 'Must be in the future';
   }
   return e;
@@ -114,8 +114,8 @@ function SchedModal({ open, onClose, editing, onSaved }: {
   open: boolean; onClose: () => void; editing: Scheduled | null;
   onSaved: (s: Scheduled, isEdit: boolean) => void;
 }) {
-  const [step,   setStep]   = useState(0);
-  const [form,   setForm]   = useState<SchedForm>(EMPTY);
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState<SchedForm>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [saving, setSaving] = useState(false);
 
@@ -124,9 +124,11 @@ function SchedModal({ open, onClose, editing, onSaved }: {
     setLast(editing);
     setStep(0); setErrors({});
     setForm(editing
-      ? { name: editing.name, subject: editing.subject, previewText: editing.previewText,
-          fromName: editing.fromName, fromEmail: editing.fromEmail, replyTo: editing.replyTo,
-          listName: editing.listName, scheduledAt: toLocalInput(editing.scheduledAt) }
+      ? {
+        name: editing.name, subject: editing.subject, previewText: editing.previewText,
+        fromName: editing.fromName, fromEmail: editing.fromEmail, replyTo: editing.replyTo,
+        listName: editing.listName, scheduledAt: toLocalInput(editing.scheduledAt)
+      }
       : EMPTY);
   }
 
@@ -156,7 +158,7 @@ function SchedModal({ open, onClose, editing, onSaved }: {
         });
         if (res.ok) { onSaved(mapScheduled(await res.json() as ApiCampaign), false); handleClose(); setSaving(false); return; }
       }
-    } catch {}
+    } catch { }
     const fallback: Scheduled = editing
       ? { ...editing, ...form }
       : { id: String(Date.now()), ...form, estimatedRecipients: 0 };
@@ -225,11 +227,11 @@ function SchedModal({ open, onClose, editing, onSaved }: {
               <Typography variant="caption" fontWeight={700} color="text.secondary"
                 sx={{ display: 'block', mb: 1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Summary</Typography>
               {[
-                { label: 'Name',      value: form.name },
-                { label: 'Subject',   value: form.subject },
-                { label: 'From',      value: form.fromName ? `${form.fromName} <${form.fromEmail}>` : '—' },
-                { label: 'Audience',  value: form.listName || '—' },
-                { label: 'Sends at',  value: form.scheduledAt ? formatDate(form.scheduledAt) : 'Not set' },
+                { label: 'Name', value: form.name },
+                { label: 'Subject', value: form.subject },
+                { label: 'From', value: form.fromName ? `${form.fromName} <${form.fromEmail}>` : '—' },
+                { label: 'Audience', value: form.listName || '—' },
+                { label: 'Sends at', value: form.scheduledAt ? formatDate(form.scheduledAt) : 'Not set' },
               ].map(row => (
                 <Box key={row.label} sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
                   <Typography variant="caption" color="text.disabled" sx={{ minWidth: 64 }}>{row.label}</Typography>
@@ -245,14 +247,14 @@ function SchedModal({ open, onClose, editing, onSaved }: {
         {step > 0 && <Button onClick={() => setStep(s => s - 1)} variant="outlined" size="small">Back</Button>}
         {step < STEPS.length - 1
           ? <Button onClick={() => {
-              const errs = validate(step, form);
-              if (Object.keys(errs).length) { setErrors(errs); return; }
-              setStep(s => s + 1);
-            }} variant="contained" size="small">Next</Button>
+            const errs = validate(step, form);
+            if (Object.keys(errs).length) { setErrors(errs); return; }
+            setStep(s => s + 1);
+          }} variant="contained" size="small">Next</Button>
           : <Button onClick={handleSave} variant="contained" size="small" disabled={saving}
-              startIcon={<ScheduleSendIcon fontSize="small" />}>
-              {saving ? 'Saving…' : editing ? 'Update schedule' : 'Schedule campaign'}
-            </Button>}
+            startIcon={<ScheduleSendIcon fontSize="small" />}>
+            {saving ? 'Saving…' : editing ? 'Update schedule' : 'Schedule campaign'}
+          </Button>}
       </DialogActions>
     </Dialog>
   );
@@ -260,15 +262,15 @@ function SchedModal({ open, onClose, editing, onSaved }: {
 
 export function CampaignsScheduledPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [items,     setItems]     = useState<Scheduled[]>([]);
-  const [loading,   setLoading]   = useState(true);
+  const [items, setItems] = useState<Scheduled[]>([]);
+  const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [search,    setSearch]    = useState('');
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing,   setEditing]   = useState<Scheduled | null>(null);
-  const [toDelete,  setToDelete]  = useState<Scheduled | null>(null);
+  const [editing, setEditing] = useState<Scheduled | null>(null);
+  const [toDelete, setToDelete] = useState<Scheduled | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -305,7 +307,7 @@ export function CampaignsScheduledPage() {
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await fetch(`${BASE()}/api/campaigns/${toDelete.id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sendMode: 'draft' }) }); } catch {}
+    try { await fetch(`${BASE()}/api/campaigns/${toDelete.id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sendMode: 'draft' }) }); } catch { }
     setItems(prev => prev.filter(s => s.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);

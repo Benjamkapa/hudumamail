@@ -18,28 +18,28 @@ import {
   TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
 
-import AddIcon           from '@mui/icons-material/Add';
-import CheckCircleIcon   from '@mui/icons-material/CheckCircle';
-import CloseIcon         from '@mui/icons-material/Close';
-import ContentCopyIcon   from '@mui/icons-material/ContentCopy';
+import AddIcon from '@mui/icons-material/Add';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import DomainIcon        from '@mui/icons-material/Language';
-import ErrorIcon         from '@mui/icons-material/Error';
-import ExpandMoreIcon    from '@mui/icons-material/ExpandMore';
-import MoreVertIcon      from '@mui/icons-material/MoreVert';
-import RefreshIcon       from '@mui/icons-material/Refresh';
-import SearchIcon        from '@mui/icons-material/Search';
-import StarIcon          from '@mui/icons-material/Star';
-import StarBorderIcon    from '@mui/icons-material/StarBorder';
+import DomainIcon from '@mui/icons-material/Language';
+import ErrorIcon from '@mui/icons-material/Error';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SearchIcon from '@mui/icons-material/Search';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -53,13 +53,13 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type RecordStatus  = 'verified' | 'pending' | 'failed';
-type DomainStatus  = 'verified' | 'partial' | 'pending' | 'failed';
+type RecordStatus = 'verified' | 'pending' | 'failed';
+type DomainStatus = 'verified' | 'partial' | 'pending' | 'failed';
 
 type DnsRecord = {
-  type:   'TXT' | 'CNAME' | 'MX';
-  name:   string;
-  value:  string;
+  type: 'TXT' | 'CNAME' | 'MX';
+  name: string;
+  value: string;
   purpose: string;
   status: RecordStatus;
 };
@@ -76,17 +76,17 @@ type SendingDomain = {
 
 // ─── Status config ────────────────────────────────────────────────────────────
 
-const DOMAIN_STATUS: Record<DomainStatus, { label: string; color: 'success'|'warning'|'default'|'error'; icon: React.ReactNode }> = {
-  verified: { label: 'Verified',    color: 'success', icon: <CheckCircleIcon  sx={{ fontSize: 13 }} /> },
-  partial:  { label: 'Partial',     color: 'warning', icon: <HourglassEmptyIcon sx={{ fontSize: 13 }} /> },
-  pending:  { label: 'Pending DNS', color: 'default', icon: <HourglassEmptyIcon sx={{ fontSize: 13 }} /> },
-  failed:   { label: 'Failed',      color: 'error',   icon: <ErrorIcon        sx={{ fontSize: 13 }} /> },
+const DOMAIN_STATUS: Record<DomainStatus, { label: string; color: 'success' | 'warning' | 'default' | 'error'; icon: React.ReactNode }> = {
+  verified: { label: 'Verified', color: 'success', icon: <CheckCircleIcon sx={{ fontSize: 13 }} /> },
+  partial: { label: 'Partial', color: 'warning', icon: <HourglassEmptyIcon sx={{ fontSize: 13 }} /> },
+  pending: { label: 'Pending DNS', color: 'default', icon: <HourglassEmptyIcon sx={{ fontSize: 13 }} /> },
+  failed: { label: 'Failed', color: 'error', icon: <ErrorIcon sx={{ fontSize: 13 }} /> },
 };
 
 const RECORD_STATUS: Record<RecordStatus, { color: string; icon: React.ReactNode }> = {
-  verified: { color: '#22c55e', icon: <CheckCircleIcon  sx={{ fontSize: 14, color: '#22c55e' }} /> },
-  pending:  { color: '#f59e0b', icon: <HourglassEmptyIcon sx={{ fontSize: 14, color: '#f59e0b' }} /> },
-  failed:   { color: '#ef4444', icon: <ErrorIcon        sx={{ fontSize: 14, color: '#ef4444' }} /> },
+  verified: { color: '#22c55e', icon: <CheckCircleIcon sx={{ fontSize: 14, color: '#22c55e' }} /> },
+  pending: { color: '#f59e0b', icon: <HourglassEmptyIcon sx={{ fontSize: 14, color: '#f59e0b' }} /> },
+  failed: { color: '#ef4444', icon: <ErrorIcon sx={{ fontSize: 14, color: '#ef4444' }} /> },
 };
 
 // ─── Seed data ────────────────────────────────────────────────────────────────
@@ -117,19 +117,19 @@ function makeDnsRecords(domain: string, status: DomainStatus): DnsRecord[] {
 }
 
 const INITIAL_DOMAINS: SendingDomain[] = [
-  { id: 'd_01', domain: 'acme.com',        isDefault: true,  status: 'verified', records: makeDnsRecords('acme.com',        'verified'), createdAt: '2025-01-10', lastChecked: '2025-07-15 09:00' },
-  { id: 'd_02', domain: 'mail.acme.com',   isDefault: false, status: 'partial',  records: makeDnsRecords('mail.acme.com',   'partial'),  createdAt: '2025-04-01', lastChecked: '2025-07-15 09:00' },
-  { id: 'd_03', domain: 'updates.acme.com',isDefault: false, status: 'pending',  records: makeDnsRecords('updates.acme.com','pending'),  createdAt: '2025-07-14', lastChecked: '2025-07-15 09:00' },
+  { id: 'd_01', domain: 'acme.com', isDefault: true, status: 'verified', records: makeDnsRecords('acme.com', 'verified'), createdAt: '2025-01-10', lastChecked: '2025-07-15 09:00' },
+  { id: 'd_02', domain: 'mail.acme.com', isDefault: false, status: 'partial', records: makeDnsRecords('mail.acme.com', 'partial'), createdAt: '2025-04-01', lastChecked: '2025-07-15 09:00' },
+  { id: 'd_03', domain: 'updates.acme.com', isDefault: false, status: 'pending', records: makeDnsRecords('updates.acme.com', 'pending'), createdAt: '2025-07-14', lastChecked: '2025-07-15 09:00' },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function domainStatusFromRecords(records: DnsRecord[]): DomainStatus {
   const allVerified = records.every(r => r.status === 'verified');
-  const anyFailed   = records.some(r  => r.status === 'failed');
-  const anyVerified = records.some(r  => r.status === 'verified');
+  const anyFailed = records.some(r => r.status === 'failed');
+  const anyVerified = records.some(r => r.status === 'verified');
   if (allVerified) return 'verified';
-  if (anyFailed)   return 'failed';
+  if (anyFailed) return 'failed';
   if (anyVerified) return 'partial';
   return 'pending';
 }
@@ -176,13 +176,13 @@ function DnsRecordRow({ rec, onCopy }: { rec: DnsRecord; onCopy: (v: string) => 
 function DomainRow({ domain, canEdit, onVerify, onSetDefault, onDelete, onCopy }: {
   domain: SendingDomain;
   canEdit: boolean;
-  onVerify:     (d: SendingDomain) => void;
+  onVerify: (d: SendingDomain) => void;
   onSetDefault: (d: SendingDomain) => void;
-  onDelete:     (d: SendingDomain) => void;
-  onCopy:       (v: string) => void;
+  onDelete: (d: SendingDomain) => void;
+  onCopy: (v: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const [anchor,   setAnchor]   = useState<null | HTMLElement>(null);
+  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
   const cfg = DOMAIN_STATUS[domain.status];
 
   return (
@@ -295,11 +295,11 @@ function AddDomainDialog({ open, onClose, onAdded }: {
   onClose: () => void;
   onAdded: (d: SendingDomain) => void;
 }) {
-  const [step,       setStep]    = useState(0);
-  const [domainVal,  setDomainVal] = useState('');
-  const [error,      setError]   = useState('');
-  const [saving,     setSaving]  = useState(false);
-  const [newDomain,  setNewDomain] = useState<SendingDomain | null>(null);
+  const [step, setStep] = useState(0);
+  const [domainVal, setDomainVal] = useState('');
+  const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [newDomain, setNewDomain] = useState<SendingDomain | null>(null);
 
   const handleClose = () => { setStep(0); setDomainVal(''); setError(''); setNewDomain(null); onClose(); };
 
@@ -307,15 +307,15 @@ function AddDomainDialog({ open, onClose, onAdded }: {
     if (!validateDomain(domainVal)) { setError('Enter a valid domain (e.g. mail.acme.com)'); return; }
     setSaving(true);
     const created: SendingDomain = {
-      id:          `d_${Date.now()}`,
-      domain:      domainVal.toLowerCase().trim(),
-      isDefault:   false,
-      status:      'pending',
-      records:     makeDnsRecords(domainVal.toLowerCase().trim(), 'pending'),
-      createdAt:   new Date().toISOString().slice(0, 10),
+      id: `d_${Date.now()}`,
+      domain: domainVal.toLowerCase().trim(),
+      isDefault: false,
+      status: 'pending',
+      records: makeDnsRecords(domainVal.toLowerCase().trim(), 'pending'),
+      createdAt: new Date().toISOString().slice(0, 10),
       lastChecked: 'Just now',
     };
-    try { await apiFetch('POST', '/api/sending/domains', { domain: created.domain }); } catch {}
+    try { await apiFetch('POST', '/api/sending/domains', { domain: created.domain }); } catch { }
     setNewDomain(created);
     setStep(1);
     setSaving(false);
@@ -410,13 +410,13 @@ function AddDomainDialog({ open, onClose, onAdded }: {
 
 export function SendingDomainsPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [domains,   setDomains]   = useState<SendingDomain[]>(INITIAL_DOMAINS);
-  const [search,    setSearch]    = useState('');
-  const [addOpen,   setAddOpen]   = useState(false);
-  const [toDelete,  setToDelete]  = useState<SendingDomain | null>(null);
-  const [snack,     setSnack]     = useState<string | null>(null);
+  const [domains, setDomains] = useState<SendingDomain[]>(INITIAL_DOMAINS);
+  const [search, setSearch] = useState('');
+  const [addOpen, setAddOpen] = useState(false);
+  const [toDelete, setToDelete] = useState<SendingDomain | null>(null);
+  const [snack, setSnack] = useState<string | null>(null);
   const [verifying, setVerifying] = useState<string | null>(null);
 
   const displayed = useMemo(() =>
@@ -430,7 +430,7 @@ export function SendingDomainsPage() {
 
   const handleVerify = useCallback(async (d: SendingDomain) => {
     setVerifying(d.id);
-    try { await apiFetch('POST', `/api/sending/domains/${d.id}/verify`); } catch {}
+    try { await apiFetch('POST', `/api/sending/domains/${d.id}/verify`); } catch { }
     // Simulate partial verification improvement
     await new Promise(r => setTimeout(r, 1200));
     setDomains(prev => prev.map(x => {
@@ -443,24 +443,24 @@ export function SendingDomainsPage() {
   }, []);
 
   const handleSetDefault = useCallback(async (d: SendingDomain) => {
-    try { await apiFetch('PATCH', `/api/sending/domains/${d.id}`, { isDefault: true }); } catch {}
+    try { await apiFetch('PATCH', `/api/sending/domains/${d.id}`, { isDefault: true }); } catch { }
     setDomains(prev => prev.map(x => ({ ...x, isDefault: x.id === d.id })));
     setSnack(`"${d.domain}" set as default sending domain.`);
   }, []);
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/sending/domains/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/sending/domains/${toDelete.id}`); } catch { }
     setDomains(prev => prev.filter(x => x.id !== toDelete.id));
     setToDelete(null);
     setSnack(`Domain removed.`);
   }, [toDelete]);
 
   const counts = useMemo(() => ({
-    total:    domains.length,
+    total: domains.length,
     verified: domains.filter(d => d.status === 'verified').length,
-    pending:  domains.filter(d => d.status === 'pending' || d.status === 'partial').length,
-    failed:   domains.filter(d => d.status === 'failed').length,
+    pending: domains.filter(d => d.status === 'pending' || d.status === 'partial').length,
+    failed: domains.filter(d => d.status === 'failed').length,
   }), [domains]);
 
   return (
@@ -485,9 +485,9 @@ export function SendingDomainsPage() {
       {/* Summary */}
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3,1fr)' } }}>
         {[
-          { label: 'Verified',       value: counts.verified, color: 'success.main' },
+          { label: 'Verified', value: counts.verified, color: 'success.main' },
           { label: 'Pending / Partial', value: counts.pending, color: 'warning.main' },
-          { label: 'Failed',         value: counts.failed,   color: 'error.main'   },
+          { label: 'Failed', value: counts.failed, color: 'error.main' },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>

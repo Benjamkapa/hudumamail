@@ -36,21 +36,21 @@ import {
   Stack, Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import AccountTreeIcon   from '@mui/icons-material/AccountTree';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon          from '@mui/icons-material/Edit';
-import PauseIcon         from '@mui/icons-material/Pause';
-import PlayArrowIcon     from '@mui/icons-material/PlayArrow';
-import SearchIcon        from '@mui/icons-material/Search';
-import OpenInNewIcon     from '@mui/icons-material/OpenInNew';
+import EditIcon from '@mui/icons-material/Edit';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import SearchIcon from '@mui/icons-material/Search';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -75,35 +75,35 @@ type Flow = {
 };
 
 type FlowForm = { name: string; description: string; trigger: string; triggerEvent: string; };
-type Errors   = Partial<Record<keyof FlowForm, string>>;
+type Errors = Partial<Record<keyof FlowForm, string>>;
 
 const SEED: Flow[] = [
-  { id: 1, name: 'Welcome Series',     description: '3-email onboarding sequence for new subscribers', trigger: 'Contact subscribed',    triggerEvent: 'contact.subscribed',       status: 'active', steps: 3, enrolled: 1240, completed: 980,  conversionRate: 12.4, createdAt: 'Jun 1, 2025'  },
-  { id: 2, name: 'Post-purchase Flow', description: 'Thank you + upsell emails after a purchase',      trigger: 'Purchase completed',    triggerEvent: 'ecommerce.purchase',       status: 'active', steps: 2, enrolled: 430,  completed: 210,  conversionRate: 8.7,  createdAt: 'Jun 15, 2025' },
-  { id: 3, name: 'Win-back Sequence',  description: "Re-engage contacts who haven't opened in 90 days",trigger: 'No open in 90 days',   triggerEvent: 'contact.inactive_90d',     status: 'paused', steps: 4, enrolled: 870,  completed: 340,  conversionRate: 4.2,  createdAt: 'May 20, 2025' },
-  { id: 4, name: 'Birthday Campaign',  description: 'Automated birthday email with a special discount', trigger: 'Birthday date match',  triggerEvent: 'contact.birthday',         status: 'draft',  steps: 1, enrolled: 0,    completed: 0,    conversionRate: 0,    createdAt: 'Jul 14, 2025' },
-  { id: 5, name: 'Cart Abandonment',   description: 'Remind contacts who left items in their cart',     trigger: 'Cart abandoned',       triggerEvent: 'ecommerce.cart_abandoned', status: 'draft',  steps: 2, enrolled: 0,    completed: 0,    conversionRate: 0,    createdAt: 'Jul 15, 2025' },
+  { id: 1, name: 'Welcome Series', description: '3-email onboarding sequence for new subscribers', trigger: 'Contact subscribed', triggerEvent: 'contact.subscribed', status: 'active', steps: 3, enrolled: 1240, completed: 980, conversionRate: 12.4, createdAt: 'Jun 1, 2025' },
+  { id: 2, name: 'Post-purchase Flow', description: 'Thank you + upsell emails after a purchase', trigger: 'Purchase completed', triggerEvent: 'ecommerce.purchase', status: 'active', steps: 2, enrolled: 430, completed: 210, conversionRate: 8.7, createdAt: 'Jun 15, 2025' },
+  { id: 3, name: 'Win-back Sequence', description: "Re-engage contacts who haven't opened in 90 days", trigger: 'No open in 90 days', triggerEvent: 'contact.inactive_90d', status: 'paused', steps: 4, enrolled: 870, completed: 340, conversionRate: 4.2, createdAt: 'May 20, 2025' },
+  { id: 4, name: 'Birthday Campaign', description: 'Automated birthday email with a special discount', trigger: 'Birthday date match', triggerEvent: 'contact.birthday', status: 'draft', steps: 1, enrolled: 0, completed: 0, conversionRate: 0, createdAt: 'Jul 14, 2025' },
+  { id: 5, name: 'Cart Abandonment', description: 'Remind contacts who left items in their cart', trigger: 'Cart abandoned', triggerEvent: 'ecommerce.cart_abandoned', status: 'draft', steps: 2, enrolled: 0, completed: 0, conversionRate: 0, createdAt: 'Jul 15, 2025' },
 ];
 
 const TRIGGERS = [
-  { label: 'Contact subscribed',    event: 'contact.subscribed'       },
-  { label: 'Contact unsubscribed',  event: 'contact.unsubscribed'     },
-  { label: 'Purchase completed',    event: 'ecommerce.purchase'       },
-  { label: 'Cart abandoned',        event: 'ecommerce.cart_abandoned' },
-  { label: 'No open in 90 days',    event: 'contact.inactive_90d'     },
-  { label: 'Birthday date match',   event: 'contact.birthday'         },
-  { label: 'Link clicked in email', event: 'campaign.link_clicked'    },
-  { label: 'Form submitted',        event: 'form.submitted'           },
-  { label: 'Tag added to contact',  event: 'contact.tag_added'        },
-  { label: 'Custom event',          event: 'custom.event'             },
+  { label: 'Contact subscribed', event: 'contact.subscribed' },
+  { label: 'Contact unsubscribed', event: 'contact.unsubscribed' },
+  { label: 'Purchase completed', event: 'ecommerce.purchase' },
+  { label: 'Cart abandoned', event: 'ecommerce.cart_abandoned' },
+  { label: 'No open in 90 days', event: 'contact.inactive_90d' },
+  { label: 'Birthday date match', event: 'contact.birthday' },
+  { label: 'Link clicked in email', event: 'campaign.link_clicked' },
+  { label: 'Form submitted', event: 'form.submitted' },
+  { label: 'Tag added to contact', event: 'contact.tag_added' },
+  { label: 'Custom event', event: 'custom.event' },
 ];
 
 const EMPTY: FlowForm = { name: '', description: '', trigger: '', triggerEvent: '' };
-const STATUS_COLOR: Record<FlowStatus, 'success'|'warning'|'default'> = { active:'success', paused:'warning', draft:'default' };
+const STATUS_COLOR: Record<FlowStatus, 'success' | 'warning' | 'default'> = { active: 'success', paused: 'warning', draft: 'default' };
 
 function validate(f: FlowForm): Errors {
   const e: Errors = {};
-  if (!f.name.trim())  e.name        = 'Flow name is required';
+  if (!f.name.trim()) e.name = 'Flow name is required';
   if (!f.triggerEvent) e.triggerEvent = 'Select a trigger event';
   return e;
 }
@@ -114,7 +114,7 @@ function FlowModal({ open, onClose, editing, onSaved }: {
   open: boolean; onClose: () => void; editing: Flow | null;
   onSaved: (f: Flow, isEdit: boolean) => void;
 }) {
-  const [form, setForm]     = useState<FlowForm>(EMPTY);
+  const [form, setForm] = useState<FlowForm>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [saving, setSaving] = useState(false);
 
@@ -216,15 +216,15 @@ function FlowModal({ open, onClose, editing, onSaved }: {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export function AutomationFlowsPage () {
+export function AutomationFlowsPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [flows,     setFlows]     = useState<Flow[]>(SEED);
-  const [search,    setSearch]    = useState('');
+  const [flows, setFlows] = useState<Flow[]>(SEED);
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing,   setEditing]   = useState<Flow | null>(null);
-  const [toDelete,  setToDelete]  = useState<Flow | null>(null);
+  const [editing, setEditing] = useState<Flow | null>(null);
+  const [toDelete, setToDelete] = useState<Flow | null>(null);
 
   const displayed = useMemo(() =>
     flows.filter(f =>
@@ -238,13 +238,13 @@ export function AutomationFlowsPage () {
 
   const handleToggle = useCallback(async (f: Flow) => {
     const next: FlowStatus = f.status === 'active' ? 'paused' : 'active';
-    try { await apiFetch('PATCH', `/api/automations/flows/${f.id}`, { status: next }); } catch {}
+    try { await apiFetch('PATCH', `/api/automations/flows/${f.id}`, { status: next }); } catch { }
     setFlows(prev => prev.map(x => x.id === f.id ? { ...x, status: next } : x));
   }, []);
 
   const handleDelete = useCallback(async () => {
     if (!toDelete) return;
-    try { await apiFetch('DELETE', `/api/automations/flows/${toDelete.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/automations/flows/${toDelete.id}`); } catch { }
     setFlows(prev => prev.filter(f => f.id !== toDelete.id));
     setToDelete(null);
   }, [toDelete]);
@@ -269,10 +269,10 @@ export function AutomationFlowsPage () {
       {/* Summary */}
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
         {[
-          { label: 'Active flows',       value: flows.filter(f=>f.status==='active').length,          color: 'success.main' },
-          { label: 'Total flows',        value: flows.length,                                          color: undefined      },
-          { label: 'Contacts enrolled',  value: flows.reduce((a,f)=>a+f.enrolled,0).toLocaleString(), color: undefined      },
-          { label: 'Completed journeys', value: flows.reduce((a,f)=>a+f.completed,0).toLocaleString(),color: undefined      },
+          { label: 'Active flows', value: flows.filter(f => f.status === 'active').length, color: 'success.main' },
+          { label: 'Total flows', value: flows.length, color: undefined },
+          { label: 'Contacts enrolled', value: flows.reduce((a, f) => a + f.enrolled, 0).toLocaleString(), color: undefined },
+          { label: 'Completed journeys', value: flows.reduce((a, f) => a + f.completed, 0).toLocaleString(), color: undefined },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>
@@ -331,7 +331,7 @@ export function AutomationFlowsPage () {
                       <Chip label={`${f.steps} step${f.steps !== 1 ? 's' : ''}`} size="small" variant="outlined" sx={{ fontSize: 11 }} />
                     </TableCell>
                     <TableCell>
-                      <Chip label={f.status.charAt(0).toUpperCase()+f.status.slice(1)}
+                      <Chip label={f.status.charAt(0).toUpperCase() + f.status.slice(1)}
                         color={STATUS_COLOR[f.status]} size="small" variant="outlined" sx={{ fontSize: 11 }} />
                     </TableCell>
                     <TableCell align="right">{f.enrolled.toLocaleString()}</TableCell>

@@ -43,19 +43,19 @@ import {
   Stack, Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
-import AddIcon           from '@mui/icons-material/Add';
-import BlockIcon         from '@mui/icons-material/Block';
-import CloseIcon         from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import BlockIcon from '@mui/icons-material/Block';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import SearchIcon        from '@mui/icons-material/Search';
-import UploadIcon        from '@mui/icons-material/Upload';
-import WarningAmberIcon  from '@mui/icons-material/WarningAmber';
+import SearchIcon from '@mui/icons-material/Search';
+import UploadIcon from '@mui/icons-material/Upload';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -80,40 +80,40 @@ type Suppressed = {
 // ─── Seed data ────────────────────────────────────────────────────────────────
 
 const SEED: Suppressed[] = [
-  { id: 1,  email: 'nomore@example.com',      reason: 'unsubscribed', addedAt: 'Jul 14, 2025', addedBy: 'Auto (unsubscribe link)' },
-  { id: 2,  email: 'optout@personal.net',      reason: 'unsubscribed', addedAt: 'Jul 13, 2025', addedBy: 'Auto (unsubscribe link)' },
-  { id: 3,  email: 'bounce@fakeemail.io',      reason: 'bounced',      addedAt: 'Jul 12, 2025', addedBy: 'Auto (hard bounce)'      },
-  { id: 4,  email: 'invalid@notreal.xyz',      reason: 'bounced',      addedAt: 'Jul 11, 2025', addedBy: 'Auto (hard bounce)'      },
-  { id: 5,  email: 'spam@reporter.com',        reason: 'complaint',    addedAt: 'Jul 10, 2025', addedBy: 'Auto (spam complaint)'   },
-  { id: 6,  email: 'junk@markasabuse.io',      reason: 'complaint',    addedAt: 'Jul 9, 2025',  addedBy: 'Auto (spam complaint)'   },
-  { id: 7,  email: 'competitor@rival.com',     reason: 'manual',       addedAt: 'Jul 8, 2025',  addedBy: 'admin@acme.com'          },
-  { id: 8,  email: 'test+seed@internal.com',   reason: 'manual',       addedAt: 'Jul 7, 2025',  addedBy: 'admin@acme.com'          },
+  { id: 1, email: 'nomore@example.com', reason: 'unsubscribed', addedAt: 'Jul 14, 2025', addedBy: 'Auto (unsubscribe link)' },
+  { id: 2, email: 'optout@personal.net', reason: 'unsubscribed', addedAt: 'Jul 13, 2025', addedBy: 'Auto (unsubscribe link)' },
+  { id: 3, email: 'bounce@fakeemail.io', reason: 'bounced', addedAt: 'Jul 12, 2025', addedBy: 'Auto (hard bounce)' },
+  { id: 4, email: 'invalid@notreal.xyz', reason: 'bounced', addedAt: 'Jul 11, 2025', addedBy: 'Auto (hard bounce)' },
+  { id: 5, email: 'spam@reporter.com', reason: 'complaint', addedAt: 'Jul 10, 2025', addedBy: 'Auto (spam complaint)' },
+  { id: 6, email: 'junk@markasabuse.io', reason: 'complaint', addedAt: 'Jul 9, 2025', addedBy: 'Auto (spam complaint)' },
+  { id: 7, email: 'competitor@rival.com', reason: 'manual', addedAt: 'Jul 8, 2025', addedBy: 'admin@acme.com' },
+  { id: 8, email: 'test+seed@internal.com', reason: 'manual', addedAt: 'Jul 7, 2025', addedBy: 'admin@acme.com' },
 ];
 
-const REASON_COLOR: Record<SuppressionReason, 'warning'|'error'|'default'> = {
+const REASON_COLOR: Record<SuppressionReason, 'warning' | 'error' | 'default'> = {
   unsubscribed: 'warning', bounced: 'error', complaint: 'error', manual: 'default',
 };
 
 const REASON_DESCRIPTIONS: Record<SuppressionReason, string> = {
   unsubscribed: 'Contact clicked unsubscribe — legally cannot be emailed',
-  bounced:      'Email address is invalid or unreachable (hard bounce)',
-  complaint:    'Contact marked your email as spam — ISP feedback loop',
-  manual:       'Manually suppressed by an account admin',
+  bounced: 'Email address is invalid or unreachable (hard bounce)',
+  complaint: 'Contact marked your email as spam — ISP feedback loop',
+  manual: 'Manually suppressed by an account admin',
 };
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function AudienceSuppressionPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [items,      setItems]      = useState<Suppressed[]>(SEED);
-  const [search,     setSearch]     = useState('');
-  const [addOpen,    setAddOpen]    = useState(false);
+  const [items, setItems] = useState<Suppressed[]>(SEED);
+  const [search, setSearch] = useState('');
+  const [addOpen, setAddOpen] = useState(false);
   const [emailInput, setEmailInput] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [saving,     setSaving]     = useState(false);
-  const [toRemove,   setToRemove]   = useState<Suppressed | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [toRemove, setToRemove] = useState<Suppressed | null>(null);
 
   const displayed = useMemo(() =>
     items.filter(i =>
@@ -123,9 +123,9 @@ export function AudienceSuppressionPage() {
 
   const counts = {
     unsubscribed: items.filter(i => i.reason === 'unsubscribed').length,
-    bounced:      items.filter(i => i.reason === 'bounced').length,
-    complaint:    items.filter(i => i.reason === 'complaint').length,
-    manual:       items.filter(i => i.reason === 'manual').length,
+    bounced: items.filter(i => i.reason === 'bounced').length,
+    complaint: items.filter(i => i.reason === 'complaint').length,
+    manual: items.filter(i => i.reason === 'manual').length,
   };
 
   const handleAdd = async () => {
@@ -152,7 +152,7 @@ export function AudienceSuppressionPage() {
 
   const handleRemove = useCallback(async () => {
     if (!toRemove) return;
-    try { await apiFetch('DELETE', `/api/contacts/suppression/${toRemove.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/contacts/suppression/${toRemove.id}`); } catch { }
     setItems(prev => prev.filter(i => i.id !== toRemove.id));
     setToRemove(null);
   }, [toRemove]);
@@ -175,7 +175,7 @@ export function AudienceSuppressionPage() {
                 const file = e.target.files?.[0];
                 if (!file) return;
                 const fd = new FormData(); fd.append('file', file);
-                try { await fetch(`${API()}/api/contacts/suppression/import`, { method: 'POST', credentials: 'include', body: fd }); } catch {}
+                try { await fetch(`${API()}/api/contacts/suppression/import`, { method: 'POST', credentials: 'include', body: fd }); } catch { }
                 e.target.value = '';
               }} />
             </Button>
@@ -196,9 +196,9 @@ export function AudienceSuppressionPage() {
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
         {([
           { key: 'unsubscribed', label: 'Unsubscribed', color: 'warning.main' },
-          { key: 'bounced',      label: 'Bounced',      color: 'error.main'   },
-          { key: 'complaint',    label: 'Complaints',   color: 'error.main'   },
-          { key: 'manual',       label: 'Manual',       color: 'text.primary' },
+          { key: 'bounced', label: 'Bounced', color: 'error.main' },
+          { key: 'complaint', label: 'Complaints', color: 'error.main' },
+          { key: 'manual', label: 'Manual', color: 'text.primary' },
         ] as const).map(s => (
           <GlassCard key={s.key} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>

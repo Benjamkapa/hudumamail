@@ -19,25 +19,25 @@ import {
   TableHead, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
 
-import AddIcon           from '@mui/icons-material/Add';
-import CheckCircleIcon   from '@mui/icons-material/CheckCircle';
-import CloseIcon         from '@mui/icons-material/Close';
-import ContentCopyIcon   from '@mui/icons-material/ContentCopy';
+import AddIcon from '@mui/icons-material/Add';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import KeyIcon           from '@mui/icons-material/Key';
-import MoreVertIcon      from '@mui/icons-material/MoreVert';
-import SearchIcon        from '@mui/icons-material/Search';
-import VisibilityIcon    from '@mui/icons-material/Visibility';
+import KeyIcon from '@mui/icons-material/Key';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SearchIcon from '@mui/icons-material/Search';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import WarningAmberIcon  from '@mui/icons-material/WarningAmber';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { GlassCard } from '../../../../dashboard/GlassCard';
-import { useAuth }   from '../../../../../state/auth/useAuth';
-import { Role }      from '../../../../../types/auth';
+import { useAuth } from '../../../../../state/auth/useAuth';
+import { Role } from '../../../../../types/auth';
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API = () => (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:3000';
+const API = () => (import.meta as any).env?.VITE_API_URL;
 async function apiFetch(method: string, path: string, body?: unknown) {
   const res = await fetch(`${API()}${path}`, {
     method, credentials: 'include',
@@ -52,12 +52,12 @@ async function apiFetch(method: string, path: string, body?: unknown) {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type ScopeId =
-  | 'contacts:read'   | 'contacts:write'
-  | 'campaigns:read'  | 'campaigns:write'
-  | 'templates:read'  | 'templates:write'
-  | 'sending:read'    | 'sending:write'
+  | 'contacts:read' | 'contacts:write'
+  | 'campaigns:read' | 'campaigns:write'
+  | 'templates:read' | 'templates:write'
+  | 'sending:read' | 'sending:write'
   | 'analytics:read'
-  | 'webhooks:read'   | 'webhooks:write'
+  | 'webhooks:read' | 'webhooks:write'
   | 'admin';
 
 type ApiKey = {
@@ -85,28 +85,28 @@ const SCOPE_GROUPS: { label: string; color: string; scopes: { id: ScopeId; desc:
   {
     label: 'Contacts', color: '#6366f1',
     scopes: [
-      { id: 'contacts:read',  desc: 'List and retrieve contacts' },
+      { id: 'contacts:read', desc: 'List and retrieve contacts' },
       { id: 'contacts:write', desc: 'Create, update and delete contacts' },
     ],
   },
   {
     label: 'Campaigns', color: '#0ea5e9',
     scopes: [
-      { id: 'campaigns:read',  desc: 'List and retrieve campaigns' },
+      { id: 'campaigns:read', desc: 'List and retrieve campaigns' },
       { id: 'campaigns:write', desc: 'Create, update, send and delete campaigns' },
     ],
   },
   {
     label: 'Templates', color: '#8b5cf6',
     scopes: [
-      { id: 'templates:read',  desc: 'List and retrieve templates' },
+      { id: 'templates:read', desc: 'List and retrieve templates' },
       { id: 'templates:write', desc: 'Create, update and delete templates' },
     ],
   },
   {
     label: 'Sending', color: '#f97316',
     scopes: [
-      { id: 'sending:read',  desc: 'View sending domains and IP status' },
+      { id: 'sending:read', desc: 'View sending domains and IP status' },
       { id: 'sending:write', desc: 'Manage sending domains, IPs, and webhooks' },
     ],
   },
@@ -119,7 +119,7 @@ const SCOPE_GROUPS: { label: string; color: string; scopes: { id: ScopeId; desc:
   {
     label: 'Webhooks', color: '#ec4899',
     scopes: [
-      { id: 'webhooks:read',  desc: 'List webhook endpoints and delivery logs' },
+      { id: 'webhooks:read', desc: 'List webhook endpoints and delivery logs' },
       { id: 'webhooks:write', desc: 'Create, update and delete webhooks' },
     ],
   },
@@ -158,18 +158,18 @@ function fmtRelative(iso: string | null) {
   if (!iso) return 'Never';
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 2)   return 'Just now';
-  if (mins < 60)  return `${mins}m ago`;
+  if (mins < 2) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24)   return `${hrs}h ago`;
+  if (hrs < 24) return `${hrs}h ago`;
   const days = Math.floor(hrs / 24);
-  if (days < 30)  return `${days}d ago`;
+  if (days < 30) return `${days}d ago`;
   return fmtDate(iso);
 }
 
 function validateForm(form: KeyForm): FormErrors {
   const errors: FormErrors = {};
-  if (!form.name.trim())    errors.name   = 'Key name is required';
+  if (!form.name.trim()) errors.name = 'Key name is required';
   if (form.scopes.length === 0) errors.scopes = 'Select at least one scope';
   return errors;
 }
@@ -256,8 +256,8 @@ function CreateKeyDialog({ open, onClose, onCreated }: {
   onClose: () => void;
   onCreated: (key: ApiKey, fullKey: string) => void;
 }) {
-  const [step,   setStep]   = useState(0);   // 0 = form, 1 = reveal
-  const [form,   setForm]   = useState<KeyForm>(EMPTY_FORM);
+  const [step, setStep] = useState(0);   // 0 = form, 1 = reveal
+  const [form, setForm] = useState<KeyForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
   const [newKey, setNewKey] = useState<{ key: ApiKey; full: string } | null>(null);
@@ -284,22 +284,22 @@ function CreateKeyDialog({ open, onClose, onCreated }: {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSaving(true);
 
-    const prefix  = generateKeyPrefix();
+    const prefix = generateKeyPrefix();
     const fullKey = generateFullKey(prefix);
-    const now     = new Date().toISOString();
+    const now = new Date().toISOString();
     const key: ApiKey = {
-      id:         `key_${Date.now()}`,
-      name:       form.name.trim(),
+      id: `key_${Date.now()}`,
+      name: form.name.trim(),
       prefix,
-      scopes:     form.scopes,
-      createdBy:  'You',
-      createdAt:  now,
+      scopes: form.scopes,
+      createdBy: 'You',
+      createdAt: now,
       lastUsedAt: null,
       lastUsedIp: null,
-      active:     true,
+      active: true,
     };
 
-    try { await apiFetch('POST', '/api/integrations/api-keys', { name: key.name, scopes: key.scopes }); } catch {}
+    try { await apiFetch('POST', '/api/integrations/api-keys', { name: key.name, scopes: key.scopes }); } catch { }
     setSaving(false);
     setNewKey({ key, full: fullKey });
     setStep(1);
@@ -443,7 +443,7 @@ function CreateKeyDialog({ open, onClose, onCreated }: {
                   Key summary
                 </Typography>
                 {[
-                  { label: 'Name',   value: newKey.key.name },
+                  { label: 'Name', value: newKey.key.name },
                   { label: 'Prefix', value: newKey.key.prefix + '_••••' },
                   { label: 'Scopes', value: newKey.key.scopes.join(', ') },
                 ].map(r => (
@@ -496,14 +496,14 @@ function RevokeDialog({ apiKey, onConfirm, onCancel }: {
 
 export function IntegrationsApiKeysPage() {
   const { user } = useAuth();
-  const canEdit  = user?.role !== Role.CLIENT_USER;
+  const canEdit = user?.role !== Role.CLIENT_USER;
 
-  const [keys,      setKeys]      = useState<ApiKey[]>(INITIAL_KEYS);
-  const [search,    setSearch]    = useState('');
-  const [createOpen,setCreateOpen]= useState(false);
-  const [toRevoke,  setToRevoke]  = useState<ApiKey | null>(null);
-  const [snack,     setSnack]     = useState<string | null>(null);
-  const [anchor,    setAnchor]    = useState<{ el: HTMLElement; key: ApiKey } | null>(null);
+  const [keys, setKeys] = useState<ApiKey[]>(INITIAL_KEYS);
+  const [search, setSearch] = useState('');
+  const [createOpen, setCreateOpen] = useState(false);
+  const [toRevoke, setToRevoke] = useState<ApiKey | null>(null);
+  const [snack, setSnack] = useState<string | null>(null);
+  const [anchor, setAnchor] = useState<{ el: HTMLElement; key: ApiKey } | null>(null);
 
   const displayed = useMemo(() => {
     const q = search.toLowerCase();
@@ -520,17 +520,17 @@ export function IntegrationsApiKeysPage() {
 
   const handleRevoke = useCallback(async () => {
     if (!toRevoke) return;
-    try { await apiFetch('DELETE', `/api/integrations/api-keys/${toRevoke.id}`); } catch {}
+    try { await apiFetch('DELETE', `/api/integrations/api-keys/${toRevoke.id}`); } catch { }
     setKeys(prev => prev.filter(k => k.id !== toRevoke.id));
     setToRevoke(null);
     setSnack(`"${toRevoke.name}" has been revoked.`);
   }, [toRevoke]);
 
   const counts = useMemo(() => ({
-    total:  keys.length,
+    total: keys.length,
     active: keys.filter(k => k.active).length,
     unused: keys.filter(k => k.active && !k.lastUsedAt).length,
-    admin:  keys.filter(k => k.scopes.includes('admin')).length,
+    admin: keys.filter(k => k.scopes.includes('admin')).length,
   }), [keys]);
 
   return (
@@ -555,10 +555,10 @@ export function IntegrationsApiKeysPage() {
       {/* Summary */}
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4,1fr)' } }}>
         {[
-          { label: 'Active keys',   value: counts.active, color: 'success.main' },
-          { label: 'Total keys',    value: counts.total,  color: undefined },
-          { label: 'Never used',    value: counts.unused, color: counts.unused > 0 ? 'warning.main' : undefined },
-          { label: 'Admin scope',   value: counts.admin,  color: counts.admin  > 0 ? 'error.main'   : undefined },
+          { label: 'Active keys', value: counts.active, color: 'success.main' },
+          { label: 'Total keys', value: counts.total, color: undefined },
+          { label: 'Never used', value: counts.unused, color: counts.unused > 0 ? 'warning.main' : undefined },
+          { label: 'Admin scope', value: counts.admin, color: counts.admin > 0 ? 'error.main' : undefined },
         ].map(s => (
           <GlassCard key={s.label} sx={{ p: 2 }}>
             <Typography variant="caption" color="text.secondary">{s.label}</Typography>
@@ -613,8 +613,10 @@ export function IntegrationsApiKeysPage() {
               <TableBody>
                 {displayed.map(k => (
                   <TableRow key={k.id} hover
-                    sx={{ '& td': { fontSize: 13, borderBottom: 1, borderColor: 'divider' },
-                      opacity: k.active ? 1 : 0.55 }}>
+                    sx={{
+                      '& td': { fontSize: 13, borderBottom: 1, borderColor: 'divider' },
+                      opacity: k.active ? 1 : 0.55
+                    }}>
                     <TableCell sx={{ pl: 2 }}>
                       <Typography variant="body2" fontWeight={600}>{k.name}</Typography>
                     </TableCell>
