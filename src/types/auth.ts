@@ -19,6 +19,7 @@ export type AuthUser = {
 export type ProfileResponse = AuthUser;
 
 export type LoginResponse = {
+  refreshToken: string | null | undefined;
   accessToken: string;
   user: AuthUser;
 };
