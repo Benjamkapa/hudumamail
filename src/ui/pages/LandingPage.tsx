@@ -44,14 +44,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../state/auth/useAuth";
 import { useCurrency } from "../../state/currency/CurrencyContext";
 import { CurrencyToggleUI } from "../components/CurrencyToggleUI";
+import type { Currency } from "../../types/currency";
 
 // ─── Google Font injection ────────────────────────────────────────────────────
 const FONT_LINK = `
   @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Nunito:wght@400;500;600;700;800;900&family=Nunito+Sans:wght@400;500;600;700;800&display=swap');
 `;
-
-// ─── Constants ────────────────────────────────────────────────────────────────
-const MAX_WIDTH = "1224px";
 
 // ─── Keyframes ────────────────────────────────────────────────────────────────
 const fadeUp = keyframes`
@@ -76,7 +74,13 @@ const slideUp = keyframes`
 `;
 
 // ─── Scroll reveal ────────────────────────────────────────────────────────────
-function Reveal({ children, delay = 0, sx = {} }: { children: React.ReactNode, delay?: number, sx?: any }) {
+interface RevealProps {
+  children: React.ReactNode;
+  delay?: number;
+  sx?: any;
+}
+
+function Reveal({ children, delay = 0, sx = {} }: RevealProps) {
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
   useEffect(() => {
@@ -104,7 +108,15 @@ function Reveal({ children, delay = 0, sx = {} }: { children: React.ReactNode, d
 }
 
 // ─── Count-up stat ────────────────────────────────────────────────────────────
-function CountUp({ end, prefix = "", suffix = "", decimals = 0, duration = 2200 }: { end: number, prefix?: string, suffix?: string, decimals?: number, duration?: number }) {
+interface CountUpProps {
+  end: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  duration?: number;
+}
+
+function CountUp({ end, prefix = "", suffix = "", decimals = 0, duration = 2200 }: CountUpProps) {
   const [display, setDisplay] = useState("0");
   const ref = useRef(null);
   const done = useRef(false);
@@ -133,7 +145,7 @@ function CountUp({ end, prefix = "", suffix = "", decimals = 0, duration = 2200 
 }
 
 // ─── SVG Brand Icons ──────────────────────────────────────────────────────────
-const BrandIcons = {
+const BrandIcons: Record<string, React.ReactNode> = {
   Zapier: (
     <svg viewBox="0 0 40 40" fill="none" width="28" height="28">
       <circle cx="20" cy="20" r="20" fill="#FF4A00" />
@@ -228,13 +240,17 @@ const BrandIcons = {
 };
 
 // ─── Currency format ──────────────────────────────────────────────────────────
-function fmt(val: number, currency: string) {
+function fmt(val: number, currency: Currency) {
   if (currency === "USD") return val === 0 ? "$0" : `$${val.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   return `KES ${Math.round(val).toLocaleString("en-KE")}`;
 }
 
 // ─── Dashboard Preview ────────────────────────────────────────────────────────
-function DashboardPreview({ dark }: { dark: boolean }) {
+interface DashboardPreviewProps {
+  dark: boolean;
+}
+
+function DashboardPreview({ dark }: DashboardPreviewProps) {
   const bg = dark ? "#0d0f14" : "#f8faff";
   const card = dark ? "#161b27" : "#ffffff";
   const border = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
@@ -415,7 +431,23 @@ function DashboardPreview({ dark }: { dark: boolean }) {
 }
 
 // ─── Email Cost Calculator ────────────────────────────────────────────────────
-function EmailCalculator({ dark, currency, rate, surface, bord, bordH, txt, muted, dimmer, blue, cyan, green, font }: any) {
+interface EmailCalculatorProps {
+  dark: boolean;
+  currency: Currency;
+  rate: number;
+  surface: string;
+  bord: string;
+  bordH: string;
+  txt: string;
+  muted: string;
+  dimmer: string;
+  blue: string;
+  cyan: string;
+  green: string;
+  font: string;
+}
+
+function EmailCalculator({ dark, currency, rate, surface, bord, bordH, txt, muted, dimmer, blue, cyan, green, font }: EmailCalculatorProps) {
   const [volume, setVolume] = useState(50000);
   const monthlyUSD = (vol: number) => {
     if (vol <= 5000) return 0;
@@ -460,7 +492,7 @@ function EmailCalculator({ dark, currency, rate, surface, bord, bordH, txt, mute
             <Typography component="span" sx={{ fontSize: 13, color: muted, fontFamily: font, ml: 0.5 }}>emails</Typography>
           </Typography>
         </Box>
-        <Slider value={volume} min={1000} max={1000000} step={1000} onChange={(_, val) => setVolume(val)}
+        <Slider value={volume} min={1000} max={1000000} step={1000} onChange={(_, val) => setVolume(val as number)}
           sx={{ color: planColor, "& .MuiSlider-thumb": { width: 22, height: 22, border: `3px solid ${planColor}`, bgcolor: dark ? "#0d1117" : "#fff", boxShadow: `0 0 0 6px ${planColor}22`, "&:hover": { boxShadow: `0 0 0 10px ${planColor}28` } }, "& .MuiSlider-track": { height: 6, border: "none", background: `linear-gradient(90deg,${blue},${planColor})` }, "& .MuiSlider-rail": { height: 6, bgcolor: dark ? "rgba(255,255,255,0.08)" : "#e2e8f0" } }}
         />
         <Box sx={{ display: "flex", gap: 1, mt: 1.5, flexWrap: "wrap" }}>
@@ -512,33 +544,28 @@ export function LandingPage() {
   const { currency, setCurrency, usdToKesRate } = useCurrency();
   const [dark, setDark] = useState(muiTheme.palette.mode === "dark");
   const [annual, setAnnual] = useState(true);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [isNavVisible, setIsNavVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
 
   useEffect(() => { setDark(muiTheme.palette.mode === "dark"); }, [muiTheme.palette.mode]);
 
   useEffect(() => {
     const handler = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Show/Hide Scroll to Top button
-      setShowScrollTop(currentScrollY > 500);
-
-      // Smart Navbar reveal logic
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsNavVisible(false); // Scrolling down - hide
-      } else {
-        setIsNavVisible(true); // Scrolling up or at top - show
-      }
-      
-      setLastScrollY(currentScrollY);
+      const y = window.scrollY;
+      // Show scroll-to-top after 500px
+      setShowScrollTop(y > 500);
+      // Hide nav on scroll-down, reveal on scroll-up
+      // Small dead-zone of 6px avoids flicker on tiny movements
+      if (Math.abs(y - lastScrollY.current) < 6) return;
+      setNavVisible(y < lastScrollY.current || y < 60);
+      lastScrollY.current = y;
     };
-
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
-  }, [lastScrollY]);
+  }, []);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -582,13 +609,13 @@ export function LandingPage() {
     scale: annual ? Math.round(99 * (1 - annualDiscount)) : 99,
   };
 
-  // ─── Nav links (all 5 working) ─────────────────────────────────────────────
+  // ─── Nav links — all scroll to in-page sections ───────────────────────────
   const navLinks = [
-    { label: "Features",   id: "features",   show: true },
-    { label: "Industries", id: "industries", show: true },
-    { label: "Pricing",    id: "pricing",    show: true },
-    { label: "API Docs",   id: "docs",       show: true, url: "/docs" },
-    { label: "Blogs",      id: "blogs",      show: true, url: "/blogs" },
+    { label: "Features",   id: "features"   },
+    { label: "Industries", id: "industries" },
+    { label: "Pricing",    id: "pricing"    },
+    { label: "API Docs",   id: "docs"       },
+    { label: "Blogs",      id: "blogs"      },
   ];
 
   const scrollTo = useCallback((id: string) => {
@@ -611,66 +638,112 @@ export function LandingPage() {
 
         {/* ══ NAVBAR ══════════════════════════════════════════════════════════ */}
         <Box component="header" sx={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 500,
           backdropFilter: "blur(32px) saturate(1.8)",
           WebkitBackdropFilter: "blur(32px) saturate(1.8)",
-          bgcolor: dark ? "rgba(8,10,15,0.78)" : "rgba(246,248,255,0.80)",
+          bgcolor: dark ? "rgba(8,10,15,0.82)" : "rgba(246,248,255,0.84)",
           borderBottom: `1px solid ${bord}`,
-          transform: isNavVisible ? "translateY(0)" : "translateY(-100%)",
-          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          transform: navVisible ? "translateY(0)" : "translateY(-110%)",
+          transition: "transform 0.38s cubic-bezier(0.4, 0, 0.2, 1)",
+          willChange: "transform",
         }}>
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, display: "flex", alignItems: "center", justifyContent: "space-between", px: { xs: 2.5, md: 5 }, py: 1.6 }}>
-          <Stack direction="row" spacing={1.25} alignItems="center" sx={{ cursor: "pointer" }} onClick={() => navigate("/")}>
-            <Box component="img" src="/favicon.png" alt="ChapMail" sx={{ width: 40, height: 40, borderRadius: 1.5, objectFit: "contain" }} />
-            <Typography sx={{ fontWeight: 700, fontSize: 18, color: txt, letterSpacing: -0.4, fontFamily: display, display: { xs: "none", sm: "block" } }}>ChapMail</Typography>
-          </Stack>
+          {/* Main bar */}
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: { xs: 2.5, md: 5 }, py: 1.6 }}>
+            <Stack direction="row" spacing={1.25} alignItems="center" sx={{ cursor: "pointer" }} onClick={() => navigate("/")}>
+              <Box component="img" src="/favicon.png" alt="ChapMail" sx={{ width: 40, height: 40, borderRadius: 1.5, objectFit: "contain" }} />
+              <Typography sx={{ fontWeight: 700, fontSize: 18, color: txt, letterSpacing: -0.4, fontFamily: display }}>ChapMail</Typography>
+            </Stack>
 
-          <Stack direction="row" alignItems="center" sx={{ display: { xs: "none", md: "flex" } }}>
-            {navLinks.map((l) => (
-              <Box key={l.label}
-                onClick={() => {
-                  if (l.url) { l.url.startsWith("http") ? window.open(l.url, "_blank") : navigate(l.url); return; }
-                  scrollTo(l.id);
-                }}
-                sx={{ px: 1.6, py: 0.8, borderRadius: 1.5, fontSize: 13.5, fontWeight: 600, color: muted, cursor: "pointer", transition: "color .15s", fontFamily: font, "&:hover": { color: txt } }}
-              >
-                {l.label}
-              </Box>
-            ))}
-          </Stack>
-
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Box sx={{ display: { xs: "none", md: "block" } }}>
-              <CurrencyToggle />
-            </Box>
-            <Box onClick={() => { window.dispatchEvent(new CustomEvent("toggle-theme")); setDark(d => !d); }}
-              sx={{ width: 36, height: 36, borderRadius: 1.5, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${bord}`, color: muted, transition: "all .15s", "&:hover": { borderColor: bordH, color: txt } }}>
-              {dark ? <LightModeOutlined sx={{ fontSize: 17 }} /> : <DarkModeOutlined sx={{ fontSize: 17 }} />}
-            </Box>
-            {user ? (
-              <Button onClick={() => navigate("/app/dashboard")} variant="contained"
-                sx={{ bgcolor: blue, color: "#fff", fontWeight: 700, fontSize: 13, px: 2.5, py: 0.9, borderRadius: 1.5, fontFamily: font, boxShadow: `0 0 20px ${blue}40`, "&:hover": { bgcolor: blueL } }}>
-                Dashboard →
-              </Button>
-            ) : (
-              <>
-                <Box onClick={() => navigate("/login")}
-                  sx={{ px: 1.5, py: 0.75, fontSize: 13, fontWeight: 600, color: muted, cursor: "pointer", borderRadius: 1, fontFamily: font, "&:hover": { color: txt }, display: { xs: "none", md: "block" } }}>
-                  Sign in
+            {/* Desktop links */}
+            <Stack direction="row" alignItems="center" sx={{ display: { xs: "none", md: "flex" } }}>
+              {navLinks.map((l) => (
+                <Box key={l.label} onClick={() => scrollTo(l.id)}
+                  sx={{ px: 1.6, py: 0.8, borderRadius: 1.5, fontSize: 13.5, fontWeight: 600, color: muted, cursor: "pointer", transition: "color .15s", fontFamily: font, "&:hover": { color: txt } }}>
+                  {l.label}
                 </Box>
-                <Button onClick={() => navigate("/register")} variant="contained"
-                  sx={{ bgcolor: blue, color: "#fff", fontWeight: 700, fontSize: 13, px: 2.5, py: 0.9, borderRadius: 1.5, fontFamily: font, boxShadow: `0 0 20px ${blue}40`, "&:hover": { bgcolor: blueL } }}>
-                  <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>Get started free</Box>
-                  <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>Start</Box>
+              ))}
+            </Stack>
+
+            {/* Right actions */}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Box sx={{ display: { xs: "none", sm: "block" } }}><CurrencyToggle /></Box>
+              <Box onClick={() => { window.dispatchEvent(new CustomEvent("toggle-theme")); setDark(d => !d); }}
+                sx={{ width: 36, height: 36, borderRadius: 1.5, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${bord}`, color: muted, transition: "all .15s", "&:hover": { borderColor: bordH, color: txt } }}>
+                {dark ? <LightModeOutlined sx={{ fontSize: 17 }} /> : <DarkModeOutlined sx={{ fontSize: 17 }} />}
+              </Box>
+              {user ? (
+                <Button onClick={() => navigate("/app/dashboard")} variant="contained"
+                  sx={{ display: { xs: "none", sm: "flex" }, bgcolor: blue, color: "#fff", fontWeight: 700, fontSize: 13, px: 2.5, py: 0.9, borderRadius: 1.5, fontFamily: font, boxShadow: `0 0 20px ${blue}40`, "&:hover": { bgcolor: blueL } }}>
+                  Dashboard →
                 </Button>
-              </>
-            )}
-          </Stack>
-        </Container>
-      </Box>
+              ) : (
+                <>
+                  <Box onClick={() => navigate("/login")}
+                    sx={{ display: { xs: "none", md: "block" }, px: 1.5, py: 0.75, fontSize: 13, fontWeight: 600, color: muted, cursor: "pointer", borderRadius: 1, fontFamily: font, "&:hover": { color: txt } }}>
+                    Sign in
+                  </Box>
+                  <Button onClick={() => navigate("/register")} variant="contained"
+                    sx={{ display: { xs: "none", sm: "flex" }, bgcolor: blue, color: "#fff", fontWeight: 700, fontSize: 13, px: 2.5, py: 0.9, borderRadius: 1.5, fontFamily: font, boxShadow: `0 0 20px ${blue}40`, "&:hover": { bgcolor: blueL } }}>
+                    Get started free
+                  </Button>
+                </>
+              )}
+              {/* Hamburger — mobile only */}
+              <Box onClick={() => setMobileMenuOpen(o => !o)}
+                sx={{ display: { xs: "flex", md: "none" }, width: 38, height: 38, borderRadius: 1.5, border: `1px solid ${bord}`, alignItems: "center", justifyContent: "center", cursor: "pointer", flexDirection: "column", gap: "5px", px: 1, transition: "border-color .15s", "&:hover": { borderColor: bordH } }}>
+                {[0, 1, 2].map((bar) => (
+                  <Box key={bar} sx={{
+                    width: bar === 1 ? 14 : 20, height: 1.5, bgcolor: muted, borderRadius: 1,
+                    transition: "all .25s cubic-bezier(.22,1,.36,1)",
+                    ...(mobileMenuOpen && bar === 0 && { transform: "translateY(6.5px) rotate(45deg)", width: 20, bgcolor: txt }),
+                    ...(mobileMenuOpen && bar === 1 && { opacity: 0, transform: "scaleX(0)" }),
+                    ...(mobileMenuOpen && bar === 2 && { transform: "translateY(-6.5px) rotate(-45deg)", width: 20, bgcolor: txt }),
+                  }} />
+                ))}
+              </Box>
+            </Stack>
+          </Box>
+
+          {/* Mobile dropdown */}
+          <Collapse in={mobileMenuOpen}>
+            <Box sx={{ display: { xs: "block", md: "none" }, borderTop: `1px solid ${bord}`, px: 2.5, py: 2, bgcolor: dark ? "rgba(8,10,15,0.96)" : "rgba(246,248,255,0.97)" }}>
+              <Stack spacing={0.5}>
+                {navLinks.map((l, i) => (
+                  <Box key={l.label} onClick={() => { scrollTo(l.id); setMobileMenuOpen(false); }}
+                    sx={{ px: 2, py: 1.25, borderRadius: 1.5, fontSize: 15, fontWeight: 600, color: muted, cursor: "pointer", fontFamily: font, display: "flex", alignItems: "center", justifyContent: "space-between", transition: "all .12s", "&:hover": { color: txt, bgcolor: dark ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)" } }}>
+                    {l.label}
+                    <ArrowForward sx={{ fontSize: 14, opacity: 0.4 }} />
+                  </Box>
+                ))}
+                <Box sx={{ pt: 1.5, borderTop: `1px solid ${bord}` }}>
+                  {user ? (
+                    <Button onClick={() => { navigate("/app/dashboard"); setMobileMenuOpen(false); }} fullWidth variant="contained"
+                      sx={{ bgcolor: blue, color: "#fff", fontWeight: 700, py: 1.2, borderRadius: 1.5, fontFamily: font }}>
+                      Dashboard →
+                    </Button>
+                  ) : (
+                    <Stack spacing={1}>
+                      <Button onClick={() => { navigate("/register"); setMobileMenuOpen(false); }} fullWidth variant="contained"
+                        sx={{ bgcolor: blue, color: "#fff", fontWeight: 700, py: 1.2, borderRadius: 1.5, fontFamily: font, boxShadow: `0 4px 16px ${blue}40` }}>
+                        Get started free
+                      </Button>
+                      <Button onClick={() => { navigate("/login"); setMobileMenuOpen(false); }} fullWidth variant="outlined"
+                        sx={{ borderColor: bord, color: muted, fontWeight: 600, py: 1.1, borderRadius: 1.5, fontFamily: font }}>
+                        Sign in
+                      </Button>
+                    </Stack>
+                  )}
+                </Box>
+              </Stack>
+            </Box>
+          </Collapse>
+        </Box>
+
+        {/* Spacer — keeps content clear of the fixed navbar */}
+        <Box sx={{ height: { xs: 64, md: 68 } }} />
 
         {/* ══ HERO ════════════════════════════════════════════════════════════ */}
-        <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, position: "relative", zIndex: 1, pt: { xs: 10, md: 17 }, pb: 4, textAlign: "center" }}>
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, pt: { xs: 6, md: 12 }, pb: 4, textAlign: "center" }}>
           <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1, px: 2, py: 0.7, borderRadius: 99, mb: 5, bgcolor: blueDim, border: `1px solid ${blue}45`, animation: `${fadeUp} .6s .05s both` }}>
             <Box sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: cyan, boxShadow: `0 0 8px ${cyan}`, animation: `${pulse} 2s infinite` }} />
             <Typography sx={{ fontSize: 12.5, fontWeight: 700, color: cyan, letterSpacing: 0.3, fontFamily: font }}>
@@ -740,7 +813,7 @@ export function LandingPage() {
         <Reveal>
           <Box sx={{ position: "relative", zIndex: 1, py: 9, mt: 10, borderTop: `1px solid ${bord}`, borderBottom: `1px solid ${bord}`, bgcolor: surfB }}>
             <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${blue}55,${cyan}40,transparent)` }} />
-            <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH }}>
+            <Container maxWidth="lg">
               <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr 1fr", md: "repeat(4,1fr)" }, gap: { xs: 4, md: 2 } }}>
                 {[
                   { end: 50, prefix: "", suffix: "B+",   label: "Emails delivered monthly",  color: blue,      sub: "across all clients",    decimals: 0 },
@@ -765,7 +838,7 @@ export function LandingPage() {
 
         {/* ══ FEATURES ════════════════════════════════════════════════════════ */}
         <Box id="features">
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, position: "relative", zIndex: 1, py: { xs: 12, md: 18 } }}>
+          <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 12, md: 18 } }}>
             <Reveal>
               <Box sx={{ textAlign: "center", mb: 10 }}>
                 <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Built different</Typography>
@@ -843,7 +916,7 @@ export function LandingPage() {
 
         {/* ══ HOW IT WORKS ════════════════════════════════════════════════════ */}
         <Box id="how" sx={{ bgcolor: surfB, py: { xs: 12, md: 18 }, borderTop: `1px solid ${bord}`, borderBottom: `1px solid ${bord}` }}>
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, position: "relative", zIndex: 1 }}>
+          <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
             <Reveal>
               <Box sx={{ textAlign: "center", mb: 10 }}>
                 <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Simple to start</Typography>
@@ -879,7 +952,7 @@ export function LandingPage() {
 
         {/* ══ INDUSTRIES ══════════════════════════════════════════════════════ */}
         <Box id="industries">
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, position: "relative", zIndex: 1, py: { xs: 12, md: 18 } }}>
+          <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 12, md: 18 } }}>
             <Reveal>
               <Box sx={{ textAlign: "center", mb: 10 }}>
                 <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Industries</Typography>
@@ -962,7 +1035,7 @@ export function LandingPage() {
 
         {/* ══ EMAIL COST CALCULATOR ═══════════════════════════════════════════ */}
         <Box sx={{ bgcolor: surfB, borderTop: `1px solid ${bord}`, borderBottom: `1px solid ${bord}` }}>
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, position: "relative", zIndex: 1, py: { xs: 10, md: 16 } }}>
+          <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 10, md: 16 } }}>
             <Reveal>
               <Box sx={{ textAlign: "center", mb: 8 }}>
                 <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Transparent Pricing</Typography>
@@ -975,8 +1048,8 @@ export function LandingPage() {
                   {currency === "KES" && <Box component="span" sx={{ color: dimmer, fontSize: 12 }}> · Live rate: 1 USD = KES {effectiveRate.toFixed(2)}</Box>}
                 </Typography>
                 <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mt: 1 }}>
-                  {(["USD", "KES"]).map((c) => (
-                    <Box key={c} onClick={() => setCurrency(c as any)}
+                  {(["USD", "KES"] as Currency[]).map((c) => (
+                    <Box key={c} onClick={() => setCurrency(c)}
                       sx={{ px: 2.5, py: 0.75, borderRadius: 99, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all .2s", fontFamily: font, bgcolor: currency === c ? (c === "KES" ? "rgba(34,197,94,0.12)" : blueDim) : "transparent", color: currency === c ? (c === "KES" ? green : blue) : muted, border: `1.5px solid ${currency === c ? (c === "KES" ? "#22c55e50" : `${blue}50`) : bord}` }}>
                       {c === "USD" ? "$ USD" : "KES"}
                     </Box>
@@ -991,7 +1064,7 @@ export function LandingPage() {
         </Box>
 
         {/* ══ INTEGRATIONS ════════════════════════════════════════════════════ */}
-        <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, position: "relative", zIndex: 1, py: { xs: 10, md: 14 } }}>
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 10, md: 14 } }}>
           <Reveal>
             <Box sx={{ textAlign: "center", mb: 6 }}>
               <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Integrations</Typography>
@@ -1017,7 +1090,7 @@ export function LandingPage() {
                 { name: "n8n", color: "#ea4b71" },
               ].map((intg) => (
                 <Box key={intg.name} sx={{ ...cardSx, p: 2.5, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 1, "&:hover": { borderColor: `${intg.color}50`, transform: "translateY(-3px)", boxShadow: `0 8px 24px ${intg.color}15` } }}>
-                  <Box sx={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center" }}>{(BrandIcons as any)[intg.name]}</Box>
+                  <Box sx={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center" }}>{BrandIcons[intg.name]}</Box>
                   <Typography sx={{ fontSize: 11, fontWeight: 700, color: muted, fontFamily: font }}>{intg.name}</Typography>
                 </Box>
               ))}
@@ -1025,9 +1098,392 @@ export function LandingPage() {
           </Reveal>
         </Container>
 
+        {/* ══ API DOCS ════════════════════════════════════════════════════════ */}
+        <Box id="docs" sx={{ bgcolor: surfB, borderTop: `1px solid ${bord}`, borderBottom: `1px solid ${bord}` }}>
+          <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 12, md: 18 } }}>
+            <Reveal>
+              <Box sx={{ textAlign: "center", mb: 10 }}>
+                <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Developer First</Typography>
+                <Typography sx={{ fontSize: { xs: "2rem", md: "3.2rem" }, fontWeight: 700, letterSpacing: -1.5, color: txt, lineHeight: 1.1, fontFamily: display, mb: 2 }}>
+                  API built for speed.<br />Docs built for humans.
+                </Typography>
+                <Typography sx={{ fontSize: 15, color: muted, maxWidth: 540, mx: "auto", lineHeight: 1.8, fontFamily: font, fontWeight: 500 }}>
+                  Send your first email in under 60 seconds. RESTful API, official SDKs for Node, Python, PHP, and Go — plus webhooks for every event.
+                </Typography>
+              </Box>
+            </Reveal>
+
+            {/* Quick-start tabs + code block */}
+            <Reveal delay={0.06}>
+              {(() => {
+                const [activeTab, setActiveTab] = React.useState(0);
+                const tabs = [
+                  {
+                    lang: "Node.js",
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.605.065-.037.151-.023.218.016l2.256 1.338c.082.045.198.045.275 0l8.795-5.076c.082-.047.134-.141.134-.238V7.926c0-.099-.05-.191-.134-.241l-8.794-5.072c-.081-.047-.197-.047-.276 0L3.065 7.685c-.085.05-.137.143-.137.24v10.15c0 .097.052.19.137.236l2.409 1.391c1.307.654 2.108-.116 2.108-.891V8.95c0-.143.115-.255.258-.255h1.115c.14 0 .256.112.256.255v10.862c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 20.633A1.86 1.86 0 011.354 19V8.85c0-.664.354-1.279.922-1.608l8.795-5.082c.553-.315 1.287-.315 1.838 0l8.794 5.082c.57.33.924.944.924 1.608v10.15c0 .663-.354 1.278-.924 1.607l-8.794 5.076c-.28.164-.6.247-.922.247"/></svg>,
+                    code: `const chapmail = require('@chapmail/node');
+const client = new chapmail.Client('ck_live_••••••••');
+
+await client.emails.send({
+  from:    'hello@yourco.com',
+  to:      'user@example.com',
+  subject: 'Welcome aboard!',
+  html:    '<h1>You\\'re in.</h1><p>Thanks for joining.</p>',
+});
+// { id: 'msg_01J...', status: 'queued' }`,
+                  },
+                  {
+                    lang: "Python",
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.83l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.23l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.02.21-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25c-.73 0-1.32.59-1.32 1.32s.59 1.32 1.32 1.32 1.32-.59 1.32-1.32-.59-1.32-1.32-1.32z"/></svg>,
+                    code: `import chapmail
+
+client = chapmail.Client("ck_live_••••••••")
+
+response = client.emails.send(
+    from_email="hello@yourco.com",
+    to="user@example.com",
+    subject="Welcome aboard!",
+    html="<h1>You're in.</h1><p>Thanks for joining.</p>"
+)
+# {'id': 'msg_01J...', 'status': 'queued'}`,
+                  },
+                  {
+                    lang: "cURL",
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>,
+                    code: `curl -X POST https://api.chapmail.io/v1/emails \\
+  -H "Authorization: Bearer ck_live_••••••••" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "from":    "hello@yourco.com",
+    "to":      "user@example.com",
+    "subject": "Welcome aboard!",
+    "html":    "<h1>You\\'re in.</h1>"
+  }'
+# { "id": "msg_01J...", "status": "queued" }`,
+                  },
+                  {
+                    lang: "PHP",
+                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.824-.124-1.06-.172-.235-.477-.225-.524-.225h-.523zm6.886 0h-.942l-.515 2.648h.837c.557 0 .971-.105 1.243-.314.272-.21.455-.559.549-1.049.092-.47.051-.824-.123-1.06-.174-.235-.478-.225-.525-.225h-.524zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM7.557 15.443H5.934L7.187 8.56h1.563c.65 0 1.143.115 1.48.344.336.228.523.527.558.897.035.37-.049.706-.25 1.007-.203.301-.506.541-.91.719.414.172.7.407.857.707.158.299.178.644.06 1.036-.2.667-.617 1.014-1.249 1.173h-1.739zm7.064 0h-1.619l1.253-6.883h1.563c.65 0 1.143.115 1.48.344.337.228.523.527.559.897.035.37-.05.706-.251 1.007-.203.301-.506.541-.91.719.414.172.701.407.857.707.158.299.178.644.06 1.036-.2.667-.617 1.014-1.249 1.173h-.743z"/></svg>,
+                    code: `<?php
+use Chapmail\\Client;
+
+$client = new Client('ck_live_••••••••');
+
+$response = $client->emails->send([
+  'from'    => 'hello@yourco.com',
+  'to'      => 'user@example.com',
+  'subject' => 'Welcome aboard!',
+  'html'    => '<h1>You\\'re in.</h1>',
+]);
+// ['id' => 'msg_01J...', 'status' => 'queued']`,
+                  },
+                ];
+
+                return (
+                  <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "1fr 1.1fr" }, gap: 4, alignItems: "start" }}>
+                    {/* Left — endpoint reference cards */}
+                    {(() => {
+                      const [openEp, setOpenEp] = React.useState<string | null>(null);
+                      const endpoints = [
+                        {
+                          method: "POST", path: "/v1/emails", desc: "Send a transactional or marketing email", color: green,
+                          reqBody: `{
+  "from":    "hello@yourco.com",
+  "to":      ["user@example.com"],
+  "subject": "Welcome aboard!",
+  "html":    "<h1>You're in.</h1>",
+  "tags":    ["onboarding"],
+  "track_opens":  true,
+  "track_clicks": true
+}`,
+                          resBody: `{
+  "id":         "msg_01JXKR9T...",
+  "status":     "queued",
+  "created_at": "2025-05-14T10:22:01Z"
+}`,
+                        },
+                        {
+                          method: "GET",  path: "/v1/emails/:id", desc: "Retrieve delivery status & metadata", color: blue,
+                          reqBody: `// No request body — pass message ID in URL:
+// GET /v1/emails/msg_01JXKR9T...`,
+                          resBody: `{
+  "id":           "msg_01JXKR9T...",
+  "status":       "delivered",
+  "to":           "user@example.com",
+  "opened_at":    "2025-05-14T10:22:45Z",
+  "clicked_at":   null,
+  "bounce_type":  null
+}`,
+                        },
+                        {
+                          method: "POST", path: "/v1/campaigns", desc: "Create and schedule a broadcast campaign", color: cyan,
+                          reqBody: `{
+  "name":         "May Newsletter",
+  "subject":      "What's new in May",
+  "from":         "team@yourco.com",
+  "list_ids":     ["lst_active_subscribers"],
+  "template_id":  "tpl_newsletter_v2",
+  "schedule_at":  "2025-05-20T09:00:00Z"
+}`,
+                          resBody: `{
+  "id":         "cmp_01JY3...",
+  "status":     "scheduled",
+  "send_at":    "2025-05-20T09:00:00Z",
+  "recipients": 24580
+}`,
+                        },
+                        {
+                          method: "GET",  path: "/v1/analytics/summary", desc: "Pull open, click, bounce aggregates", color: "#a78bfa",
+                          reqBody: `// Query params:
+// ?campaign_id=cmp_01JY3...
+// &from=2025-05-01&to=2025-05-31`,
+                          resBody: `{
+  "sent":           24580,
+  "delivered":      24391,
+  "opened":         6972,
+  "clicked":        1021,
+  "bounced":        189,
+  "open_rate":      0.2857,
+  "click_rate":     0.0418
+}`,
+                        },
+                        {
+                          method: "POST", path: "/v1/contacts/import", desc: "Bulk import contacts with list assignment", color: "#f97316",
+                          reqBody: `{
+  "list_id": "lst_subscribers",
+  "contacts": [
+    { "email": "a@co.com", "name": "Alice" },
+    { "email": "b@co.com", "name": "Bob" }
+  ],
+  "update_existing": true
+}`,
+                          resBody: `{
+  "imported":   2,
+  "updated":    0,
+  "skipped":    0,
+  "job_id":     "job_import_01JY..."
+}`,
+                        },
+                        {
+                          method: "POST", path: "/v1/webhooks", desc: "Register a URL for real-time event delivery", color: "#ec4899",
+                          reqBody: `{
+  "url":    "https://yourco.com/hooks/chapmail",
+  "events": [
+    "email.delivered",
+    "email.opened",
+    "email.bounced"
+  ],
+  "secret": "whsec_your_signing_secret"
+}`,
+                          resBody: `{
+  "id":      "wh_01JY5...",
+  "url":     "https://yourco.com/hooks/chapmail",
+  "status":  "active",
+  "events":  ["email.delivered","email.opened","email.bounced"]
+}`,
+                        },
+                      ];
+                      return (
+                        <Box>
+                          <Typography sx={{ fontSize: 13, fontWeight: 800, color: dimmer, textTransform: "uppercase", letterSpacing: 2, mb: 3, fontFamily: font }}>Core endpoints</Typography>
+                          <Stack spacing={1.5}>
+                            {endpoints.map((ep) => {
+                              const isOpen = openEp === ep.path;
+                              return (
+                                <Box key={ep.path} sx={{ ...cardSx, overflow: "visible", cursor: "pointer", "&:hover": { borderColor: `${ep.color}45` }, ...(isOpen && { borderColor: `${ep.color}55`, boxShadow: `0 0 24px ${ep.color}10` }) }}>
+                                  {/* Header row */}
+                                  <Box onClick={() => setOpenEp(isOpen ? null : ep.path)}
+                                    sx={{ px: 2.5, py: 2, display: "flex", alignItems: "center", gap: 2 }}>
+                                    <Box sx={{ px: 1.2, py: 0.3, borderRadius: 1, bgcolor: `${ep.color}15`, border: `1px solid ${ep.color}30`, flexShrink: 0, minWidth: 52, textAlign: "center" }}>
+                                      <Typography sx={{ fontSize: 10, fontWeight: 900, color: ep.color, fontFamily: "monospace", letterSpacing: 0.5 }}>{ep.method}</Typography>
+                                    </Box>
+                                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                                      <Typography sx={{ fontSize: 12.5, fontWeight: 700, color: txt, fontFamily: "monospace", mb: 0.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{ep.path}</Typography>
+                                      <Typography sx={{ fontSize: 11.5, color: muted, fontFamily: font }}>{ep.desc}</Typography>
+                                    </Box>
+                                    <Box sx={{ width: 22, height: 22, borderRadius: "50%", bgcolor: `${ep.color}12`, border: `1px solid ${ep.color}28`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "transform .2s", transform: isOpen ? "rotate(180deg)" : "none" }}>
+                                      <ExpandMoreOutlined sx={{ fontSize: 14, color: ep.color }} />
+                                    </Box>
+                                  </Box>
+
+                                  {/* Expandable JSON body */}
+                                  <Collapse in={isOpen}>
+                                    <Box sx={{ borderTop: `1px solid ${ep.color}20`, mx: 0 }}>
+                                      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" } }}>
+                                        {/* Request */}
+                                        <Box sx={{ p: 2, borderRight: { sm: `1px solid ${ep.color}15` } }}>
+                                          <Typography sx={{ fontSize: 10, fontWeight: 800, color: ep.color, textTransform: "uppercase", letterSpacing: 1.5, mb: 1.5, fontFamily: font }}>Request body</Typography>
+                                          <Box sx={{ bgcolor: dark ? "#060810" : "#0f172a", borderRadius: 1.5, p: 1.5, overflow: "auto" }}>
+                                            {ep.reqBody.split("\n").map((line, li) => (
+                                              <Typography key={li} component="div"
+                                                sx={{ fontSize: 11, lineHeight: 1.75, color: "#e2e8f0", fontFamily: "monospace", whiteSpace: "pre" }}
+                                                dangerouslySetInnerHTML={{ __html: line
+                                                  .replace(/(\/\/.*$)/g, '<span style="color:#475569">$1</span>')
+                                                  .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:#93c5fd">$1</span>:')
+                                                  .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:#86efac">$1</span>')
+                                                  .replace(/:\s*(true|false|null)/g, ': <span style="color:#fbbf24">$1</span>')
+                                                  .replace(/:\s*(\d+)/g, ': <span style="color:#f9a8d4">$1</span>')
+                                                }} />
+                                            ))}
+                                          </Box>
+                                        </Box>
+                                        {/* Response */}
+                                        <Box sx={{ p: 2 }}>
+                                          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+                                            <Typography sx={{ fontSize: 10, fontWeight: 800, color: ep.color, textTransform: "uppercase", letterSpacing: 1.5, fontFamily: font }}>Response</Typography>
+                                            <Box sx={{ px: 1, py: 0.15, borderRadius: 99, bgcolor: `${green}15`, border: `1px solid ${green}30` }}>
+                                              <Typography sx={{ fontSize: 9.5, fontWeight: 700, color: green, fontFamily: "monospace" }}>200 OK</Typography>
+                                            </Box>
+                                          </Box>
+                                          <Box sx={{ bgcolor: dark ? "#060810" : "#0f172a", borderRadius: 1.5, p: 1.5, overflow: "auto" }}>
+                                            {ep.resBody.split("\n").map((line, li) => (
+                                              <Typography key={li} component="div"
+                                                sx={{ fontSize: 11, lineHeight: 1.75, color: "#e2e8f0", fontFamily: "monospace", whiteSpace: "pre" }}
+                                                dangerouslySetInnerHTML={{ __html: line
+                                                  .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:#93c5fd">$1</span>:')
+                                                  .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:#86efac">$1</span>')
+                                                  .replace(/:\s*(true|false|null)/g, ': <span style="color:#fbbf24">$1</span>')
+                                                  .replace(/:\s*(\d+\.\d+)/g, ': <span style="color:#f9a8d4">$1</span>')
+                                                  .replace(/:\s*(\d+)(?=[,\n}])/g, ': <span style="color:#f9a8d4">$1</span>')
+                                                }} />
+                                            ))}
+                                          </Box>
+                                        </Box>
+                                      </Box>
+                                    </Box>
+                                  </Collapse>
+                                </Box>
+                              );
+                            })}
+                          </Stack>
+
+                          {/* SDKs row */}
+                          <Box sx={{ mt: 4 }}>
+                            <Typography sx={{ fontSize: 13, fontWeight: 800, color: dimmer, textTransform: "uppercase", letterSpacing: 2, mb: 2.5, fontFamily: font }}>Official SDKs</Typography>
+                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
+                              {[
+                                { name: "Node.js", color: "#68a063" },
+                                { name: "Python",  color: "#3572a5" },
+                                { name: "PHP",     color: "#787cb5" },
+                                { name: "Go",      color: "#00add8" },
+                                { name: "Ruby",    color: "#cc342d" },
+                                { name: "Java",    color: "#b07219" },
+                              ].map((sdk) => (
+                                <Box key={sdk.name} sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.75, py: 0.75, borderRadius: 99, bgcolor: `${sdk.color}10`, border: `1px solid ${sdk.color}30`, cursor: "pointer", transition: "all .15s", "&:hover": { bgcolor: `${sdk.color}18`, borderColor: `${sdk.color}55` } }}>
+                                  <Box sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: sdk.color }} />
+                                  <Typography sx={{ fontSize: 12, fontWeight: 700, color: sdk.color, fontFamily: font }}>{sdk.name}</Typography>
+                                </Box>
+                              ))}
+                            </Box>
+                          </Box>
+                        </Box>
+                      );
+                    })()}
+
+                    {/* Right — interactive code block */}
+                    <Box>
+                      {/* Language selector */}
+                      <Box sx={{ display: "flex", gap: 0, mb: 0, bgcolor: dark ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)", borderRadius: "12px 12px 0 0", border: `1px solid ${bord}`, borderBottom: "none", overflow: "hidden" }}>
+                        {tabs.map((t, i) => (
+                          <Box key={t.lang} onClick={() => setActiveTab(i)}
+                            sx={{ flex: 1, py: 1.2, px: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 0.75, cursor: "pointer", transition: "all .15s", bgcolor: activeTab === i ? (dark ? "#0d1117" : "#fff") : "transparent", borderRight: i < tabs.length - 1 ? `1px solid ${bord}` : "none", borderBottom: activeTab === i ? `2px solid ${blue}` : "none" }}>
+                            <Box sx={{ color: activeTab === i ? blue : muted, display: "flex", alignItems: "center" }}>{t.icon}</Box>
+                            <Typography sx={{ fontSize: 11.5, fontWeight: activeTab === i ? 700 : 500, color: activeTab === i ? txt : muted, fontFamily: font }}>{t.lang}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
+
+                      {/* Code panel */}
+                      <Box sx={{ bgcolor: dark ? "#080c14" : "#0f172a", borderRadius: "0 0 12px 12px", border: `1px solid ${bord}`, p: 3, position: "relative", overflow: "hidden" }}>
+                        {/* Glow */}
+                        <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg,${blue},${cyan})` }} />
+                        {/* Line numbers + code */}
+                        <Box sx={{ display: "flex", gap: 2.5, overflowX: "auto" }}>
+                          <Box sx={{ flexShrink: 0 }}>
+                            {tabs[activeTab].code.split("\n").map((_, li) => (
+                              <Typography key={li} sx={{ fontSize: 12.5, lineHeight: 1.85, color: dark ? "#3a4460" : "#334155", fontFamily: "monospace", userSelect: "none", textAlign: "right" }}>{li + 1}</Typography>
+                            ))}
+                          </Box>
+                          <Box sx={{ flex: 1 }}>
+                            {tabs[activeTab].code.split("\n").map((line, li) => {
+                              const colored = line
+                                .replace(/(\/\/.*$|#.*$)/g, '<span style="color:#6b7a99">$1</span>')
+                                .replace(/("(?:[^"\\]|\\.)*")/g, '<span style="color:#22c55e">$1</span>')
+                                .replace(/\b(const|let|var|await|import|from|require|async|function|return|use|new)\b/g, '<span style="color:#a78bfa">$1</span>')
+                                .replace(/\b(true|false|null|None|False|True)\b/g, '<span style="color:#f97316">$1</span>');
+                              return (
+                                <Typography key={li} component="div" sx={{ fontSize: 12.5, lineHeight: 1.85, color: "#e2e8f0", fontFamily: "monospace", whiteSpace: "pre" }}
+                                  dangerouslySetInnerHTML={{ __html: colored }} />
+                              );
+                            })}
+                          </Box>
+                        </Box>
+
+                        {/* Copy button */}
+                        <Box onClick={() => navigator.clipboard?.writeText(tabs[activeTab].code)}
+                          sx={{ position: "absolute", top: 16, right: 16, px: 1.5, py: 0.5, borderRadius: 1, bgcolor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { bgcolor: "rgba(255,255,255,0.1)" } }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                          <Typography sx={{ fontSize: 11, color: "#94a3b8", fontFamily: font, fontWeight: 600 }}>Copy</Typography>
+                        </Box>
+                      </Box>
+
+                      {/* Response time / rate limit badges */}
+                      <Box sx={{ display: "flex", gap: 1.5, mt: 2, flexWrap: "wrap" }}>
+                        {[
+                          { icon: <SpeedOutlined sx={{ fontSize: 13 }} />, label: "Avg response < 80 ms", color: green },
+                          { icon: <SecurityOutlined sx={{ fontSize: 13 }} />, label: "TLS 1.3 encrypted", color: blue },
+                          { icon: <AutoGraphOutlined sx={{ fontSize: 13 }} />, label: "Rate limit: 1,000 req/s", color: "#a78bfa" },
+                        ].map((b) => (
+                          <Box key={b.label} sx={{ display: "flex", alignItems: "center", gap: 0.75, px: 1.5, py: 0.6, borderRadius: 99, bgcolor: `${b.color}10`, border: `1px solid ${b.color}28` }}>
+                            <Box sx={{ color: b.color }}>{b.icon}</Box>
+                            <Typography sx={{ fontSize: 11.5, fontWeight: 600, color: b.color, fontFamily: font }}>{b.label}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              })()}
+            </Reveal>
+
+            {/* Webhook events grid */}
+            <Reveal delay={0.1}>
+              <Box sx={{ mt: 10 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 800, color: dimmer, textTransform: "uppercase", letterSpacing: 2, mb: 4, fontFamily: font, textAlign: "center" }}>Webhook events</Typography>
+                <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(3,1fr)", md: "repeat(6,1fr)" }, gap: 1.5 }}>
+                  {[
+                    { event: "email.delivered", color: green },
+                    { event: "email.opened",    color: blue },
+                    { event: "email.clicked",   color: cyan },
+                    { event: "email.bounced",   color: "#f97316" },
+                    { event: "email.complaint", color: "#ec4899" },
+                    { event: "email.unsubscribed", color: "#a78bfa" },
+                  ].map((ev) => (
+                    <Box key={ev.event} sx={{ ...cardSx, p: 1.75, textAlign: "center", "&:hover": { borderColor: `${ev.color}45`, transform: "translateY(-2px)" } }}>
+                      <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: ev.color, mx: "auto", mb: 1, boxShadow: `0 0 8px ${ev.color}` }} />
+                      <Typography sx={{ fontSize: 10.5, fontWeight: 700, color: muted, fontFamily: "monospace" }}>{ev.event}</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Reveal>
+
+            {/* Full docs CTA */}
+            <Reveal delay={0.12}>
+              <Box sx={{ mt: 8, textAlign: "center" }}>
+                <Button variant="outlined" endIcon={<ArrowForward />}
+                  onClick={() => window.open("https://docs.chapmail.io", "_blank")}
+                  sx={{ borderColor: `${blue}50`, color: blue, fontWeight: 700, fontSize: 14, borderRadius: 2, px: 3.5, py: 1.3, fontFamily: font, "&:hover": { borderColor: blue, bgcolor: blueDim } }}>
+                  Read the full API reference
+                </Button>
+              </Box>
+            </Reveal>
+          </Container>
+        </Box>
+
         {/* ══ TESTIMONIALS ════════════════════════════════════════════════════ */}
         <Box sx={{ bgcolor: surfB, py: { xs: 12, md: 18 }, borderTop: `1px solid ${bord}` }}>
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH, position: "relative", zIndex: 1 }}>
+          <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
             <Reveal>
               <Box sx={{ textAlign: "center", mb: 10 }}>
                 <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Wall of love</Typography>
@@ -1036,7 +1492,7 @@ export function LandingPage() {
             </Reveal>
             <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" }, gap: 2.5 }}>
               {[
-                { quote: "ChapMail's deliverability is in a class of its own. Our open rates jumped 18% the first month after switching. The IP warmup tooling alone saved us weeks of manual work.", name: "Benjamin A.", role: "Head of Growth", company: "TechFlow SaaS", avatar: "SK", color: blue },
+                { quote: "ChapMail's deliverability is in a class of its own. Our open rates jumped 18% the first month after switching. The IP warmup tooling alone saved us weeks of manual work.", name: "Sarah K.", role: "Head of Growth", company: "TechFlow SaaS", avatar: "SK", color: blue },
                 { quote: "We send 2 million emails a month and the uptime has been flawless. The reseller dashboard lets us manage 40+ client accounts from a single login — genuinely game-changing.", name: "Marcus O.", role: "CEO", company: "SendLoop Agency", avatar: "MO", color: cyan },
                 { quote: "The migration was zero-drama. Real-time analytics showed us issues we didn't even know we had. Inbox placement went from 87% to 99% within the first two weeks.", name: "Priya N.", role: "Email Marketing Lead", company: "CloudBase", avatar: "PN", color: "#a78bfa" },
               ].map((t, i) => (
@@ -1061,9 +1517,184 @@ export function LandingPage() {
           </Container>
         </Box>
 
+        {/* ══ BLOGS ═══════════════════════════════════════════════════════════ */}
+        <Box id="blogs">
+          <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 12, md: 18 } }}>
+            <Reveal>
+              <Box sx={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", mb: 10, flexWrap: "wrap", gap: 3 }}>
+                <Box>
+                  <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>From the blog</Typography>
+                  <Typography sx={{ fontSize: { xs: "2rem", md: "3rem" }, fontWeight: 700, letterSpacing: -1.5, color: txt, lineHeight: 1.1, fontFamily: display }}>
+                    Insights from the<br />deliverability trenches.
+                  </Typography>
+                </Box>
+                <Button variant="outlined" endIcon={<ArrowForward />}
+                  sx={{ borderColor: `${blue}50`, color: blue, fontWeight: 700, fontSize: 13, borderRadius: 2, px: 2.5, py: 1.1, fontFamily: font, flexShrink: 0, "&:hover": { borderColor: blue, bgcolor: blueDim } }}>
+                  All articles
+                </Button>
+              </Box>
+            </Reveal>
+
+            {/* Featured post */}
+            <Reveal delay={0.04}>
+              <Box sx={{ ...cardSx, mb: 3, display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, overflow: "hidden", "&:hover": { borderColor: `${blue}40`, boxShadow: `0 0 40px ${blue}10, 0 20px 40px rgba(0,0,0,.14)`, transform: "translateY(-4px)" } }}>
+                <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg,transparent,${blue}80,transparent)` }} />
+                {/* Visual panel */}
+                <Box sx={{ bgcolor: dark ? "#0d1626" : "#dbeafe", minHeight: { xs: 220, md: "auto" }, display: "flex", alignItems: "center", justifyContent: "center", p: 5, position: "relative", overflow: "hidden" }}>
+                  <Box sx={{ position: "absolute", top: "20%", left: "15%", width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle,${blue}35,transparent)`, filter: "blur(40px)" }} />
+                  <Box sx={{ position: "relative", zIndex: 1, textAlign: "center" }}>
+                    <MailOutlineOutlined sx={{ fontSize: 64, color: blue, opacity: 0.9 }} />
+                    <Box sx={{ mt: 2, px: 2, py: 0.6, borderRadius: 99, bgcolor: `${blue}18`, border: `1px solid ${blue}40`, display: "inline-block" }}>
+                      <Typography sx={{ fontSize: 11, fontWeight: 700, color: blue, fontFamily: font }}>15 min read</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+                {/* Content panel */}
+                <Box sx={{ p: { xs: 3, md: 5 } }}>
+                  <Stack direction="row" spacing={1} sx={{ mb: 2.5 }} flexWrap="wrap">
+                    <Box sx={{ px: 1.25, py: 0.3, borderRadius: 99, bgcolor: `${blue}10`, border: `1px solid ${blue}25` }}>
+                      <Typography sx={{ fontSize: 10.5, fontWeight: 700, color: blue, fontFamily: font }}>Deliverability</Typography>
+                    </Box>
+                    <Box sx={{ px: 1.25, py: 0.3, borderRadius: 99, bgcolor: `${cyan}10`, border: `1px solid ${cyan}25` }}>
+                      <Typography sx={{ fontSize: 10.5, fontWeight: 700, color: cyan, fontFamily: font }}>Featured</Typography>
+                    </Box>
+                  </Stack>
+                  <Typography sx={{ fontSize: { xs: 20, md: 24 }, fontWeight: 700, color: txt, fontFamily: display, lineHeight: 1.25, mb: 2, letterSpacing: -0.5 }}>
+                    The definitive guide to inbox placement in 2025
+                  </Typography>
+                  <Typography sx={{ fontSize: 14, color: muted, lineHeight: 1.8, mb: 3.5, fontFamily: font }}>
+                    Inbox placement dropped an average of 4 points across ESPs in Q1. We analysed 2 billion sends to find out exactly why — and what you can do to stay above 98%.
+                  </Typography>
+                  <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3.5 }}>
+                    <Box sx={{ width: 36, height: 36, borderRadius: "50%", bgcolor: `${blue}20`, border: `2px solid ${blue}40`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Typography sx={{ fontSize: 11, fontWeight: 700, color: blue, fontFamily: display }}>AO</Typography>
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontSize: 13, fontWeight: 700, color: txt, fontFamily: font }}>Alex Omondi</Typography>
+                      <Typography sx={{ fontSize: 11.5, color: muted, fontFamily: font }}>Head of Deliverability · May 14, 2025</Typography>
+                    </Box>
+                  </Stack>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, color: blue, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: font }}>
+                    Read the full guide <ArrowForward sx={{ fontSize: 15 }} />
+                  </Box>
+                </Box>
+              </Box>
+            </Reveal>
+
+            {/* Secondary posts grid */}
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "repeat(3,1fr)" }, gap: 2 }}>
+              {[
+                {
+                  tag: "Automation", tagColor: cyan, readTime: "8 min",
+                  title: "Drip vs. broadcast: when to use which (and how to blend both)",
+                  excerpt: "Most teams default to one or the other. Here's the framework we use with our highest-performing clients to decide when each strategy wins.",
+                  author: "Wanjiru K.", authorInitials: "WK", date: "May 8, 2025", color: cyan,
+                  Icon: AutoGraphOutlined,
+                },
+                {
+                  tag: "Engineering", tagColor: "#a78bfa", readTime: "6 min",
+                  title: "How we achieve sub-100ms API response times at 50B sends/month",
+                  excerpt: "A behind-the-scenes look at our multi-region queuing architecture, adaptive rate shaping, and the lessons learned scaling to global infrastructure.",
+                  author: "Brian M.", authorInitials: "BM", date: "Apr 29, 2025", color: "#a78bfa",
+                  Icon: SpeedOutlined,
+                },
+                {
+                  tag: "Compliance", tagColor: green, readTime: "10 min",
+                  title: "GDPR, CAN-SPAM, and CASL: a plain-English compliance checklist for 2025",
+                  excerpt: "Regulations tightened again this year. We break down exactly what has changed, what still applies, and the five steps every sender should take today.",
+                  author: "Amira S.", authorInitials: "AS", date: "Apr 17, 2025", color: green,
+                  Icon: SecurityOutlined,
+                },
+                {
+                  tag: "Analytics", tagColor: "#f97316", readTime: "7 min",
+                  title: "Beyond open rates: the five engagement signals that actually predict revenue",
+                  excerpt: "Open rates are gamed by Apple MPP. We walk through the alternative metrics that correlate far more strongly with conversion — and how to track them.",
+                  author: "Alex Omondi", authorInitials: "AO", date: "Apr 9, 2025", color: "#f97316",
+                  Icon: TrendingUpOutlined,
+                },
+                {
+                  tag: "Growth", tagColor: "#ec4899", readTime: "5 min",
+                  title: "The re-engagement campaign template that won back 22% of lapsed subscribers",
+                  excerpt: "We split-tested 11 subject line strategies and 4 send-time windows across 400k lapsed users. Here's the exact playbook that outperformed everything else.",
+                  author: "Wanjiru K.", authorInitials: "WK", date: "Apr 2, 2025", color: "#ec4899",
+                  Icon: RocketLaunchOutlined,
+                },
+                {
+                  tag: "Deliverability", tagColor: blue, readTime: "9 min",
+                  title: "IP warmup in 2025: the updated schedule Gmail and Outlook actually respect",
+                  excerpt: "The old 30-day warmup spreadsheet is obsolete. Postmaster Tools data from 120 warmups reveals the cadence that builds sender reputation fastest without triggering filters.",
+                  author: "Brian M.", authorInitials: "BM", date: "Mar 26, 2025", color: blue,
+                  Icon: VerifiedOutlined,
+                },
+              ].map((post, i) => (
+                <Reveal key={post.title} delay={i * 0.06}>
+                  <Box sx={{ ...cardSx, p: 3, height: "100%", display: "flex", flexDirection: "column", cursor: "pointer", "&:hover": { borderColor: `${post.color}45`, boxShadow: `0 0 30px ${post.color}10, 0 16px 32px rgba(0,0,0,.12)`, transform: "translateY(-4px)" } }}>
+                    <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg,transparent,${post.color}70,transparent)` }} />
+                    {/* Top row: tag + read time */}
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2.5 }}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Box sx={{ width: 32, height: 32, borderRadius: 1.5, bgcolor: `${post.color}12`, border: `1px solid ${post.color}22`, display: "flex", alignItems: "center", justifyContent: "center", color: post.color }}>
+                          <post.Icon sx={{ fontSize: 16 }} />
+                        </Box>
+                        <Box sx={{ px: 1.1, py: 0.25, borderRadius: 99, bgcolor: `${post.tagColor}10`, border: `1px solid ${post.tagColor}25` }}>
+                          <Typography sx={{ fontSize: 10, fontWeight: 700, color: post.tagColor, fontFamily: font }}>{post.tag}</Typography>
+                        </Box>
+                      </Box>
+                      <Typography sx={{ fontSize: 11, color: dimmer, fontFamily: font }}>{post.readTime} read</Typography>
+                    </Box>
+                    <Typography sx={{ fontSize: 15.5, fontWeight: 700, color: txt, fontFamily: display, lineHeight: 1.3, mb: 1.5, letterSpacing: -0.3, flex: 1 }}>{post.title}</Typography>
+                    <Typography sx={{ fontSize: 12.5, color: muted, lineHeight: 1.75, fontFamily: font, mb: 3 }}>{post.excerpt}</Typography>
+                    {/* Author + date */}
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <Box sx={{ width: 28, height: 28, borderRadius: "50%", bgcolor: `${post.color}18`, border: `1.5px solid ${post.color}35`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <Typography sx={{ fontSize: 9.5, fontWeight: 700, color: post.color, fontFamily: display }}>{post.authorInitials}</Typography>
+                        </Box>
+                        <Box>
+                          <Typography sx={{ fontSize: 11.5, fontWeight: 700, color: txt, fontFamily: font, lineHeight: 1.2 }}>{post.author}</Typography>
+                          <Typography sx={{ fontSize: 10.5, color: dimmer, fontFamily: font }}>{post.date}</Typography>
+                        </Box>
+                      </Stack>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.4, color: post.color, fontSize: 12, fontWeight: 700, fontFamily: font }}>
+                        Read <ArrowForward sx={{ fontSize: 13 }} />
+                      </Box>
+                    </Box>
+                  </Box>
+                </Reveal>
+              ))}
+            </Box>
+
+            {/* Newsletter signup */}
+            <Reveal delay={0.1}>
+              <Box sx={{ mt: 6, ...cardSx, p: { xs: 3.5, md: 5 }, display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { md: "center" }, justifyContent: "space-between", gap: 4, background: dark ? `linear-gradient(135deg,rgba(37,99,235,0.08),rgba(6,182,212,0.05))` : `linear-gradient(135deg,rgba(37,99,235,0.04),rgba(6,182,212,0.03))` }}>
+                <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg,${blue},${cyan})` }} />
+                <Box sx={{ flex: 1 }}>
+                  <Typography sx={{ fontSize: { xs: 18, md: 22 }, fontWeight: 700, color: txt, fontFamily: display, mb: 0.75, letterSpacing: -0.5 }}>
+                    Deliverability insights, weekly.
+                  </Typography>
+                  <Typography sx={{ fontSize: 14, color: muted, fontFamily: font, lineHeight: 1.7 }}>
+                    Join 12,000+ senders who get our Friday digest — no fluff, just tactics that move the inbox placement needle.
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", gap: 1, flexShrink: 0, flexWrap: "wrap" }}>
+                  <Box sx={{ height: 44, px: 2, borderRadius: 1.5, border: `1.5px solid ${bord}`, bgcolor: surface, display: "flex", alignItems: "center", minWidth: 240, "&:focus-within": { borderColor: blue } }}>
+                    <MailOutlineOutlined sx={{ fontSize: 16, color: dimmer, mr: 1 }} />
+                    <Typography component="input" placeholder="you@company.com"
+                      sx={{ border: "none", outline: "none", bgcolor: "transparent", color: txt, fontSize: 13.5, fontFamily: font, width: "100%", "&::placeholder": { color: dimmer } }} />
+                  </Box>
+                  <Button variant="contained"
+                    sx={{ bgcolor: blue, color: "#fff", fontWeight: 700, fontSize: 13.5, px: 3, height: 44, borderRadius: 1.5, fontFamily: font, whiteSpace: "nowrap", boxShadow: `0 4px 16px ${blue}40`, "&:hover": { bgcolor: blueL } }}>
+                    Subscribe free
+                  </Button>
+                </Box>
+              </Box>
+            </Reveal>
+          </Container>
+        </Box>
+
         {/* ══ PRICING ═════════════════════════════════════════════════════════ */}
         <Box id="pricing" sx={{ position: "relative", zIndex: 1, py: { xs: 12, md: 18 } }}>
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH }}>
+          <Container maxWidth="lg">
             <Reveal>
               <Box sx={{ textAlign: "center", mb: 8 }}>
                 <Typography sx={{ fontSize: 11, fontWeight: 800, color: blue, textTransform: "uppercase", letterSpacing: 3.5, mb: 2, fontFamily: font }}>Simple pricing</Typography>
@@ -1076,8 +1707,8 @@ export function LandingPage() {
                 </Typography>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 2, flexWrap: "wrap", mb: 2 }}>
                   <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0, bgcolor: surfB, border: `1px solid ${bord}`, borderRadius: 99, p: 0.5 }}>
-                    {(["USD", "KES"]).map((c) => (
-                      <Box key={c} onClick={() => setCurrency(c as any)}
+                    {(["USD", "KES"] as Currency[]).map((c) => (
+                      <Box key={c} onClick={() => setCurrency(c)}
                         sx={{ px: 2, py: 0.65, borderRadius: 99, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all .2s", fontFamily: font, bgcolor: currency === c ? (c === "KES" ? "#22c55e" : blue) : "transparent", color: currency === c ? "#fff" : muted, boxShadow: currency === c ? `0 2px 12px ${c === "KES" ? "#22c55e45" : `${blue}45`}` : "none" }}>
                         {c === "USD" ? "$ USD" : "KES"}
                       </Box>
@@ -1234,54 +1865,71 @@ export function LandingPage() {
         </Reveal>
 
         {/* ══ FOOTER ══════════════════════════════════════════════════════════ */}
-        <Box component="footer" sx={{ position: "relative", zIndex: 1, borderTop: `1px solid ${bord}`, bgcolor: surface, pt: 10, pb: 5 }}>
-          <Container maxWidth={false} sx={{ maxWidth: MAX_WIDTH }}>
-          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr 1fr", md: "2fr 1fr 1fr 1fr" }, gap: { xs: 5, md: 4 }, mb: 8 }}>
-            <Box>
-              <Stack direction="row" spacing={1.25} alignItems="center" sx={{ mb: 2 }}>
-                <Box component="img" src="/favicon.png" alt="ChapMail" sx={{ width: 36, height: 36, borderRadius: 1.5, objectFit: "contain" }} />
+        <Box component="footer" sx={{ position: "relative", zIndex: 1, borderTop: `1px solid ${bord}`, bgcolor: surface, px: { xs: 3, md: 8 }, pt: 7, pb: 5 }}>
+          <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { md: "flex-start" }, justifyContent: "space-between", gap: 5, mb: 6 }}>
+
+            {/* Brand column */}
+            <Box sx={{ maxWidth: 260 }}>
+              <Stack direction="row" spacing={1.25} alignItems="center" sx={{ mb: 2, cursor: "pointer" }} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+                <Box component="img" src="/favicon.png" alt="ChapMail" sx={{ width: 34, height: 34, borderRadius: 1.5, objectFit: "contain" }} />
                 <Typography sx={{ fontSize: 16, fontWeight: 700, color: txt, fontFamily: display }}>ChapMail</Typography>
               </Stack>
-              <Typography sx={{ fontSize: 13, color: muted, lineHeight: 1.75, fontFamily: font, maxWidth: 240, mb: 2.5 }}>
-                Infrastructure-grade email for teams that can't afford to miss. Trusted by 10,000+ businesses worldwide.
+              <Typography sx={{ fontSize: 13, color: muted, lineHeight: 1.75, fontFamily: font, mb: 2.5 }}>
+                Infrastructure-grade email for teams that can't afford to miss.
               </Typography>
-              <Stack direction="row" spacing={1.5}>
+              <Stack direction="row" spacing={1.25}>
                 {[
-                  <svg key="x" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.733-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
-                  <svg key="li" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>,
-                  <svg key="gh" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>,
-                  <svg key="yt" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>,
-                ].map((svg, i) => (
-                  <Box key={i} sx={{ width: 34, height: 34, borderRadius: 1.5, bgcolor: surfB, border: `1px solid ${bord}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: muted, transition: "all .15s", "&:hover": { borderColor: bordH, color: txt } }}>{svg}</Box>
+                  { key: "x",  svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.733-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> },
+                  { key: "li", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> },
+                  { key: "yt", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg> },
+                ].map((s) => (
+                  <Box key={s.key} sx={{ width: 32, height: 32, borderRadius: 1.5, bgcolor: surfB, border: `1px solid ${bord}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: muted, transition: "all .15s", "&:hover": { borderColor: bordH, color: txt } }}>{s.svg}</Box>
                 ))}
               </Stack>
             </Box>
-            {[
-              { title: "Product", links: ["Features", "Pricing", "Changelog", "Roadmap", "API Docs", "Status page"] },
-              { title: "Company", links: ["About us", "Blog", "Careers", "Press kit", "Partners", "Contact"] },
-              { title: "Legal", links: ["Privacy Policy", "Terms of Service", "Cookie Policy", "DPA", "GDPR", "Security"] },
-            ].map((col) => (
-              <Box key={col.title}>
-                <Typography sx={{ fontSize: 12, fontWeight: 800, color: txt, textTransform: "uppercase", letterSpacing: 1.5, mb: 2.5, fontFamily: font }}>{col.title}</Typography>
-                <Stack spacing={1.5}>
-                  {col.links.map((l) => (
-                    <Typography key={l} sx={{ fontSize: 13.5, color: muted, cursor: "pointer", fontFamily: font, fontWeight: 500, "&:hover": { color: txt }, transition: "color .15s" }}>{l}</Typography>
+
+            {/* Nav links — only what exists on this page */}
+            <Box sx={{ display: "flex", gap: { xs: 4, md: 8 }, flexWrap: "wrap" }}>
+              <Box>
+                <Typography sx={{ fontSize: 11.5, fontWeight: 800, color: txt, textTransform: "uppercase", letterSpacing: 1.5, mb: 2, fontFamily: font }}>On this page</Typography>
+                <Stack spacing={1.25}>
+                  {navLinks.map((l) => (
+                    <Typography key={l.id} onClick={() => scrollTo(l.id)}
+                      sx={{ fontSize: 13.5, color: muted, cursor: "pointer", fontFamily: font, fontWeight: 500, "&:hover": { color: txt }, transition: "color .15s" }}>
+                      {l.label}
+                    </Typography>
                   ))}
                 </Stack>
               </Box>
-            ))}
+              <Box>
+                <Typography sx={{ fontSize: 11.5, fontWeight: 800, color: txt, textTransform: "uppercase", letterSpacing: 1.5, mb: 2, fontFamily: font }}>Account</Typography>
+                <Stack spacing={1.25}>
+                  <Typography onClick={() => navigate("/register")} sx={{ fontSize: 13.5, color: muted, cursor: "pointer", fontFamily: font, fontWeight: 500, "&:hover": { color: txt }, transition: "color .15s" }}>Get started free</Typography>
+                  <Typography onClick={() => navigate("/login")} sx={{ fontSize: 13.5, color: muted, cursor: "pointer", fontFamily: font, fontWeight: 500, "&:hover": { color: txt }, transition: "color .15s" }}>Sign in</Typography>
+                  {user && <Typography onClick={() => navigate("/app/dashboard")} sx={{ fontSize: 13.5, color: blue, cursor: "pointer", fontFamily: font, fontWeight: 600, "&:hover": { color: blueL }, transition: "color .15s" }}>Dashboard</Typography>}
+                </Stack>
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: 11.5, fontWeight: 800, color: txt, textTransform: "uppercase", letterSpacing: 1.5, mb: 2, fontFamily: font }}>Legal</Typography>
+                <Stack spacing={1.25}>
+                  <Typography onClick={() => navigate("/privacy")} sx={{ fontSize: 13.5, color: muted, cursor: "pointer", fontFamily: font, fontWeight: 500, "&:hover": { color: txt }, transition: "color .15s" }}>Privacy Policy</Typography>
+                  <Typography onClick={() => navigate("/terms")} sx={{ fontSize: 13.5, color: muted, cursor: "pointer", fontFamily: font, fontWeight: 500, "&:hover": { color: txt }, transition: "color .15s" }}>Terms of Service</Typography>
+                </Stack>
+              </Box>
+            </Box>
           </Box>
-          <Box sx={{ borderTop: `1px solid ${bord}`, pt: 4, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
+
+          {/* Bottom bar */}
+          <Box sx={{ borderTop: `1px solid ${bord}`, pt: 3.5, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
             <Typography sx={{ fontSize: 12, color: dimmer, fontFamily: font }}>
-              © {new Date().getFullYear()} ChapMail. All rights reserved. Crafted with precision.
+              © {new Date().getFullYear()} ChapMail. All rights reserved.
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, px: 1.5, py: 0.5, borderRadius: 99, bgcolor: `${green}12`, border: `1px solid ${green}30` }}>
               <Box sx={{ width: 6, height: 6, borderRadius: "50%", bgcolor: green, animation: `${pulse} 2.5s infinite` }} />
               <Typography sx={{ fontSize: 11, fontWeight: 700, color: green, fontFamily: font }}>All systems operational</Typography>
             </Box>
           </Box>
-        </Container>
-      </Box>
+        </Box>
 
         {/* ══ SCROLL TO TOP ════════════════════════════════════════════════════ */}
         <Fab onClick={scrollToTop}
@@ -1303,6 +1951,4 @@ export function LandingPage() {
       </Box>
     </>
   );
-
 }
-
